@@ -1,16 +1,29 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from  quiz_app.api import bard_api
-
+from .models import CustomUser
 #from file_handler import FileHandler
 #import api_request
 # Create your views here.
 
 from quiz_app.file_processor import filehandler
 
-def homee(request):
-    return render(request, 'home.html')
-
+def user_register(request):
+    if request.method == "POST":
+        full_name = request.POST.get("name")
+        email = request.POST.get("email")
+        password1 = request.POST.get("password1")
+        password2 = request.POST.get("password2")
+        carrier= request.POST.get("role")
+        gender = request.POST.get("gender")
+        
+        if password1 == password2:
+            user = CustomUser.objects.create(username=email, password=password2,email=email,carrier=carrier,gender=gender )
+            #user.save()
+            return redirect('quiz')
+        else:
+            return render(request, 'registration.html', {'error':''})
+    return render(request, 'registeration.html')
 
 def home(request):
     if request.method == "POST":

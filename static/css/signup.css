@@ -1,0 +1,42 @@
+body{
+    background-image: var(--bg-image);
+    width: 100vw;
+    height:100vh;
+}
+  div{
+    margin: 2em 5em 3em 5em;
+  
+    padding: 2em 6em 2em 6em;
+    background: rgb(2,0,36);
+  background: linear-gradient(117deg, rgb(2, 1, 22) 0%, rgba(125,129,150,0.9757503221014968) 96%, rgba(222,199,45,1) 98%, rgba(222,199,45,1) 98%, rgba(142,49,242,0.5859143339953169) 98%);
+    color: #ffff;
+    font-family: cursive;
+    border-radius: 1.25rem;
+  }
+  #container_1{
+    text-align:center;
+  }
+  #container_2{
+   display: block;
+  
+    
+  }
+  .form{
+    width: 100%;
+    margin-bottom: 1em;
+  }
+  
+  #submit{
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    background: rgb(2,0,36);
+    color: inherit;
+    border-radius: 15px;
+    cursor: pointer;
+  }
+  
+  textarea{
+    width: 100%;
+  }
+  

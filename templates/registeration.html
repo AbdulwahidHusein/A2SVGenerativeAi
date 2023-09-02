@@ -1,0 +1,59 @@
+{% extends 'index.html' %}
+
+{% block body %}
+{% load static %}
+
+<link rel="stylesheet" href="{%static 'css/signup.css' %}">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
+<div id="container_1">
+  
+    <h1 id="title">
+    Sign Up
+  </h1><!--title-->
+  <form method="post">
+    {%csrf_token%}
+  <p id="description">
+    Enter the required data in the boxes.
+    {%if error %}
+    {{error}}
+    {% endif %}
+  </p>
+  <label id="number-label">Full Name</label>
+        <input type="text" id="number" name="name" class="form form-group" placeholder="name" ><br><!---number-->
+<label id="number-label">Email</label>
+    <input  type="email" id="number" name="email" class="form form-group" placeholder="email" ><br><!---number-->
+    <label id="number-label">Password</label>
+    <input  type="password" id="number" name="password1" class="form form-group" placeholder="password" ><br><!---number-->
+    <label id="number-label">retype Password</label>
+    <input  type="password" id="number" name="password2" class="form form-group" placeholder="password" ><br><!---number-->
+     
+      <label id="carrer">Carrer</label>
+      <select id="dropdown" class="form-group" name="role" required>
+        <option disabled selected value>
+          Select your carrer
+        </option>
+        <option value="ISC">
+          Student
+        </option>
+        <option value="IMA">
+          Teacher
+        </option>
+    </select>
+      <p>Gender</p>
+      <label>
+        <input type="radio" class="form-group" name="gender" value="Male">Male
+      </label>
+      <label>
+        <input type="radio"  class="form-group" name="gender" value="Female">Female
+      </label>
+      <label>
+   
+      
+      
+      <input type="submit" id="submit" class="form-group" name="submit" value="Submit">
+    </form>
+
+
+{% endblock body %}
+  
