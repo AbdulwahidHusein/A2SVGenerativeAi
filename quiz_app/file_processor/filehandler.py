@@ -30,8 +30,18 @@ class FileHandler:
             return self.text
         return False
     
-    def read_docx(self):
+    def read_docx(self, start_page, end_page):
         pass
+    
+    def read_file(self, spage, epage):
+        file_name = self.file.name
+        file_extension = file_name.split('.')[-1]
+        
+        if file_extension == 'pdf':
+            self.read_pdf(spage, epage)
+        elif file_extension == 'docx':
+            self.read_docx(spage, epage)
+    
     
     def summerized(self, max_sentences, max_tokens):
         parser = PlaintextParser.from_string(self.text, Tokenizer("english"))
