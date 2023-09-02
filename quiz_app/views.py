@@ -13,12 +13,10 @@ def homee(request):
 
 
 def home(request):
-    
     if request.method == "POST":
-
         uploaded_file = request.FILES['file']
         num_of_questions = request.POST.get('qnumber')
-        difficulty = request.POST.get('')
+        difficulty = request.POST.get('difficulty')
         spage = request.POST.get('spage')
         epage = request.POST.get('epage')
         file_handle = filehandler.FileHandler(uploaded_file)
@@ -30,7 +28,8 @@ def home(request):
         question = bard_api.generate_question(summerised, num_of_questions, difficulty)
         parsed = bard_api.parse_question(question)
 
-  
-  
-        return JsonResponse(parsed)
+        if parsed:
+            return JsonResponse(parsed)
+        else:
+            return JsonResponse({'error2':'error'})
     return render(request, 'home.html')
