@@ -1,7 +1,13 @@
+##pip install gensim==3.8.3
+
 import PyPDF2
 from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.lex_rank import LexRankSummarizer
+import gensim
+from gensim.summarization import summarize
+from gensim.summarization.textcleaner import split_sentences
+
 
 class FileHandler:
     def __init__(self, file) -> None:
@@ -26,18 +32,29 @@ class FileHandler:
     
 
     def summerized(self, num_tokens):
-        stop_words = [',','.','!', '?', ';', '<', '>', '@', '#', '$', '\\']
-        parser = PlaintextParser.from_string(self.text, Tokenizer("english"))
-        summary = self.summerizer(parser.document, sentences_count=num_tokens)
-        count = 0
-        text = ''
-        for i in summary:
-            for j in str(i):
-                if count >= num_tokens:
-                    return ((text))
-                if j not in stop_words:
-                    text += j
-                    count += 1
-                    
+        sentences = split_sentences(self.text)
+
+        # Join sentences until the desired number of tokens is reached
+        summary = ''
+        tokens_count = 0
+        for sentence in sentences:
+            summary += sentence + ' '
+            tokens_count = len(summary.split())
+            if tokens_count >= num_tokens:
+                break
+
+        # Use Gensim's summarize function iteratively to refine the summary
+        while tokens_count > num_tokens:
+            summary = summarize(summary, ratio=num_tokens / tokens_count, split=True)
+            summary = ' '.join(summary)
+            tokens_count = len(summary.split())
+
+        return summary.strip()
+
+test = FileHandler("/home/samuel/Desktop/2nd_year/2nd_semester/Database/Raghu_Ramakrishnan_Database_Management_Systems_Ramakrishnan_2018.pdf")
+print((len(test.read_pdf(25, 35))))
+print('\n Summerization\n \n')
+print(len(test.summerized(1000)))
+
 
 
