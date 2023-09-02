@@ -49,7 +49,3 @@ class FileHandler:
 
 
 
-file = FileHandler("/home/samuel/Desktop/SamuelLegesseLAB3.docx")
-print(file.read_docx(0, 5))
-print("\n\nsummerized\n")
-print(file.summerized())
