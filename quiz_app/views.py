@@ -13,13 +13,23 @@ def homee(request):
 
 
 def home(request):
+    error = ''
     if request.method == "POST":
-        uploaded_file = request.FILES['file']
-        file_handle = file_handler.FileHandler(uploaded_file)
-        file_handle.read_pdf(5, 10)
+        try:
+            uploaded_file = request.FILES['file']
+            num_of_questions = request.POST.get('qnumber')
+            difficulty = request.POST.get('')
+            file_handle = filehandler.FileHandler(uploaded_file)
+            spage = request.POST.get('spage')
+            epage = request.POST.get('epage')
+            
+        except:
+            error = "error uploading Your file"
+    
+        file_handle.read_pdf(spage, epage)
         summerised = file_handle.summerized(500, 10)
         #make Apicall
-        question = bard_api.generate_question(summerised, 5, 'very hard')
+        question = bard_api.generate_question(summerised, num_of_questions, difficulty)
         parsed = bard_api.parse_question(question)
 
   
