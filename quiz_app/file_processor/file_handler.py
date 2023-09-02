@@ -1,13 +1,7 @@
-##pip install gensim==3.8.3
-
 import PyPDF2
 from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.lex_rank import LexRankSummarizer
-import gensim
-from gensim.summarization import summarize
-from gensim.summarization.textcleaner import split_sentences
-
 
 class FileHandler:
     def __init__(self, file) -> None:
@@ -33,6 +27,7 @@ class FileHandler:
 
     def summerized(self, num_tokens):
         sentences = split_sentences(self.text)
+
         # Join sentences until the desired number of tokens is reached
         summary = ''
         tokens_count = 0
@@ -50,10 +45,10 @@ class FileHandler:
 
         return summary.strip()
 
-'''test = FileHandler("/home/samuel/Desktop/2nd_year/2nd_semester/Database/Raghu_Ramakrishnan_Database_Management_Systems_Ramakrishnan_2018.pdf")
+test = FileHandler("/home/samuel/Desktop/2nd_year/2nd_semester/Database/Raghu_Ramakrishnan_Database_Management_Systems_Ramakrishnan_2018.pdf")
 print((len(test.read_pdf(25, 35))))
 print('\n Summerization\n \n')
-print(len(test.summerized(1000)))'''
+print(len(test.summerized(1000)))
 
 
 
