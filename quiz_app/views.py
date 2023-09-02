@@ -6,7 +6,7 @@ from  quiz_app.api import bard_api
 #import api_request
 # Create your views here.
 
-from quiz_app import file_handler
+from quiz_app.file_processor import filehandler
 
 def homee(request):
     return render(request, 'home.html')
