@@ -51,7 +51,7 @@ function test(quiz){
     $("#result").html("<h1 class='res-header'>Total Score: &nbsp;" + scr + '/' + totalque + "</h1>");
     for (var j = 0; j < totalque; j++) {
     var res;
-    if (quiz.JS[j].score == 0) {
+    if (quiz.JS[j].score == 0 || quiz.JS[j].score == '0') {
     res = '<span class="wrong"> you are Wrong</span><i class="fa fa-remove c-wrong"></i>';
     } else {
     res = '<span class="correct">You are correct</span><i class="fa fa-check c-correct"></i>';
@@ -80,6 +80,7 @@ function test(quiz){
     quiz.JS[this.currentque].status = "correct";
     }
     } else {
+      quiz.JS[this.currentque].score = 0;
     quiz.JS[this.currentque].status = "wrong";
     }
     quiz.JS[this.currentque].user_answwer = option;

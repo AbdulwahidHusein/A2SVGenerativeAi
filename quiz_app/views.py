@@ -54,3 +54,7 @@ def home(request):
     if user.is_authenticated:   
         return render(request, 'home.html', {"auth":True})
     return render(request, 'home.html', {"auth":False})
+
+
+def login(request):
+    pass
