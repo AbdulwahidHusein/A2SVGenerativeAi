@@ -48,7 +48,7 @@ function test(quiz){
   
     this.showResult = function (scr) {
     $("#result").addClass('result');
-    $("#result").html("<h1 class='res-header'>Total Score: &nbsp;" + scr + '/' + totalque + "</h1>");
+    $("#result").html("<h1 class='res-header'>Total Score: &nbsp;" + totalque-1 + '/' + totalque + "</h1>");
     for (var j = 0; j < totalque; j++) {
     var res;
     if (quiz.JS[j].score == 0 || quiz.JS[j].score == '0') {
