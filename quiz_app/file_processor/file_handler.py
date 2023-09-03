@@ -2,7 +2,7 @@ import PyPDF2
 from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.lex_rank import LexRankSummarizer
-from docx import Document
+#from docx import Document
 
 class FileHandler:
     def __init__(self, file) -> None:
@@ -46,6 +46,17 @@ class FileHandler:
         for word in summary:
                 summ += str(word)
         return summ
+    
+    def read_file(self, spage, epage):
+        txt = ""
+        file_name = self.file.name
+        file_extension = file_name.split('.')[-1]
+        
+        if file_extension == 'pdf':
+            txt = self.read_pdf(spage, epage)
+        elif file_extension == 'docx':
+            txt = self.read_docx(spage, epage)
+        return txt
 
 
 
