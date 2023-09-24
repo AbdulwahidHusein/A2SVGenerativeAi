@@ -58,3 +58,18 @@ def home(request):
 
 def login(request):
     pass
+
+# # example usage for group_text.py (import HttpResponse from django.http and convert_to_pdf_group from api and zipfile)
+# def convert_text_to_pdf_groups(request):
+#     if request.method == 'POST':
+#         text = request.POST.get('text')
+#         pdf_groups = convert_to_pdf_groups(text)
+
+#         response = HttpResponse(content_type='application/zip')
+#         response['Content-Disposition'] = 'attachment; filename="pdf_groups.zip"'
+
+#         with zipfile.ZipFile(response, 'w') as zipf:
+#             for pdf_path in pdf_groups:
+#                 zipf.write(pdf_path)
+
+#         return response
