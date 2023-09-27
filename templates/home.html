@@ -12,7 +12,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Add jQuery library -->
 
-<div id="upload-page" >
+<div id="upload-page">
     <form id="myForm" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="file-upload">
@@ -22,7 +22,6 @@
             <div></div>
             <div></div>
         </div>
-        
           <div class="image-upload-wrap">
             <input type='file' class="file-upload-input" name="file"  accept="application/pdf, .docx, .txt" onChange="fileSelect()" />
             <div class="drag-text">
@@ -36,7 +35,6 @@
                 </li>
               </ul>
             </div>
-            <div id="error" class=""></div>
           </div>
           <div class="file-upload-content">
           </div>
@@ -65,52 +63,33 @@
       </form>
 </div>
 
-<div id="quiz-page"style="display:nne" >
-  <body >
-    <main class="main">
-        <!-- creating a modal for when quiz ends -->
-        <div class="modal-container" id="score-modal">
-          
-            <div class="modal-content-container">
-              
-                <h1>Congratulations, Quiz Completed.</h1>
-              
-                <div class="grade-details">
-                    <p>Wrong Answers : <span id="wrong-answers"></span></p>
-                    <p>Right Answers : <span id="right-answers"></span></p>
-                    <p>Grade : <span id="grade-percentage"></span>%</p>
-                    <p ><span id="remarks"></span></p>
-                </div>
-              
-                <div class="modal-button-container">
-                    <button class="view-explanation" onclick="showExplanation()">View Explanations</button>
-                </div>
-            </div>
-          
-        </div>
+<div id="quiz-page"style="display:none" >
+    <header class="head bg-primary" style="width:100vw; display:flex; padding: 20px; justify-content:space-between">
+        <div class="left-title">QuizGenerator</div>
+        <div class="center-title">Time remaining:</div>
+        <div class="right-title">Total Questions: <span id="tque"></span></div>
         
-        <div class="game-quiz-container">
-          
-            <div class="game-details-container">
-                <h1 style="color:white">Score : <span id="player-score"></span></h1>
-                <h1 style="color:white"> Question : <span style="color:white" id="question-number"></span></h1>
-            </div>
-
-            <div class="game-question-container">
-                <h1 id="display-question" style="color:white"></h1>
-            </div>
-
-            <div class="game-options-container">
-              
-               <div class="modal-container" id="option-modal">
-                 
-                    <div class="modal-content-container">
-                         <h1>Please Pick An Option</h1>
-                      
-                         <div class="modal-button-container">
-                            <button onclick="closeOptionModal()">Continue</button>
-                        </div>
-                      
+        {%if not auth %}
+        <div class="r"><a style="background-color:rgb(39, 47, 117); border: 3px solid " class="" href="{%url 'login' %}">login</a>| <a class="logr" href="{%url 'register'%}" style="background-color:rgb(39, 47, 117); border: 3px solid " class="" href="{%url 'login' %}">Register</a></div>
+          {% endif %}
+        <div class="clearfix"></div>
+    </header>
+    
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div id="result" class="quiz-body">
+                        <form name="quizForm" onSubmit="">
+                            <fieldset class="form-group">
+                                <h4><span id="qid">1.</span> <span id="question"></span></h4>
+                                <div class="option-block-container" id="question-options">
+                                </div> <!-- End of option block -->
+                            </fieldset>
+                            <button type="botton" name="previous" id="previous" class="btn btn-success">Previous</button>
+                            &nbsp;
+                            <button type="botton" name="next" id="next" class="btn btn-success">Next</button>
+                        </form>
                     </div>
                  
                </div>
@@ -204,20 +183,11 @@
               success: function(response) {
                   // Process the JSON response here
                   //var quiz = response;
-                  console.log(response)
-                  if (response.hasOwnProperty('error2')){
-                    $('#error').html('<h class="alert alert-danger" > error occured </h>');
-                  }
-                  else{
-                    
+                  test(response);
                   // Display the quiz page
                   $('#upload-page').hide();
                   $('#quiz-page').show();
-                  console.log(response)
-                  shuffledQuestions = response['questions']
-                  length = questions.length
-                  NextQuestion(0)
-                    //test(response);
+                    test(response);
                   }
                   
               },

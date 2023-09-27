@@ -62,4 +62,6 @@ def convert_to_pdf_groups(text):
         create_pdf_from_text(group_text, output_path)
         pdf_groups.append(output_path)
 
+
     return pdf_groups
+

@@ -1,2 +1,3 @@
 virtual/
 .env
+db.sqlite3
