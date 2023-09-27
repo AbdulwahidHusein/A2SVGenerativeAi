@@ -61,6 +61,9 @@ class OpenAi:
             'n': 1,  # Generate a single reply
             'stop': None,  # You can specify a stop sequence to control the length of the completion
         }
+        response = openai.Completion.create(**parameters)
+        reply = response.choices[0].text.strip()
+        return reply
         
     
 class BardEx:
