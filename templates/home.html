@@ -10,7 +10,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Add jQuery library -->
 
-<div id="upload-page" >
+<div id="upload-page">
     <form id="myForm" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="file-upload">
@@ -20,7 +20,6 @@
             <div></div>
             <div></div>
         </div>
-        
           <div class="image-upload-wrap">
             <input type='file' class="file-upload-input" name="file"  accept="application/pdf, .docx, .txt" onChange="fileSelect()" />
             <div class="drag-text">
@@ -34,7 +33,6 @@
                 </li>
               </ul>
             </div>
-            <div id="error" class=""></div>
           </div>
           <div class="file-upload-content">
           </div>
@@ -63,15 +61,11 @@
       </form>
 </div>
 
-<div id="quiz-page"style="display:none" >
-    <header class="head bg-primary" style="width:100vw; display:flex; padding: 20px; justify-content:space-between">
-        <div class="left-title">QuizGenerator</div>
+<div id="quiz-page" style="display: none" >
+    <header class="header bg-primary">
+        <div class="left-title">Quiz Me</div>
         <div class="center-title">Time remaining:</div>
         <div class="right-title">Total Questions: <span id="tque"></span></div>
-        
-        {%if not auth %}
-        <div class="r"><a style="background-color:rgb(39, 47, 117); border: 3px solid " class="" href="{%url 'login' %}">login</a>| <a class="logr" href="{%url 'register'%}" style="background-color:rgb(39, 47, 117); border: 3px solid " class="" href="{%url 'login' %}">Register</a></div>
-          {% endif %}
         <div class="clearfix"></div>
     </header>
     
@@ -149,18 +143,10 @@
               success: function(response) {
                   // Process the JSON response here
                   //var quiz = response;
-                  console.log(response)
-                  if (response.hasOwnProperty('error2')){
-                    $('#error').html('<h class="alert alert-danger" > error occured </h>');
-                  }
-                  else{
-                    
+                  test(response);
                   // Display the quiz page
                   $('#upload-page').hide();
                   $('#quiz-page').show();
-                    test(response);
-                  }
-                  
               },
               error: function(xhr, status, error) {
                   // Handle errors here
