@@ -17,11 +17,14 @@ from telegram.ext import (
 )
 from telegram import Bot
 import file_handler
+from dotenv import load_dotenv
 
 
-openai.api_key = "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"
+openai.api_key = os.environ.get("OPENAI_API_KEY")
 
-TOKEN = os.environ.get("TOKEN")
+
+TOKEN = os.environ.get("BOT_TOKEN")
+
 logging.basicConfig(level=logging.INFO)
 
 user_data = {}
