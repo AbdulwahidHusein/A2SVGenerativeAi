@@ -1,42 +1,36 @@
-body{
-    background-image: var(--bg-image);
-    width: 100vw;
-    height:100vh;
+*{
+  color: white;
 }
-  div{
-    margin: 2em 5em 3em 5em;
-  
-    padding: 2em 6em 2em 6em;
-    background: rgb(2,0,36);
+.signup-box {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 40px;
+  border: 1px solid #175da2;
   background: linear-gradient(117deg, rgb(2, 1, 22) 0%, rgba(125,129,150,0.9757503221014968) 96%, rgba(222,199,45,1) 98%, rgba(222,199,45,1) 98%, rgba(142,49,242,0.5859143339953169) 98%);
-    color: #ffff;
-    font-family: cursive;
-    border-radius: 1.25rem;
-  }
-  #container_1{
-    text-align:center;
-  }
-  #container_2{
-   display: block;
-  
-    
-  }
-  .form{
-    width: 100%;
-    margin-bottom: 1em;
-  }
-  
-  #submit{
-    display: block;
-    width: 100%;
-    padding: 0.75rem;
-    background: rgb(2,0,36);
-    color: inherit;
-    border-radius: 15px;
-    cursor: pointer;
-  }
-  
-  textarea{
-    width: 100%;
-  }
-  
+  margin-top: 100px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+.signup-box h2 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.form-control:focus {
+  border-color: #007bff;
+  box-shadow: none;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+  cursor: pointer;
+}
+
+.login-link {
+  text-align: center;
+}
+option{
+color:rgb(50, 46, 46);
+}
