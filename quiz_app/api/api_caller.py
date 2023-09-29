@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from api import PromptGenerator, OpenAi, BardEx
-from api_response import ResponseParser
+from parse_response import ResponseParser
 
 load_dotenv()
 BARD_API_KEY = os.getenv("BARD_API_KEY")
@@ -73,7 +73,7 @@ if __name__ == '__main__':
 
 
 
-    generator = GenerateQuestionRequest(question, 'catgpt')
+    generator = GenerateQuestionRequest(question, 'chatgpt')
     data = generator.make_request(5, 'medium')
 
     print(data)

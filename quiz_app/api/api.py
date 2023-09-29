@@ -65,7 +65,8 @@ class OpenAi:
         reply = response.choices[0].text.strip()
         return reply
         
-    
+
+ 
 class BardEx:
     def __init__(self, API_KEY) -> None:
         self.api_key = API_KEY

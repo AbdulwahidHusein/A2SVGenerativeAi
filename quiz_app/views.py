@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from  quiz_app.api import bard_api
+from  quiz_app.api import bard_apiii
 from bardapi import Bard
 from .models import CustomUser, Message
 from quiz_app.file_processor import file_reader
@@ -51,8 +51,8 @@ def home(request):
         
         summerised = file_handle.summerized()
         #make Apicall
-        question = bard_api.generate_question(summerised, num_of_questions, difficulty, user.id)
-        parsed = bard_api.process_response(question)
+        question = bard_apiii.generate_question(summerised, num_of_questions, difficulty, user.id)
+        parsed = bard_apiii.process_response(question)
 
         if parsed:
             return JsonResponse(parsed)
