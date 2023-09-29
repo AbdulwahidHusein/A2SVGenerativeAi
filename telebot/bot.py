@@ -18,7 +18,34 @@ from telegram.ext import (
 from telegram import Bot
 import file_handler
 from dotenv import load_dotenv
+import json
 
+load_dotenv()
+
+question_format = {
+    "JS": [
+        {
+            "id": 1,
+            "question": "Question number 1",
+            "options": ["option a", "option b", "option c", "option d"],
+            "answer": "option c",
+            "score": 0,
+            "status": "",
+            "user_answer": "",
+            "explanation": "brief explanation",
+        },
+        {
+            "id": 2,
+            "question": "Question number 2",
+            "options": ["option a", "option b", "option c", "option d"],
+            "answer": "option c",
+            "score": 0,
+            "status": "",
+            "user_answer": "",
+            "explanation": "brief explanation",
+        },
+    ]
+}
 
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
@@ -64,6 +91,7 @@ def send_request(update: Update, context: CallbackContext):
         chat_id=update.message.chat_id,
         text="choose difficulty\n easy\n medium\n difficult",
     )
+    number_of_questions = 5
     difficulty = update.message.text
     text = file_handler.FileHandler(user_data["file_name"])
     start_page = int(user_data["start_page_text"])
@@ -71,12 +99,11 @@ def send_request(update: Update, context: CallbackContext):
     text.read_file(spage=start_page, epage=end_page)
     processed_string = text.summerized()
 
-    user_message = (
-        "create 5 questions that are multiple questions with difficulty level:"
-        + difficulty
-        + "each multiple question must have 4 alternarives. the questions and alteratives must be extracted from this text. for the 'i'th question the format should be Question [i]: the question. Choice[A] first choice\n Choice[B] second choice\n Choice[c] Third choice\n Choice[D] Fourth choice. Notice: i only want the generated question and answer!!"
-        + processed_string
-    )
+    user_message = f"""generate a quiz contining {number_of_questions} different multiple choice questions with 
+    different context containing four choices with {difficulty} difficulty the questions must be returned in 
+    the following format {question_format} note the 
+    question must be in json format!!! also make sure the explanations must be less than 2 lines important!.
+    NOTE only use the following text for the generation of quiz {processed_string}"""
     context.bot.send_chat_action(
         chat_id=update.effective_chat.id, action=ChatAction.TYPING
     )
@@ -89,8 +116,10 @@ def send_request(update: Update, context: CallbackContext):
         stop=None,
     )
     bot_response = response.choices[0].text.strip()
+    json_start_index = bot_response.find("{'JS':")
+    json_text = bot_response[json_start_index:]
 
-    context.bot.send_message(chat_id=update.effective_chat.id, text=bot_response)
+    context.bot.send_message(chat_id=update.effective_chat.id, text=json_text)
 
 
 def start(update: Update, context: CallbackContext):
