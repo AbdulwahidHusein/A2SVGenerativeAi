@@ -12,11 +12,11 @@ class PromptGenerator:
         prompt  = f'''Dear AI Model,
             Please generate a quiz that consists of {number_of_questions} different multiple-choice questions. Each question should have a unique context and four choices. Set the difficulty level to {difficulty}. The questions must be returned in the following format: {question_format}. 
 
-            Please note that each question, answer, choice, and explanation should be limited to one line. It is important to ensure that all items are quoted to avoid JSON errors. Do not use quoted words that may interfere with the string's quotation. Remember to quote each item properly.
+            Please note that each question, answer, choice, and explanation should not be more than two lines. It is important to ensure that all items are quoted to avoid JSON errors. Do not use quoted words that may interfere with the string's quotation. Remember to quote each item properly.
 
             The question itself should be a valid JSON format with appropriate quotes and commas. The correct option should be written as "option" followed by the option letter, e.g., optionA.
 
-            Please use the provided text to generate the quiz, along with this note.
+            Please use the provided text to generate the quiz THE TEXT: {self.text}, along with this note.
 
             Thank you for your assistance in generating the quiz.
 
@@ -50,7 +50,7 @@ class OpenAi:
         generated_response = completion.choices[0].message["content"]
         return generated_response
     
-    def generate_question(prompt):
+    def generate_question(self, prompt):
         prompt_token_length = len([w for w in prompt.split()])
         max_tokens = 3500 - prompt_token_length
         parameters = {
@@ -67,11 +67,9 @@ class OpenAi:
         
     
 class BardEx:
-    def __init__(self, API_KEY, session, conversation_id) -> None:
+    def __init__(self, API_KEY) -> None:
         self.api_key = API_KEY
-        self.conversation_id = conversation_id
-        self.session = session
-        self.bard = Bard(API_KEY=self.api_key, session=self.session, conversation_id=self.conversation_id)
+        self.bard = Bard(token=self.api_key)
         
     def get_answer(self, question):
         answer = self.bard.get_answer(question)

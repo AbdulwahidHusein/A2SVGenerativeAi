@@ -171,7 +171,7 @@
               }
           });
           var quiz
-          // Send form data to Django
+          //// Send form data to Django
           if (fileSelect()){
           $.ajax({
               type: 'POST',
@@ -181,7 +181,7 @@
               contentType: false,
               
               success: function(response) {
-                  // Process the JSON response here
+                  ///////////// Process the JSON response here
                   //var quiz = response;
                   test(response);
                   // Display the quiz page

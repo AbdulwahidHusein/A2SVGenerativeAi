@@ -68,6 +68,7 @@
 let submit =  document.getElementById('submit')
 let prompt  = document.getElementById('prompt')
 let card = document.getElementById('card')
+
 window.scrollTop = window.scrollHeight;
 submit.addEventListener('click', (e)=>{
     e.preventDefault()
@@ -86,11 +87,12 @@ submit.addEventListener('click', (e)=>{
   dv.innerHTML = `<div class="media media-chat ">
     <img class="avatar" src="{%static 'images/AIlogo.png' %}" alt="...">
     <div class="media-body">
-      <p>... </p>
+      <p>Thinking... </p>
       <p class="meta"><time datetime="2018">00:07</time></p>
     </div>
   </div>`
   card.appendChild(dv)
+
   card.scrollTop = card.scrollHeight;
   var url = '{% url "get_chat" %}' + '?query=' + encodeURIComponent(value);// Construct the URL with the query parameter
 

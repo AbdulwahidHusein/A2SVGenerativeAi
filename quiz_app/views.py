@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from  quiz_app.api import bard_api
 from bardapi import Bard
 from .models import CustomUser, Message
-from quiz_app.file_processor import file_handler
+from quiz_app.file_processor import file_reader
 import json
 #import api_request
 # Create your views here.
@@ -46,7 +46,7 @@ def home(request):
         difficulty = request.POST.get('difficulty')
         spage = int(request.POST.get('spage'))
         epage = int(request.POST.get('epage'))
-        file_handle = file_handler.FileHandler(uploaded_file)
+        file_handle = file_reader.FileHandler(uploaded_file)
         file_handle.read_file(spage, epage)
         
         summerised = file_handle.summerized()
@@ -126,6 +126,7 @@ def chat(request, query):
 def user_logout(request):
     logout(request)
     return redirect('login')
+
 
 # # example usage for group_text.py (import HttpResponse from django.http and convert_to_pdf_group from api and zipfile)
 # def convert_text_to_pdf_groups(request):
