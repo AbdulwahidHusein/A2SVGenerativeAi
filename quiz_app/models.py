@@ -49,3 +49,11 @@ class ScoreHolder(models.Model):
 
     def __str__(self):
         return f"Score for Group Quiz {self.group_quiz.pk} - Competitor: {self.competitor.username} - Score: {self.score}"
+    
+    
+    
+class File(models.Model):
+    subject = models.CharField(max_length=50, null=True, blank=True)
+    uploaded_by = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING)
+    
+    

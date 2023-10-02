@@ -3,13 +3,26 @@ from django.http import JsonResponse
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from  quiz_app.api import bard_apiii
+from  quiz_app.api import api_caller
 from bardapi import Bard
 from .models import CustomUser, Message
-from quiz_app.file_processor import file_reader
+from quiz_app.file_processor import file_reader, file_summerizer, file_chunk
+from .generator import get_question
+
 import json
 #import api_request
 # Create your views here.
+
+def handle_upload(request):
+    if request.method == 'POST':
+        file = request.FILES['file']
+        num_of_questions = request.POST.get('qnumber')
+        difficulty = request.POST.get('difficulty')
+        spage = int(request.POST.get('spage'))
+        epage = int(request.POST.get('epage'))
+        generator = get_question(file, num_of_questions, difficulty, spage, epage)
+        
+
 
 
 def user_register(request):

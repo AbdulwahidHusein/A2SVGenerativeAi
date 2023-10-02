@@ -58,7 +58,6 @@ class GenerateQuestionRequest:
 
 
 
-
 if __name__ == '__main__':
     question = '''
     Testing plays a crucial role in software development, ensuring the quality, reliability, and functionality of the software being developed. It involves systematically evaluating the software against defined criteria to identify defects, errors, and areas for improvement. Here are some key points to consider when it comes to testing in software development:
@@ -73,7 +72,7 @@ if __name__ == '__main__':
 
 
 
-    generator = GenerateQuestionRequest(question, 'chatpt')
+    generator = GenerateQuestionRequest(question, 'chatgpt')
     data = generator.make_request(6, 'medium')
 
     print(data)
