@@ -73,7 +73,7 @@ if __name__ == '__main__':
 
 
 
-    generator = GenerateQuestionRequest(question, 'chatgpt')
-    data = generator.make_request(5, 'medium')
+    generator = GenerateQuestionRequest(question, 'chatpt')
+    data = generator.make_request(6, 'medium')
 
     print(data)
