@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
-from api import PromptGenerator, OpenAi, BardEx
-from parse_response import ResponseParser
+from .api import PromptGenerator, OpenAi, BardEx
+from .parse_response import ResponseParser
 
 load_dotenv()
 BARD_API_KEY = os.getenv("BARD_API_KEY")

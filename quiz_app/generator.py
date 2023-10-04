@@ -1,12 +1,16 @@
-
-from quiz_app.api import api_caller
-from quiz_app.file_processor import file_reader, file_summerizer, file_chunk
-from .models import Quiz
+import sys
+sys.path.append("..") 
+from api import api_caller
+from file_processor import file_reader, file_summerizer, file_chunk
 
 def read_summerize_split(file, spage, epage):
     '''read and summerise'''
     reader = file_reader.FileReader(file)
-    file_content = reader.read_file(spage, epage)
+    if epage - spage > 10:
+        1
+        #epage = spage + 10
+        
+    file_content = reader.read_file(spage, epage) 
     splitted = []
     divider = 2
     if file_content:
@@ -14,8 +18,9 @@ def read_summerize_split(file, spage, epage):
         summerized = summerizer.summarize(divider)#1/3 of the original number of sentence
         splitted = file_chunk.split_text_into_groups(summerized, 100, 1000)
         
-        while len(splitted) > 3:
+        while len(splitted) > 5:
             divider += 1
+            summerizer =  file_summerizer.Summerizer(' '.join(splitted))
             summerized = summerizer.summarize(divider)#1/3 of the original number of sentence
             splitted = file_chunk.split_text_into_groups(summerized, 100, 1000)
             
@@ -33,8 +38,8 @@ def get_question(file, num_of_questions, difficulty, spage, epage):
     response = {}
     question_generator = api_caller.GenerateQuestionRequest(summerized_data[0], 'chatgpt') 
     questions = question_generator.make_request(num_of_questions, difficulty)
-        
-        
-        
-        
     
+    
+with open("c:\\Users\\Abdi\\Desktop\\A2SVGenerativeAi\\quiz_app/drf.pdf", 'rb') as df:
+    f = read_summerize_split(df, 1,  98)
+    print(f)

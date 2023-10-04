@@ -50,6 +50,7 @@ def user_register(request):
         
     return render(request, 'registeration.html')
 
+
 @login_required(login_url='login')
 def home(request):
     user = request.user
@@ -64,8 +65,8 @@ def home(request):
         
         summerised = file_handle.summerized()
         #make Apicall
-        question = bard_apiii.generate_question(summerised, num_of_questions, difficulty, user.id)
-        parsed = bard_apiii.process_response(question)
+        question = bard_api.generate_question(summerised, num_of_questions, difficulty, user.id)
+        parsed = bard_api.process_response(question)
 
         if parsed:
             return JsonResponse(parsed)
@@ -116,6 +117,7 @@ def get_chat(request):
     res = {}
     res['answer'] = response
     return JsonResponse(res)
+
 
 @login_required(login_url='login')
 def chat(request, query):
