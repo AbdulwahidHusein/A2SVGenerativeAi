@@ -1,18 +1,43 @@
-d = {"questions": [{"question": "What is the core of every cell?", "optionA": "Cell membrane", "optionB": "Cytoplasm", "optionC": "Nucleus", "optionD": "Mitochondria", "correctOption": "optionA", "explanation": "The cell membrane is the core of every cell, acting as a selectively permeable barrier that separates the cell from its environment."}, 
-{"question": "What does the nucleus contain?", "optionA": "Proteins", "optionB": "Lipids", "optionC": "Genetic material", "optionD": "ATP", "correctOption": "optionC", "explanation": "The nucleus contains the genetic material in the form of DNA, which carries the instructions that dictate the cell s activities."}, 
-{"question": "What is the role of the mitochondria?", "optionA": "Synthesizing proteins", "optionB": "Modifying proteins", "optionC": "Generating energy", "optionD": "Transporting proteins", "correctOption": "optionC", "explanation": "Mitochondria, known as the powerhouses of the cell, generate energy by converting nutrients into ATP through cellular respiration."},
-{"question": "What is the role of the endoplasmic reticulum?", "optionA": "Generating energy", "optionB": "Synthesizing proteins", "optionC": "Modifying proteins", "optionD": "Packaging proteins", "correctOption": "optionB", "explanation": "The endoplasmic reticulum plays a role in protein synthesis and lipid metabolism."},        
-{"question": "What is the role of the Golgi apparatus?", "optionA": "Generating energy", "optionB": "Synthesizing proteins", "optionC": "Modifying proteins", "optionD": "Packaging proteins", "correctOption": "optionD", "explanation": "The Golgi apparatus modifies, sorts, and packages proteins for transport to their intended destinations within or outside the cell."},
-{"question": "What is the field of cell biology?", "optionA": "The study of cells and their structure", "optionB": "The study of cells and their function", "optionC": "The study of cells and their interactions", "optionD": "The study of cells, their structure, function, and interactions", "correctOption": "optionD", "explanation": 
-"The field of cell biology encompasses the study of cells, their structure, function, and interactions."},     
-{"question": "What are cells essential to?", "optionA": "Growth", "optionB": "Development", "optionC": "Reproduction", "optionD": "All of the above", "correctOption": "optionD", "explanation": "Cells are essential to growth, development, and reproduction."},
-{"question": "What is the purpose of tissues?", "optionA": "To provide structure", "optionB": "To provide support", "optionC": "To specialize", "optionD": "To maintain the overall health of the organism", "correctOption": 
-"optionC", "explanation": "In multicellular organisms, cells often organize into tissues, which further specialize to form organs and organ systems."},
-{"question": "What is the importance of studying cells?", "optionA": "Unraveling the mysteries of life", "optionB": "Gaining insights into the mechanisms of growth, development, and disease", "optionC": "Providing knowledge across various scientific disciplines", "optionD": "All of the above", "correctOption": "optionD", "explanation": "Understanding cells is crucial to unraveling the mysteries of life, and studying cells provides valuable knowledge across various scientific disciplines."}]}
-{'questions': [{'question': 'What is the core of every cell?', 'optionA': 'Cell membrane', 'optionB': 'Cytoplasm', 'optionC': 'Nucleus', 'optionD': 'Mitochondria', 'correctOption': 'optionA', 'explanation': 'The cell membrane is the core of every cell, acting as a selectively permeable barrier that separates the cell from its environment.'}, {'question': 'What does the nucleus contain?', 'optionA': 'Proteins', 'optionB': 'Lipids', 'optionC': 'Genetic material', 'optionD': 'ATP', 'correctOption': 'optionC', 'explanation': 'The nucleus contains the genetic material in the form of DNA, which carries the instructions that dictate the cell s activities.'}, {'question': 'What is the role of the mitochondria?', 'optionA': 'Synthesizing proteins', 'optionB': 'Modifying proteins', 'optionC': 'Generating energy', 'optionD': 'Transporting proteins', 'correctOption': 'optionC', 'explanation': 'Mitochondria, known as the powerhouses of the cell, generate energy by converting nutrients into ATP through cellular respiration.'}, {'question': 'What is the role of the endoplasmic reticulum?', 'optionA': 'Generating energy', 'optionB': 'Synthesizing proteins', 'optionC': 'Modifying proteins', 'optionD': 'Packaging proteins', 'correctOption': 'optionB', 'explanation': 'The endoplasmic reticulum plays a role in protein synthesis and lipid metabolism.'}, {'question': 'What is the role of the Golgi apparatus?', 'optionA': 'Generating energy', 'optionB': 'Synthesizing proteins', 'optionC': 'Modifying proteins', 'optionD': 'Packaging proteins', 'correctOption': 'optionD', 'explanation': 'The Golgi apparatus modifies, sorts, and packages proteins for transport to their intended destinations within or outside the cell.'}, {'question': 'What is the field of cell biology?', 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
-'optionA': 'The study of cells and their structure', 'optionB': 'The study of cells and their function', 'optionC': 'The study of cells and their interactions', 'optionD': 'The study of cells, their structure, function, and interactions', 'correctOption': 'optionD', 'explanation': 'The field of cell biology encompasses the study of cells, their structure, function, and interactions.'}, {'question': 'What are cells essential to?', 'optionA': 'Growth', 'optionB': 'Development', 'optionC': 'Reproduction', 'optionD': 'All of the above', 'correctOption': 'optionD', 'explanation': 'Cells are essential to growth, development, and reproduction.'}, {'question': 'What is the purpose of tissues?', 'optionA': 'To provide structure', 'optionB': 'To provide support', 'optionC': 'To specialize', 'optionD': 'To maintain the overall health of the organism', 'correctOption': 'optionC', 'explanation': 'In multicellular organisms, cells often organize into tissues, which further specialize to form organs and organ systems.'}, {'question': 'What is the importance of studying cells?', 'optionA': 'Unraveling the mysteries of life', 'optionB': 'Gaining insights into the mechanisms of growth, development, and disease', 'optionC': 'Providing knowledge across various scientific disciplines', 'optionD': 'All of the above', 'correctOption': 'optionD', 'explanation': 'Understanding cells is crucial to unraveling the mysteries of life, and studying cells provides valuable knowledge across various scientific disciplines.'}]
- 
- }
+import os
+from dotenv import load_dotenv
+from bardapi import Bard
 
-print(len(d['questions']))
+load_dotenv()
+BARD_API_KEY = os.getenv("BARD_API_KEY")
+import requests
+'''import requests
+
+def get_bard_response(query):
+    bard = Bard(token=BARD_API_KEY)
+    prompt = my name is Abdu include my name in your response. our last conversations were [
+       me:  hello
+       You: Hello! How can I assist you today?
+       me: a python function to reverse a list
+       You: Certainly! You can use the reverse() method to reverse a list in Python. Here's an example of a Python function that reverses a list:
+python
+Copy
+def reverse_list(lst):
+    lst.reverse()
+    return lst] based on our previous conversation please answer the following question me: don't use builtin function''
+    print(bard.get_answer(prompt))
+    
+get_bard_response('')
+'''
+
+
+session = requests.Session()
+session.headers = {
+            "Host": "bard.google.com",
+            "X-Same-Domain": "1",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36",
+            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+            "Origin": "https://bard.google.com",
+            "Referer": "https://bard.google.com/",
+        }
+session.cookies.set("__Secure-1PSID", BARD_API_KEY) 
+# session.cookies.set("__Secure-1PSID", token) 
+
+bard = Bard(token=BARD_API_KEY, session=session, conversation_id="c_1f04f704a788e6e4", timeout=30)
+print(bard.get_answer("is there a better way")['content'])
+
+# Continued conversation without set new session

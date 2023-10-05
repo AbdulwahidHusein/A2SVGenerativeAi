@@ -41,5 +41,7 @@ def get_question(file, num_of_questions, difficulty, spage, epage):
     
     
 with open("c:\\Users\\Abdi\\Desktop\\A2SVGenerativeAi\\quiz_app/drf.pdf", 'rb') as df:
-    f = read_summerize_split(df, 1,  98)
+    f = read_summerize_split(df, 1,  10)
     print(f)
+    print('\n\n\n\n\n\n')
+    print(len(f))
