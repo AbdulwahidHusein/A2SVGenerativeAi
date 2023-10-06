@@ -1,13 +1,15 @@
 import os
+import sys
+sys.path.append('..')
 from dotenv import load_dotenv
-from .api import PromptGenerator, OpenAi, BardEx
+from .api_setup import PromptGenerator, OpenAi, BardEx
 from .parse_response import ResponseParser
 
 load_dotenv()
 BARD_API_KEY = os.getenv("BARD_API_KEY")
 OPEN_AI_API_KEY  = os.getenv('OPEN_AI_API_KEY')
 
-question_format = {
+multiple_choice_question_format = {
     'questions': [
    {
       "question": "question1",
@@ -30,28 +32,52 @@ question_format = {
 ]
 }
 
+short_answer_question_format = {
+    'questions': [
+   {
+      "question": "question1",
+      "answer": "Explanation."
+    },
+     {
+      "question": "question2",
+      "answer": "Explanation."
+    },
+     {
+      "question": "question3",
+      "answer": "Explanation."
+    }
+     
+]
+}
+
 class GenerateQuestionRequest:
     
     def __init__(self, document_content, model) -> None:
         self.document_data = document_content
         self.model = model
         
-    def make_request(self, number_of_questions, difficulty):
-        global question_format
-        prompt_generator = PromptGenerator(self.document_data)
-        prompt = prompt_generator.make_prompt(number_of_questions, difficulty, question_format)
-
+    def make_request(self, number_of_questions, difficulty, mode):
+        global multiple_choice_question_format, short_answer_question_format
+        
+        prompt_generator = PromptGenerator(self.document_data, difficulty)
+        if mode == 'multiple_choice':
+            prompt = prompt_generator.make_multiple_choice_prompt(number_of_questions, multiple_choice_question_format)
+        elif mode == 'short_answer':
+            prompt = prompt_generator.make_short_answer_propmt(number_of_questions, short_answer_question_format)
+        else:
+            prompt = prompt_generator.make_multiple_choice_prompt(number_of_questions, multiple_choice_question_format)
+        
         if self.model == 'chatgpt':
             open_ai = OpenAi(OPEN_AI_API_KEY)
             generated_questions = open_ai.generate_question(prompt)
-            parsed = ResponseParser(generated_questions)
+            parsed = ResponseParser(generated_questions, mode)
             parsed = parsed.get_json_data()
             return parsed
         
         else:
             bard = BardEx(BARD_API_KEY)
             generated_questions = bard.get_answer(prompt)
-            parsed = ResponseParser(generated_questions)
+            parsed = ResponseParser(generated_questions, mode)
             parsed = parsed.get_json_data()
             return parsed
 
@@ -72,7 +98,7 @@ if __name__ == '__main__':
 
 
 
-    generator = GenerateQuestionRequest(question, 'chatgpt')
-    data = generator.make_request(6, 'medium')
+    generator = GenerateQuestionRequest(question, 'chatpt')
+    data = generator.make_request(5, 'medium', 'multiple_choice')
 
     print(data)

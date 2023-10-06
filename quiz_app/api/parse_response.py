@@ -3,9 +3,11 @@ import json
 
 class ResponseParser:
     
-    def __init__(self, text) -> None:
+    def __init__(self, text, mode) -> None:
         self.text = text
         self.json_data = {}
+        self.mode = mode
+        print(text)
 
     def _extract_json_text(self):
         # Extract the JSON object from the response text
@@ -26,7 +28,7 @@ class ResponseParser:
         json_text = re.sub(r":(?!(\[| \[|\"| \"|\]))", ':"', json_text)
         #replace any newline by space
         
-        #replace words loke don't and didn't
+        #replace words like don't and didn't by like dont and didnt 
         json_text = re.sub(r"(\b\w+)\"(\w+\b)", r"\1 \2", json_text)
         #json_text = re.sub(r'"(?:\s*,\s*|\s*,\s*)\n', ' ', json_text)
         
@@ -54,17 +56,22 @@ class ResponseParser:
             return self.json_data
         except:
             self._make_improvements()
+            print(self.text)
             try:
                 self.json_data = json.loads(self.text)
                 self._check_multiple_choice_formating()
                 return self.json_data
             except:
-                raise Exception("the geven text can not be parsed to json format")
+                raise Exception("the geven text can not be parsed in to json format")
             
     def get_json_data(self):
+        if self.mode == 'multiple_choice':
+            self._extract_json_text()
+            self._process_json_text()
         
-        self._extract_json_text()
-        
-        self._process_json_text()
-        
+        elif self.mode == 'short_answer':
+            self._extract_json_text()
+            self._process_json_text()
+
+
         return self.json_data
