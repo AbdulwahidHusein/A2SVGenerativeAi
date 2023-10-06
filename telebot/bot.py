@@ -56,47 +56,12 @@ TOKEN = os.environ.get("BOT_TOKEN")
 logging.basicConfig(level=logging.INFO)
 
 user_data = {}
-start = 0
+start_flag = 0
+difficulty = "not difficult"
 
 
 def help(update: Update, context: CallbackContext):
     update.message.reply_text("Please enter file")
-
-
-def send_request(update: Update, context: CallbackContext):
-    context.bot.send_message(
-        chat_id=update.message.chat_id,
-        text="choose difficulty\n easy\n medium\n difficult",
-    )
-    number_of_questions = 5
-    difficulty = update.message.text
-    text = file_handler.FileHandler(user_data["file_name"])
-    start_page = int(user_data["start_page_text"])
-    end_page = int(user_data["end_page_text"])
-    text.read_file(spage=start_page, epage=end_page)
-    processed_string = text.summerized()
-
-    user_message = f"""generate a quiz contining {number_of_questions} different multiple choice questions with 
-    different context containing four choices with {difficulty} difficulty the questions must be returned in 
-    the following format {question_format} note the 
-    question must be in json format!!! also make sure the explanations must be less than 2 lines important!.
-    NOTE only use the following text for the generation of quiz {processed_string}"""
-    context.bot.send_chat_action(
-        chat_id=update.effective_chat.id, action=ChatAction.TYPING
-    )
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=user_message,
-        max_tokens=2000,
-        temperature=0.1,
-        n=1,
-        stop=None,
-    )
-    bot_response = response.choices[0].text.strip()
-    json_start_index = bot_response.find("{'JS':")
-    json_text = bot_response[json_start_index:]
-
-    context.bot.send_message(chat_id=update.effective_chat.id, text=json_text)
 
 
 def start(update: Update, context: CallbackContext):
@@ -151,39 +116,44 @@ def Enterfile(update: Update, context: CallbackContext):
     update.message.reply_text(reply_text, reply_markup=keyboard_markup)
 
 
-def set_and_request(update: Update, context: CallbackContext):
-    logging.info("sending request")
+def set_difficulty(update: Update, context: CallbackContext):
+    keyboard = [
+        [InlineKeyboardButton("Easy", callback_data="easy")],
+        [InlineKeyboardButton("Medium", callback_data="medium")],
+        [InlineKeyboardButton("Difficult", callback_data="difficult")],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    return reply_markup
+
+
+def show_difficulty(update: Update, context: CallbackContext):
+    keyboard_markup = set_difficulty(update=update, context=context)
+    reply_text = "choose difficulty:"
     context.bot.send_message(
-        "Processing and sending request started\nplease wait while we make the quiz for you"
+        chat_id=update.effective_chat.id, text=reply_text, reply_markup=keyboard_markup
     )
-    logging.info("eiding request here")
-    send_request(update=update, context=context)
-    logging.info("Sent the request")
 
 
 def button_callback(update: Update, context: CallbackContext):
+    global user_data
+    global start_flag
+    global difficulty
     query = update.callback_query
-    page_number = -1
     try:
         page_number = int(query.data)
-        logging.info("page number setting")
     except:
         command = query.data
-
-    global user_data
-    global start
-    if page_number != -1 and start == 0:
-        user_data["start_page_text"] = page_number
-        # try:
-        #     user_data["start_page_text"] = page_number
-        # except:
-        #     user_data.setdefault("start_page_text", page_number)
-        start = 1
+    if query.data.isdigit() and start_flag == 0:
+        try:
+            user_data["start_page_text"] = page_number
+        except:
+            user_data.setdefault("start_page_text", page_number)
+        start_flag = 1
         query.message.reply_text(
             text=f"start page set to {user_data['start_page_text']}",
         )
         logging.info("start page set")
-    elif page_number != -1 and start == 1:
+    elif query.data.isdigit() and start_flag == 1:
         try:
             user_data["end_page_text"] = page_number
         except:
@@ -192,16 +162,49 @@ def button_callback(update: Update, context: CallbackContext):
             f"End page set to {user_data['end_page_text']}",
         )
         logging.info("end page set")
-        start = 0
-        set_and_request(update=update, context=context)
+        start_flag = 0
+        show_difficulty(update=update, context=context)
+    else:
+        difficulty = query.data
+        user_data["difficulty"] = difficulty
+        send_request(update=update, context=context)
+
+
+def send_request(update: Update, context: CallbackContext):
+    text = file_handler.FileHandler(user_data["file_name"])
+    start_page = int(user_data["start_page_text"])
+    end_page = int(user_data["end_page_text"])
+    text.read_file(spage=start_page, epage=end_page)
+    processed_string = text.summerized()
+    number_of_questions = 5
+    user_message = f"""generate a quiz contining {number_of_questions} different multiple choice questions with 
+    different context containing four choices with {user_data['difficulty']} difficulty the questions must be returned in 
+    the following format {question_format} note the 
+    question must be in json format!!! also make sure the explanations must be less than 2 lines important!.
+    NOTE only use the following text for the generation of quiz {processed_string}"""
+    print(user_data["difficulty"])
+    context.bot.send_chat_action(
+        chat_id=update.effective_chat.id, action=ChatAction.TYPING
+    )
+    response = openai.Completion.create(
+        engine="text-davinci-003",
+        prompt=user_message,
+        max_tokens=2000,
+        temperature=0.1,
+        n=1,
+        stop=None,
+    )
+    bot_response = response.choices[0].text.strip()
+    json_start_index = bot_response.find("{'JS':")
+    json_text = bot_response[json_start_index:]
+
+    context.bot.send_message(chat_id=update.effective_chat.id, text=json_text)
 
 
 def register(dispatcher):
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(MessageHandler(Filters.document & ~Filters.text, Enterfile))
     dispatcher.add_handler(CallbackQueryHandler(button_callback))
-
-    # dispatcher.add_handler(CommandHandler("readpdf", set_and_request))
     dispatcher.add_handler(CommandHandler("help", help))
 
 
