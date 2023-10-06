@@ -85,7 +85,7 @@ class GenerateQuestionRequest:
 
 
 if __name__ == '__main__':
-    question = '''
+    text = '''
     Testing plays a crucial role in software development, ensuring the quality, reliability, and functionality of the software being developed. It involves systematically evaluating the software against defined criteria to identify defects, errors, and areas for improvement. Here are some key points to consider when it comes to testing in software development:
 
     Quality Assurance: Testing is an integral part of quality assurance in software development. It helps verify that the software meets the specified requirements, functions as intended, and delivers the expected value to end users.
@@ -98,7 +98,7 @@ if __name__ == '__main__':
 
 
 
-    generator = GenerateQuestionRequest(question, 'chatpt')
+    generator = GenerateQuestionRequest(text, 'chatpt')
     data = generator.make_request(5, 'medium', 'multiple_choice')
 
     print(data)
