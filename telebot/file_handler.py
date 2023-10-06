@@ -29,6 +29,12 @@ class FileHandler:
             self.text += pdf_reader.pages[page].extract_text().strip()
         return self.text
 
+    def page_num(self, file):
+        pdf_reader = PyPDF2.PdfReader(file)
+        num_pages = len(pdf_reader.pages)
+
+        return num_pages
+
     def read_docx(self, start_page=0, end_page=0):
         document = Document(self.file)
         paragraphs = document.paragraphs
