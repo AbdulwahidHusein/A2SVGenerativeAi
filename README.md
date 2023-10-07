@@ -10,7 +10,7 @@ quiz_project/: This directory contains the main project files for the Quiz Gener
 
 static/: This directory contains static files such as CSS, JavaScript, and images used in the Quiz Generator Website.
 
-telegram_bot/: This directory contains the code for the Telegram Bot, which is responsible for handling interactions
+telebot/: This directory contains the code for the Telegram Bot, which is responsible for handling interactions
 
 templates/: This directory contains HTML templates used for rendering the Quiz Generator Website.
 README.md: This readme file that provides an overview of the project, its purpose, and the structure of the repository.
