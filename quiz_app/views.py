@@ -157,3 +157,6 @@ def user_logout(request):
 #                 zipf.write(pdf_path)
 
 #         return response
+
+def t123(request):
+    return render(request, 'home2.html')
