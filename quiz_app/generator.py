@@ -1,7 +1,7 @@
 import sys
 sys.path.append("..") 
-from api import api_caller
-from file_processor import file_reader, file_summerizer, file_chunk
+from quiz_app.api import api_caller
+from quiz_app.file_processor import file_reader, file_summerizer, file_chunk
 
 def read_summerize_split(file, start_page, end_page):
     '''read and summerise'''

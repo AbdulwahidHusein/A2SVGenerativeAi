@@ -9,4 +9,5 @@ urlpatterns = [
     path('chat/<str:query>', views.chat, name='char'),
     path('get_chat/', views.get_chat, name="get_chat"),
     path('logout/', views.user_logout, name="logout"),
+    path('t123', views.t123),
 ]

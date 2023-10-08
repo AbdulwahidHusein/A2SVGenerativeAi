@@ -1,0 +1,110 @@
+{% extends "index2.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Spinner Start -->
+<div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+    <div class="spinner-grow text-primary" role="status"></div>
+</div>
+<!-- Spinner End -->
+
+
+
+<!-- Navbar Start -->
+<nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5">
+    <a href="index.html" class="navbar-brand d-flex align-items-center">
+        <h6 class="m-0"><img class="img-fluid me-3" src="{% static 'img/icon/icon-02-primary.png' %}" alt="">Quiz Me</h6>
+    </a>
+    <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav mx-auto bg-light pe-4 py-3 py-lg-0">
+            <a href="index.html" class="nav-item nav-link active">Home</a>
+            <a href="contact.html" class="nav-item nav-link">Get Started</a>
+            <a href="about.html" class="nav-item nav-link">My Quizes</a>
+            <a href="service.html" class="nav-item nav-link">Group Quizes</a>
+            <a href="contact.html" class="nav-item nav-link">Sign Up</a>
+        </div>
+        <div class="h-100 d-lg-inline-flex align-items-center d-none">
+            <a class="btn btn-square rounded-circle bg-light text-primary me-2" href=""><i class="fab fa-facebook-f"></i></a>
+            <a class="btn btn-square rounded-circle bg-light text-primary me-2" href=""><i class="fab fa-twitter"></i></a>
+            <a class="btn btn-square rounded-circle bg-light text-primary me-2" href=""><i class="fab fa-linkedin-in"></i></a>
+            <a class="btn btn-square rounded-circle bg-light text-primary me-0" href=""><i class="fab fa-instagram"></i></a>
+        </div>
+    </div>
+</nav>
+<!-- Navbar End -->
+
+
+<!-- Carousel Start -->
+<div class="container-fluid p-0 mb-5">
+    <div id="header-carousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img class="w-100" src="{% static 'img/carousel-1.jpg' %}" alt="Image">
+                <div class="carousel-caption">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-7 pt-5">
+                                <h1 class="display-4 text-white mb-4 animated slideInDown">Convert Your Study material into interactive quiz</h1>
+                                <p class="fs-5 text-body mb-4 pb-2 mx-sm-5 animated slideInDown">Just Upload Your Document. The AI handles the rest</p>
+                                <a href="" class="btn btn-primary py-3 px-5 animated slideInDown">Get Started</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Carousel End -->
+
+<!-- About Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
+                <div class="h-100">
+                    <h1 class="display-6 mb-5">Our Features</h1>
+                    <div class="row g-4 mb-4">
+                        <div class="col-sm-6">
+                            <div class="d-flex align-items-center">
+                                <img class="flex-shrink-0 me-3" width="20%" src="img/icon/icon-07-primary.png" alt="">
+                                <h5 class="mb-0">Automated Quiz Generation: </h5>
+                            </div>
+                            <p>our platform automatically analyzes the uploaded educational material and generates a set of interactive quiz questions, saving yor time and effort.</p>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="d-flex align-items-center">
+                                <img class="flex-shrink-0 me-3" width="35%"  src="img/icon/icon-09-primary.png" alt="">
+                                <h5 class="mb-0">Competitive Learning</h5>
+                            </div>
+                            <p>you can compete with others, either individually or in groups. Leaderboards and rankings are implemented to foster healthy competition and encourage continuous learning.</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="d-flex align-items-center">
+                                <img class="flex-shrink-0 me-3" width="35%"  src="img/icon/icon-09-primary.png" alt="">
+                                <h5 class="mb-0">Share and ExportYour Quizzes</h5>
+                            </div>
+                            <p>You can fully access, share export into different formats your previously generated quiz and also you take quizes shared by others</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="d-flex align-items-center">
+                                <img class="flex-shrink-0 me-3" width="35%"  src="img/icon/icon-09-primary.png" alt="">
+                                <h5 class="mb-0">Access with Telegram Bot</h5>
+                            </div>
+                            <p>you can also use this service with Telegram bot. wheather you are student, content creator, group owner, and educator you can easily upload materials and receive the generated quizzes directly within your Telegram channels or groups as a poll.</p>
+                            <a href="#" >Open in Telegram</a>
+                        </div>
+                        <a href="" class="btn btn-primary py-3 px-5 animated slideInDown">Get Started</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
