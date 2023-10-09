@@ -95,6 +95,9 @@
     font-weight: 400;
     outline: none;
 }
+nav{
+    background-color: #0d1b62;
+}
 
 .navbar .navbar-nav .nav-link:hover,
 .navbar .navbar-nav .nav-link.active {

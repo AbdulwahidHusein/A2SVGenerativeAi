@@ -1,11 +1,13 @@
-{% extends 'index.html' %}
-
-{% block body %}
+{% extends "index2.html" %}
 {% load static %}
+
+{% block content %}
+
+
 <link rel="stylesheet" href="{% static 'css/quiz2.css' %}" />
 <script src="{%static 'js/quiz2.js' %}"></script>
 
-<body onload="NextQuestion(0)">
+<body style="background:black" onload="NextQuestion(0)">
     <main class="main">
         <!-- creating a modal for when quiz ends -->
         <div class="modal-container" id="score-modal">
@@ -91,4 +93,7 @@
     <script src="index.js"></script>
 </body>
 
-{% endblock body %}
+
+
+
+{% endblock content %}
