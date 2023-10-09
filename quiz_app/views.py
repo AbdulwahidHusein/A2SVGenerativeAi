@@ -158,5 +158,28 @@ def user_logout(request):
 
 #         return response
 
-def t123(request):
+def home(request):
     return render(request, 'home2.html')
+
+def upload(request):
+    if request.method == 'POST':
+        uploaded_file = request.FILES['file']
+        num_of_questions = request.POST.get('qnumber')
+        difficulty = request.POST.get('difficulty')
+        spage = int(request.POST.get('spage'))
+        epage = int(request.POST.get('epage'))
+        comment = request.POST.get('additional_comment')
+        
+        file_text = get_question(uploaded_file, 5, difficulty, 20, 30, 'multiple_choice', 'chatgpt')
+        print(file_text)
+        return render(request, 'upload.html', {'file_text':file_text})
+    
+    return render(request, 'upload.html')
+
+
+def quiz(request):
+    return render(request, 'quiz3.html')
+
+
+def chat(request):
+    return render(request, 'chat2.html')
