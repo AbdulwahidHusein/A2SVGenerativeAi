@@ -1,4 +1,4 @@
-const questions = [
+const questionss = [
     {
       question: "Which law of thermodynamics states that energy cannot be created or destroyed, only transferred or transformed?",
       optionA: "First Law of Thermodynamics",
@@ -90,11 +90,13 @@ const questions = [
       explanation: "Sublimation is the process by which a solid changes directly into a gas without becoming a liquid first."
     },
   ];
+  
 
 
+function test(shuffledQuestions){
 
-let shuffledQuestions = questions//empty array to hold shuffled selected questions
-length = questions.length
+//let shuffledQuestions = questionss//empty array to hold shuffled selected questions
+length = shuffledQuestions.length
 /*
 function handleQuestions() { 
     //function to shuffle and push 10 questions to shuffledQuestions array
@@ -243,29 +245,29 @@ function handleEndGame() {
     document.getElementById('wrong-answers').innerHTML = wrongAttempt
     document.getElementById('right-answers').innerHTML = playerScore
     document.getElementById('score-modal').style.display = "flex"
-
-
+   closeScoreModal()
 }
 
 let explanationArea = document.getElementById('explanations')
+
 function showExplanation(){
 document.getElementsByClassName('main')[0].style.display = 'none'
 let explanationArea = document.getElementById('explanations')
 
     for (let [key, value] in Object.entries(correctAnswers)){
         if (value == 1 || value =='1'){
-            explanationArea.innerHTML += '<p class="explanation-question"><h>Question ' +parseInt(key)+1 + ': </h>'+ questions[key].question +'</p>'
-            explanationArea.innerHTML += '<p class="explanation-correctAnswer"><h> Correct Answer: </h>' + questions[key][questions[key].correctOption] +'</p>'
+            explanationArea.innerHTML += '<p class="explanation-question"><h>Question ' +parseInt(key)+1 + ': </h>'+ shuffledQuestions[key].question +'</p>'
+            explanationArea.innerHTML += '<p class="explanation-correctAnswer"><h> Correct Answer: </h>' + shuffledQuestions[key][shuffledQuestions[key].correctOption] +'</p>'
         }
         else{
-        let query = 'Provide me Explanation about the following question ' + questions[key].question
-       query +=  ' and the choices are '+ ' '+questions[key].optionA+' '+questions[key].optionB + ' '+questions[key].optionC +' '+questions[key].optionD + 'what is the correct answer and tell me the reason '
+        let query = 'Provide me Explanation about the following question ' + shuffledQuestions[key].question
+       query +=  ' and the choices are '+ ' '+shuffledQuestions[key].optionA+' '+shuffledQuestions[key].optionB + ' '+shuffledQuestions[key].optionC +' '+shuffledQuestions[key].optionD + 'what is the correct answer and tell me the reason '
         explanationArea.innerHTML += 
         '<div class="single-result">'+
-        '<p class="explanation-question"><h>Question '+parseInt(key)+':</h> '+ questions[key].question +'</p>'
-     + '<p class="explanation-correctAnswer"><h> Your Answer:</h> ' + questions[key][userAnswers[key]] +'</p>'
-       + '<p class="explanation-correctAnswer"><h> Correct Answer:</h> ' + questions[key][questions[key].correctOption] +'</p>'
-         + '<p class="explanation-correctAnswer"><h> Explanation:</h> '+ questions[key].explanation + ' </p>'
+        '<p class="explanation-question"><h>Question '+parseInt(key)+':</h> '+ shuffledQuestions[key].question +'</p>'
+     + '<p class="explanation-correctAnswer"><h> Your Answer:</h> ' + shuffledQuestions[key][userAnswers[key]] +'</p>'
+       + '<p class="explanation-correctAnswer"><h> Correct Answer:</h> ' + shuffledQuestions[key][shuffledQuestions[key].correctOption] +'</p>'
+         + '<p class="explanation-correctAnswer"><h> Explanation:</h> '+ shuffledQuestions[key].explanation + ' </p>'
          + `<a class="more-exp-link" href="chat/${query}" >More Explanations </a>`
     }
     }
@@ -287,4 +289,12 @@ function closeOptionModal() {
     //explanationArea.style.display = 'block'
     document.getElementById('option-modal').style.display = "none"
 }
+document.addEventListener('DOMContentLoaded', function() {
+document.getElementById('next').addEventListener('click', handleNextQuestion)
+document.getElementById('exp-btn').addEventListener('click', showExplanation)
+document.getElementById('close-modal-btn').addEventListener('click', closeOptionModal)
+NextQuestion(1);
+})
 
+
+}

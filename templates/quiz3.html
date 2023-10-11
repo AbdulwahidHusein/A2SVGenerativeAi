@@ -3,11 +3,18 @@
 
 {% block content %}
 
-
 <link rel="stylesheet" href="{% static 'css/quiz2.css' %}" />
-<script src="{%static 'js/quiz2.js' %}"></script>
+<script src="{% static 'js/quiz2.js' %}"></script>
 
-<body style="background:black" onload="NextQuestion(0)">
+<body style="background:black">
+    <main class="main">
+        <script defer>
+            let shuffledQuestions  = {{ questions|safe }};
+            console.log(shuffledQuestions);
+            //shuffledQuestions = JSON.parse(shuffledQuestions);
+            test(shuffledQuestions)
+            
+        </script>
     <main class="main">
         <!-- creating a modal for when quiz ends -->
         <div class="modal-container" id="score-modal">
@@ -17,14 +24,14 @@
                 <h1>Congratulations, Quiz Completed.</h1>
               
                 <div class="grade-details">
-                    <p>Wrong Answers : <span id="wrong-answers"></span></p>
-                    <p>Right Answers : <span id="right-answers"></span></p>
-                    <p>Grade : <span id="grade-percentage"></span>%</p>
-                    <p ><span id="remarks"></span></p>
+                    <p>Wrong Answers: <span id="wrong-answers"></span></p>
+                    <p>Right Answers: <span id="right-answers"></span></p>
+                    <p>Grade: <span id="grade-percentage"></span>%</p>
+                    <p><span id="remarks"></span></p>
                 </div>
               
                 <div class="modal-button-container">
-                    <button class="view-explanation" onclick="showExplanation()">View Explanations</button>
+                    <button class="view-explanation" id="exp-btn">View Explanations</button>
                 </div>
             </div>
           
@@ -33,8 +40,8 @@
         <div class="game-quiz-container">
           
             <div class="game-details-container">
-                <h1 style="color:white">Score : <span id="player-score"></span></h1>
-                <h1 style="color:white"> Question : <span style="color:white" id="question-number"></span></h1>
+                <h1 style="color:white">Score: <span id="player-score"></span></h1>
+                <h1 style="color:white">Question: <span style="color:white" id="question-number"></span></h1>
             </div>
 
             <div class="game-question-container">
@@ -49,7 +56,7 @@
                          <h1>Please Pick An Option</h1>
                       
                          <div class="modal-button-container">
-                            <button onclick="closeOptionModal()">Continue</button>
+                            <button id="close-modal-btn" >Continue</button>
                         </div>
                       
                     </div>
@@ -83,7 +90,7 @@
             </div>
 
             <div class="next-button-container">
-                <button onclick="handleNextQuestion()">Next Question</button>
+                <button id="next" >Next Question</button>
             </div>
 
         </div>
@@ -92,8 +99,5 @@
     </div>
     <script src="index.js"></script>
 </body>
-
-
-
 
 {% endblock content %}

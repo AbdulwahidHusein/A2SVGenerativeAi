@@ -1,60 +1,73 @@
-{% extends 'index.html' %}
+{% extends "index2.html" %}
 
-{% block body %}
-{% load static %}
-<link rel="stylesheet" href="{%static 'css/signup.css'%}" />
-  <div class="container">
-    <div class="signup-box">
-      <h2 style="color:white">Sign Up</h2>
-      <div id="alert" class="alert alert-danger">
-        {% if error %}
-        <p style="color: white">{{error}}</p>
-        {% endif %}
-        <script>
-            setTimeout(() => {
-              document.getElementById('alert').innerHTML = '';
-              document.getElementById('alert').classList = '';
-            }, 2000);
-          </script>
+{% block content %}
+
+    <!-- Contact Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-12 wow fadeIn" data-wow-delay="0.1s">
+                    <p class="display-6 mb-5">Upload Your Documents So that we Prepare a quiz for you!</p>
+                    <br />
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="file" name="file" class="form-control" id="name" >
+                                    <label for="name">Your Document</label>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select id="difficulty" name="difficulty" class="form-control" >
+                                        <option>
+                                            Easy
+                                        </option>
+                                        <option>
+                                            Medium
+                                        </option>
+                                        <option>
+                                            Hard
+                                        </option>
+                                    </select>
+                                    <label for="email">Difficulty</label>
+                                </div>
+                            </div>
+
+                            <p class="">Specify the range of pages in you Document for generation of the quiz</p>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="number" name="spage" class="form-control" id="email" placeholder="Your Email">
+                                    <label for="email">Start Page</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-floating">
+                                    <input type="number" name="epage" class="form-control" id="email" placeholder="Your Email">
+                                    <label for="email">end Page</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <textarea class="form-control" name="additional_comment" placeholder="Leave a message here" id="message" style="height: 100px"></textarea>
+                                    <label for="message">Additional Comments</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-primary py-3 w-100 px-5" type="submit">Submit</button>
+                            </div>
+                            {% if file_text %}
+                            {{file_text}}
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-      <form method="post">
-        {% csrf_token %}
-        <div class="form-group">
-  
-          <label for="fullname">Full Name</label>
-          <input type="text" class="form-control" name="fullname" id="fullname" placeholder="Enter your full name">
-        </div>
-        <div class="form-group">
-          <label for="email">Email address</label>
-          <input type="email" class="form-control" name="email" id="email" placeholder="Enter email">
-        </div>
-        <div class="form-group">
-          <label for="password" >Password</label>
-          <input type="password" class="form-control" name="password1" id="password" placeholder="Enter password">
-        </div>
-        <div class="form-group">
-          <label for="confirm-password">Confirm Password</label>
-          <input type="password" class="form-control" name="password2" id="confirm-password" placeholder="Confirm password">
-        </div>
-        <div class="form-group">
-          <label for="profession">Profession</label>
-          <input type="text" class="form-control"  name="profession" id="profession" placeholder="Enter your profession">
-        </div>
-        <div class="form-group">
-          <label for="gender">Gender</label>
-          <select class="form-control" name="gender" id="gender">
-            <option>Select gender</option>
-            <option>Male</option>
-            <option>Female</option>
-          </select>
-        </div>
-        <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
-      </form>
-      <div class="login-link">
-        <p>Already have an account? <a href="#"> Login</a></p>
-      </div>
     </div>
-  </div>
-  <script>
-  </script>
-{% endblock body %}
+    <!-- Contact End -->
+
+
+{% endblock content %}
