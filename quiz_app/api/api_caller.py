@@ -35,16 +35,13 @@ multiple_choice_question_format = {
 short_answer_question_format = {
     'questions': [
    {
-      "question": "question1",
-      "answer": "Explanation."
+      "question": "question1"
     },
      {
-      "question": "question2",
-      "answer": "Explanation."
+      "question": "question2"
     },
      {
-      "question": "question3",
-      "answer": "Explanation."
+      "question": "question3"
     }
      
 ]
@@ -70,6 +67,7 @@ class GenerateQuestionRequest:
         if self.model == 'chatgpt':
             open_ai = OpenAi(OPEN_AI_API_KEY)
             generated_questions = open_ai.generate_question(prompt)
+            print(generated_questions)
             parsed = ResponseParser(generated_questions, mode)
             parsed = parsed.get_json_data()
             return parsed

@@ -8,6 +8,7 @@ from bardapi import Bard
 from .models import CustomUser, Message
 from quiz_app.file_processor import file_reader, file_summerizer, file_chunk
 from .generator import get_question
+import urllib.parse
 
 import json
 #import api_request
@@ -158,6 +159,9 @@ def user_logout(request):
 
 #         return response
 
+def acccess(request):
+    return render(request, 'quiz3.html')
+
 def home(request):
     return render(request, 'home2.html')
 
@@ -170,15 +174,18 @@ def upload(request):
         epage = int(request.POST.get('epage'))
         comment = request.POST.get('additional_comment')
         
-        file_text = get_question(uploaded_file, 5, difficulty, 20, 30, 'multiple_choice', 'chatgpt')
-        print(file_text)
-        return render(request, 'upload.html', {'file_text':file_text})
+        questions = get_question(uploaded_file, 5, difficulty, spage, epage, 'multiple_choice', 'chatgpt')
+        print(questions)
+        #redirect_url = 'quiz/?questions={}'.format(questions['questions'])
+        return render(request, 'quiz3.html', {'questions':questions['questions']})
     
     return render(request, 'upload.html')
 
 
+
 def quiz(request):
-    return render(request, 'quiz3.html')
+    questions = urllib.parse.unquote(request.GET.get('questions'))
+    return render(request, 'quiz3.html', {'questions':questions})
 
 
 def chat(request):
