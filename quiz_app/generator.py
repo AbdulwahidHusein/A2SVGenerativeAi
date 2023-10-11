@@ -42,7 +42,7 @@ def get_question(file, num_of_questions, difficulty, start_page, end_page, mode,
 
 if __name__ == '__main__':
     with open("c:\\Users\\Abdi\\Desktop\\A2SVGenerativeAi\\quiz_app/drf.pdf", 'rb') as df:
-        q = get_question(df, 5, 'hard', 30, 50, 'multiple_choice', 'chatpt')
+        q = get_question(df, 5, 'hard', 30, 50, 'multiple_choice', 'chatgpt')
         print(q)
         '''f = read_summerize_split(df, 10,  100)
         print(f)
