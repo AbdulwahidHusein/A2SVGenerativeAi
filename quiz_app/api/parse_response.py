@@ -5,8 +5,8 @@ class ResponseParser:
     
     def __init__(self, text, mode) -> None:
         self.text = text
-        self.json_data = {}
         self.mode = mode
+        self.json_data = {}
 
     def _extract_json_text(self):
         # Extract the JSON object from the response text
@@ -22,25 +22,19 @@ class ResponseParser:
         return json_text
     
     def _make_improvements(self):
-        #remove any new lines
-        json_text = re.sub(r'\n', ' ', self.text)
-        #replace any single quotes by double quote
-        json_text = re.sub(r"'", '"', json_text)
-        json_text = re.sub(r"(\b\w+)\"(\w+\b)", r"\1 \2", json_text)# substitute dont"t by don t
-        json_text = re.sub(r'(\"(?:\s*)\")', '", "', json_text)#add comma beetween key value pairs if forgotten
-    
+        json_text = re.sub(r"'", '"', self.text)
         #ensure there is quote after colon
+        json_text = re.sub(r":(?!(\[| \[|\"| \"|\]))", ':"', json_text)
+        #replace any newline by space
         
-        #replace words like don't and didn't by like dont and didnt 
-        #json_text = re.sub(r"(\b\w+)\"(\w+\b)", r"\1 \2", json_text)
+        #replace words loke don't and didn't
+        json_text = re.sub(r"(\b\w+)\"(\w+\b)", r"\1 \2", json_text)
         #json_text = re.sub(r'"(?:\s*,\s*|\s*,\s*)\n', ' ', json_text)
         
         #replace all new lines thet intrupts the string 
         #json_text = re.sub(r"\n(?!question|optionA|optionB|optionC|optionD|correctOption|explanation|\})", ' ', json_text)
         #add comma before newline 
-        #json_text = re.sub(r"(?<!,|\]|\{|\[)(?<!\n)(?!\s*(question|optionA|optionB|optionC|optionD|correctOption|explanation|\{|\[|\}|\]))\n", ',\n', json_text)# Convert the JSON object to a Python dictionary
-        #replace any inapropirate new lines by empty space
-        #json_text = re.sub(r"(?<!,)(?<![{}<>])\n(?!\s*})", " ", json_text)
+        json_text = re.sub(r"(?<!,|\]|\{|\[)(?<!\n)(?!\s*(question|optionA|optionB|optionC|optionD|correctOption|explanation|\{|\[|\}|\]))\n", ',\n', json_text)# Convert the JSON object to a Python dictionary
         self.text = json_text
         
         return self.text
@@ -66,16 +60,12 @@ class ResponseParser:
                 self._check_multiple_choice_formating()
                 return self.json_data
             except:
-                raise Exception("the geven text can not be parsed in to json format")
+                raise Exception("the geven text can not be parsed to json format")
             
     def get_json_data(self):
-        if self.mode == 'multiple_choice':
-            self._extract_json_text()
-            self._process_json_text()
         
-        elif self.mode == 'short_answer':
-            self._extract_json_text()
-            self._process_json_text()
-
-
+        self._extract_json_text()
+        
+        self._process_json_text()
+        
         return self.json_data

@@ -5,9 +5,11 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from  quiz_app.api import api_caller
 from bardapi import Bard
-from .models import CustomUser, Message
+from .models import CustomUser, Message, Quiz
 from quiz_app.file_processor import file_reader, file_summerizer, file_chunk
 from .generator import get_question
+import urllib.parse
+
 
 import json
 #import api_request
@@ -24,6 +26,20 @@ def handle_upload(request):
         
 
 
+def user_login(request):
+    if request.method == "POST":
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = CustomUser.objects.get(email=email)
+        
+        user = authenticate(request, email=email, password=password)
+        if user:
+            login(request, user)
+            return redirect('home')
+        else:
+            return render(request, 'login.html', {'error': 'Invalid login credentials.'})
+    
+    return render(request, 'login.html')
 
 def user_register(request):
     if request.method == "POST":
@@ -40,8 +56,10 @@ def user_register(request):
             existing_user = None
         
         if password1 == password2 and not existing_user:
-            user = CustomUser.objects.create(username=email, password=password2, email=email, carrier=carrier, gender=gender, first_name=full_name)
+            user = CustomUser(username=email, email=email, carrier=carrier, gender=gender, first_name=full_name)
+            user.set_password(password2)
             user.save()
+            login(request, user)
             return redirect('quiz')
         elif existing_user:
             return render(request, 'registeration.html', {'error': 'A user with this email is already registered.'})
@@ -49,6 +67,7 @@ def user_register(request):
             return render(request, 'registeration.html', {'error': 'Passwords did not match.'})
         
     return render(request, 'registeration.html')
+
 
 
 @login_required(login_url='login')
@@ -77,19 +96,6 @@ def home(request):
     return render(request, 'home.html', {"auth":False})
 
 
-def user_login(request):
-    if request.method == "POST":
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        
-        user = authenticate(request, username=email, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('test')
-        else:
-            return render(request, 'login.html', {'error': 'Invalid login credentials.'})
-    
-    return render(request, 'login.html')
 
 
 def test(request):
@@ -158,10 +164,22 @@ def user_logout(request):
 
 #         return response
 
-def home(request):
-    return render(request, 'home2.html')
+def acccess(request):
+    return render(request, 'quiz3.html')
 
+def home(request):
+    user = request.user
+    context = {}
+    if user.is_authenticated:
+        context['auth'] = True
+    else:
+        context['auth'] = False
+    return render(request, 'home2.html', context)
+
+
+@login_required(login_url='login')
 def upload(request):
+    user = request.user
     if request.method == 'POST':
         uploaded_file = request.FILES['file']
         num_of_questions = request.POST.get('qnumber')
@@ -170,15 +188,24 @@ def upload(request):
         epage = int(request.POST.get('epage'))
         comment = request.POST.get('additional_comment')
         
-        file_text = get_question(uploaded_file, 5, difficulty, 20, 30, 'multiple_choice', 'chatgpt')
-        print(file_text)
-        return render(request, 'upload.html', {'file_text':file_text})
+        questions = get_question(uploaded_file, 5, difficulty, spage, epage, 'multiple_choice', 'chatgpt')
+        print(questions)
+        title = questions['questions'][0]['question']
+        quiz = Quiz.objects.create(generated_by=user, questions=str(questions),size=5, title=title)
+        quiz.save()
+        #redirect_url = 'quiz/?questions={}'.format(questions['questions'])
+        return render(request, 'quiz3.html', {'questions':questions['questions']})
     
     return render(request, 'upload.html')
 
+@login_required(login_url='login')
+def myquizes(request):
+    user = request.user
+    
 
 def quiz(request):
-    return render(request, 'quiz3.html')
+    questions = urllib.parse.unquote(request.GET.get('questions'))
+    return render(request, 'quiz3.html', {'questions':questions})
 
 
 def chat(request):
