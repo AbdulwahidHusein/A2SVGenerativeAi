@@ -23,9 +23,7 @@ from telegram.ext import (
     Updater,
     CallbackQueryHandler,
 )
-import requests
 from dotenv import load_dotenv
-import json
 
 
 load_dotenv()
@@ -35,9 +33,9 @@ TOKEN = os.environ.get("BOT_TOKEN")
 
 logging.basicConfig(level=logging.INFO)
 
+# some global variables for storing data.
 user_data = {}
 question_format = {}
-file = None
 START_PAGE = 0
 END_PAGE = 1
 difficulty = "not difficult"
@@ -47,12 +45,14 @@ def help(update: Update, context: CallbackContext):
     update.message.reply_text("Please enter file")
 
 
+# The start function
 def start(update: Update, context: CallbackContext):
     update.message.reply_text(
         "Hello There, please enter file so we can change it to qize for you!"
     )
 
 
+# displays the difficulty buttons
 def set_difficulty(update: Update, context: CallbackContext):
     keyboard = [
         [InlineKeyboardButton("Easy", callback_data="easy")],
@@ -63,6 +63,7 @@ def set_difficulty(update: Update, context: CallbackContext):
     update.message.reply_text("Choose Difficulty:", reply_markup=reply_markup)
 
 
+# function for setting the end page of the recieved file
 def set_end(update: Update, context: CallbackContext):
     end = update.message.text
     user_data["end_page"] = int(end)
@@ -72,6 +73,7 @@ def set_end(update: Update, context: CallbackContext):
     set_difficulty(update=update, context=context)
 
 
+# function for setting the start page of the received file
 def set_start(update: Update, context: CommandHandler):
     start = update.message.text
     user_data["start_page"] = int(start)
@@ -84,13 +86,13 @@ def cancel(update: Update, context: CallbackContext):
     return ConversationHandler.END
 
 
+# Function for processing the file. It currently works by downloading the file first and then moves on to processing it.
+# working on ways to process the file without downloading it
 def Enterfile(update: Update, context: CallbackContext):
     global user_data
-    global file
     file = update.message.document
     file_recieved = context.bot.get_file(file_id=file.file_id)
     file_name = file.file_name
-    # file_path = file_recieved.file_path
     user_data["file_name"] = file_name
     file_downloaded = file_recieved.download()
     user_data["file"] = file_downloaded
@@ -105,6 +107,7 @@ def Enterfile(update: Update, context: CallbackContext):
     return START_PAGE
 
 
+# this function handles the events that happen after a button is pressed
 def button_callback(update: Update, context: CallbackContext):
     global user_data
     global difficulty
@@ -117,6 +120,7 @@ def button_callback(update: Update, context: CallbackContext):
         send_request(update=update, context=context)
 
 
+# this function sends request to erither openAi or Bard, it uses Bard if OpnAI fails. currently works on openAi only
 def send_request(update: Update, context: CallbackContext):
     global user_data
     global question_format
@@ -151,6 +155,7 @@ def register(dispatcher):
     dispatcher.add_handler(CommandHandler("help", help))
 
 
+# driver function
 def main():
     updater = Updater(token=TOKEN)
     register(updater.dispatcher)
@@ -159,11 +164,4 @@ def main():
 
 
 if __name__ == "__main__":
-    # with open("his.pdf", "rb") as f:
-    #     for line in f:
-    #         print(line)
-    #     # question = generator.get_question(
-    #     #     f, 5, "easy", 2, 3, "multiple_choice", "chat_gpt"
-    #     # )
-    #     # print(question)
     main()
