@@ -16,45 +16,75 @@
               document.getElementById('alert').classList = '';
             }, 2000);
           </script>
+    <!-- Contact Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-12 wow fadeIn" data-wow-delay="0.1s">
+                    <p class="display-6 mb-5">Please Register to access our service</p>
+                    <br />
+                    {%if error %}
+                    <div id="alertContainer" class="alert alert-danger" role="alert">
+                      {{error}}
+                      <script>
+                        setTimeout(3000, ()=>{document.getElementById("alertContainer").style.display = "none";
+                      })
+                      </script>
+                    </div>
+                    {%endif%}
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" name="fullname" class="form-control" id="email" placeholder="Your Email">
+                                    <label for="email">Full Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="email" name="email" class="form-control" id="email" placeholder="Your Email">
+                                    <label for="email">Email</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input class="form-control" type="password" name="password1" placeholder="Leave a message here" id="message">
+                                    <label for="message">Password</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="form-floating">
+                                  <input class="form-control" type="password" name="password2" placeholder="Leave a message here" id="message" >
+                                  <label for="message">Re Type Password</label>
+                              </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="form-floating">
+                                <input class="form-control" name="profession" placeholder="Leave a message here" id="message" >
+                                <label for="message">Profession</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="agreeCheckbox">
+                            <label class="form-check-label" for="agreeCheckbox">
+                              I agree to the terms and conditions
+                            </label>
+                          </div>
+                        </div>
+                        
+                            <div class="col-12">
+                                <button class="btn btn-primary py-3 w-100 px-5" type="submit">Submit</button>
+                            </div>
+                            <a class="text-center" href="{%url 'login' %}">Dou you have an account? Login</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-      <form method="post">
-        {% csrf_token %}
-        <div class="form-group">
-  
-          <label for="fullname">Full Name</label>
-          <input type="text" class="form-control" name="fullname" id="fullname" placeholder="Enter your full name">
-        </div>
-        <div class="form-group">
-          <label for="email">Email address</label>
-          <input type="email" class="form-control" name="email" id="email" placeholder="Enter email">
-        </div>
-        <div class="form-group">
-          <label for="password" >Password</label>
-          <input type="password" class="form-control" name="password1" id="password" placeholder="Enter password">
-        </div>
-        <div class="form-group">
-          <label for="confirm-password">Confirm Password</label>
-          <input type="password" class="form-control" name="password2" id="confirm-password" placeholder="Confirm password">
-        </div>
-        <div class="form-group">
-          <label for="profession">Profession</label>
-          <input type="text" class="form-control"  name="profession" id="profession" placeholder="Enter your profession">
-        </div>
-        <div class="form-group">
-          <label for="gender">Gender</label>
-          <select class="form-control" name="gender" id="gender">
-            <option>Select gender</option>
-            <option>Male</option>
-            <option>Female</option>
-          </select>
-        </div>
-        <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
-      </form>
-      <div class="login-link">
-        <p>Already have an account? <a href="#"> Login</a></p>
-      </div>
     </div>
-  </div>
-  <script>
-  </script>
+    <!-- Contact End -->
+
+
 {% endblock content %}
