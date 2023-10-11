@@ -1,6 +1,22 @@
-{% extends "index2.html" %}
+{% extends 'index2.html' %}
 
 {% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}" />
+
+  <div class="container">
+    <div class="login-box">
+      {% if error %}
+        <div id="alert" class="alert alert-danger">
+        <p style="color: white">{{error}}</p>
+        <script>
+            setTimeout(() => {
+              document.getElementById('alert').innerHTML = '';
+              document.getElementById('alert').classList = '';
+            }, 2000);
+          </script>
+          </div>
+          {% endif %}
 
     <!-- Contact Start -->
     <div class="container-xxl py-5">
@@ -45,6 +61,4 @@
         </div>
     </div>
     <!-- Contact End -->
-
-
 {% endblock content %}

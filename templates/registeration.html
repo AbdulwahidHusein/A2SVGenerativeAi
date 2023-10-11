@@ -1,7 +1,21 @@
-{% extends "index2.html" %}
+{% extends 'index2.html' %}
 
 {% block content %}
-
+{% load static %}
+<link rel="stylesheet" href="{%static 'css/signup.css'%}" />
+  <div class="container">
+    <div class="signup-box">
+      <h2 style="color:white">Sign Up</h2>
+      <div id="alert" class="alert alert-danger">
+        {% if error %}
+        <p style="color: white">{{error}}</p>
+        {% endif %}
+        <script>
+            setTimeout(() => {
+              document.getElementById('alert').innerHTML = '';
+              document.getElementById('alert').classList = '';
+            }, 2000);
+          </script>
     <!-- Contact Start -->
     <div class="container-xxl py-5">
         <div class="container">
