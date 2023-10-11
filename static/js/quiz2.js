@@ -228,7 +228,7 @@ function handleEndGame() {
         remark = "Bad Grades, Keep Practicing."
         remarkColor = "red"
     }
-    else if (playerScore >= length/2 && playerScore < length*2/3) {
+    else if (playerScore >= length/3 && playerScore < length*2/3) {
         remark = "Average Grades, You can do better."
         remarkColor = "orange"
     }
