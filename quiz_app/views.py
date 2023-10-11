@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect, HttpResponse
 from django.http import JsonResponse
 from django.contrib.auth import login, logout, authenticate
@@ -30,15 +31,17 @@ def user_login(request):
     if request.method == "POST":
         email = request.POST.get('email')
         password = request.POST.get('password')
-        user = CustomUser.objects.get(email=email)
-        
-        user = authenticate(request, email=email, password=password)
-        if user:
-            login(request, user)
-            return redirect('home')
-        else:
-            return render(request, 'login.html', {'error': 'Invalid login credentials.'})
-    
+
+        try: 
+            user = CustomUser.objects.get(email=email)
+            user = authenticate(request, email=email, password=password)
+            if user:
+                login(request, user)
+                return redirect('home')
+            else:
+                return render(request, 'login.html', {'error': 'Invalid login credentials.'})
+        except ObjectDoesNotExist:
+            return render(request, 'login.html', {'error': "Naah, we don't know you. Signup."})
     return render(request, 'login.html')
 
 def user_register(request):
