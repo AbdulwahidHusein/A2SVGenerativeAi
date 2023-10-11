@@ -53,7 +53,11 @@
                 <a href="about.html" class="nav-item nav-link">My Quizes</a>
                 <a href="#" class="nav-item nav-link">Group Quizes</a>
                 <a href="{%url 'chat' %}" class="nav-item nav-link">chat</a>
-                <a href="{%url 'register' %}" class="nav-item nav-link">Sign Up</a>
+                {% if auth %}
+                <a href="{%url 'register' %}" class="nav-item nav-link">Logout</a>
+                {% else %}
+                <a href="{%url 'register' %}" class="nav-item nav-link">Login</a>
+                {% endif %}
             </div>
             <div class="h-100 d-lg-inline-flex align-items-center d-none">
                 <a class="btn btn-square rounded-circle bg-light text-primary me-2" href=""><i class="fab fa-facebook-f"></i></a>

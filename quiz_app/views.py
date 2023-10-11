@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from  quiz_app.api import api_caller
 from bardapi import Bard
-from .models import CustomUser, Message
+from .models import CustomUser, Message, Quiz
 from quiz_app.file_processor import file_reader, file_summerizer, file_chunk
 from .generator import get_question
 import urllib.parse
@@ -168,9 +168,18 @@ def acccess(request):
     return render(request, 'quiz3.html')
 
 def home(request):
-    return render(request, 'home2.html')
+    user = request.user
+    context = {}
+    if user.is_authenticated:
+        context['auth'] = True
+    else:
+        context['auth'] = False
+    return render(request, 'home2.html', context)
 
+
+@login_required(login_url='login')
 def upload(request):
+    user = request.user
     if request.method == 'POST':
         uploaded_file = request.FILES['file']
         num_of_questions = request.POST.get('qnumber')
@@ -181,12 +190,18 @@ def upload(request):
         
         questions = get_question(uploaded_file, 5, difficulty, spage, epage, 'multiple_choice', 'chatgpt')
         print(questions)
+        title = questions['questions'][0]['question']
+        quiz = Quiz.objects.create(generated_by=user, questions=str(questions),size=5, title=title)
+        quiz.save()
         #redirect_url = 'quiz/?questions={}'.format(questions['questions'])
         return render(request, 'quiz3.html', {'questions':questions['questions']})
     
     return render(request, 'upload.html')
 
-
+@login_required(login_url='login')
+def myquizes(request):
+    user = request.user
+    
 
 def quiz(request):
     questions = urllib.parse.unquote(request.GET.get('questions'))
