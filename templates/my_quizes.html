@@ -1,0 +1,37 @@
+{% extends 'index2.html' %}
+
+{% block content %}
+{% load static %}
+    <style>
+        .custom-container {
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+    <body>
+        <div class="container-xxl py-5 custom-container">
+            <div class="container">
+                {% if quizes %}
+                    {% for quiz in quizes %}
+                        <div class="row border border-primary rounded p-3 mt-3">
+                            <div class="col-md-6">
+                                {{ quiz.title }}
+                            </div>
+                            <div class="col-md-3">
+                                Your previous Score: {{ quiz.score }}
+                            </div>
+                            <div class="col-md-3">
+                                <a href="">Retake quiz</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <h1>You haven't taken any quizzes yet.</h1>
+                {% endif %}
+            </div>
+        </div>
+    </body>
+{% endblock content %}

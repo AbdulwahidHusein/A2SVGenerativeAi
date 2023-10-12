@@ -18,5 +18,5 @@ urlpatterns = [
     path('upload', views.upload, name="upload"),
     path('quiz/', views.quiz, name="quiz"),
     path('chat', views.chat, name="chat"),
-    path('acc' , views.acccess),
+    path('my_quizes', views.myquizes, name='my_quizes'),
 ]
