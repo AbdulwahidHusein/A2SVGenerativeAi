@@ -197,18 +197,20 @@ def upload(request):
         quiz = Quiz.objects.create(generated_by=user, questions=str(questions),size=5, title=title)
         quiz.save()
         #redirect_url = 'quiz/?questions={}'.format(questions['questions'])
-        return render(request, 'quiz3.html', {'questions':questions['questions']})
+        return render(request, 'quiz3.html', {'questions':questions['questions'], 'id':quiz.id})
     
     return render(request, 'upload.html')
 
 @login_required(login_url='login')
 def myquizes(request):
     user = request.user
+    quizs = Quiz.objects.all().filter(generated_by= user)
+    return render(request, 'my_quizes.html', {"quizes":quizs})
     
 
 def quiz(request):
     questions = urllib.parse.unquote(request.GET.get('questions'))
-    return render(request, 'quiz3.html', {'questions':questions})
+    return render(request, 'quiz3.html', {'quizes':questions})
 
 
 def chat(request):
