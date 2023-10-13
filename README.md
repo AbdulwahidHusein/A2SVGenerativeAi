@@ -4,13 +4,13 @@ This repository contains the source code and documentation for the Quiz Generato
 ## Repository Structure
 The repository is structured as follows:
 
-**quiz_app/: This directory contains the code for the Quiz App, which includes the backend logic and API endpoints for generating quizzes on the Quiz Generator Website.
+**quiz_app/**: This directory contains the code for the Quiz App, which includes the backend logic and API endpoints for generating quizzes on the Quiz Generator Website.
 
-**quiz_project/: This directory contains the main project files for the Quiz Generator, including settings and configuration files.
+**quiz_project/**: This directory contains the main project files for the Quiz Generator, including settings and configuration files.
 
-**static/: This directory contains static files such as CSS, JavaScript, and images used in the Quiz Generator Website.
+**static/**: This directory contains static files such as CSS, JavaScript, and images used in the Quiz Generator Website.
 
-**telebot/: This directory contains the code for the Telegram Bot, which is responsible for handling interactions
+**telebot/**: This directory contains the code for the Telegram Bot, which is responsible for handling interactions
 
 **templates/: This directory contains HTML templates used for rendering the Quiz Generator Website.
 README.md: This readme file that provides an overview of the project, its purpose, and the structure of the repository.
