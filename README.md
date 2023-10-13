@@ -12,7 +12,7 @@ The repository is structured as follows:
 
 **telebot/**: This directory contains the code for the Telegram Bot, which is responsible for handling interactions
 
-**templates/: This directory contains HTML templates used for rendering the Quiz Generator Website.
+**templates/**: This directory contains HTML templates used for rendering the Quiz Generator Website.
 README.md: This readme file that provides an overview of the project, its purpose, and the structure of the repository.
 
 ## Purpose
