@@ -24,7 +24,7 @@
                                 Your previous Score: {{ quiz.score }}
                             </div>
                             <div class="col-md-3">
-                                <a href="">Retake quiz</a>
+                                <a href="{%url 'quiz' quiz.id %}">Retake quiz</a>
                             </div>
                         </div>
                     {% endfor %}

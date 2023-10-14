@@ -12,7 +12,7 @@ urlpatterns = [
     
     
     #new paths
-    
+    path('quiz/<int:id>', views.get_quiz, name="quiz"),
     path('home', views.home, name="home"),
     path('upload', views.upload, name="upload"),
     path('chat', views.chat, name="chat"),

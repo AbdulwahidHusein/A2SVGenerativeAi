@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from .models import CustomUser, Message, Quiz
 from .generator import get_question
-
+import json, re
 
 def user_login(request):
     if request.method == "POST":
@@ -129,6 +129,19 @@ def upload(request):
         return render(request, 'quiz3.html', {'questions':questions['questions'], 'id':quiz.id})
     
     return render(request, 'upload.html')
+
+def get_quiz(request, id):
+    user = request.user
+    quiz = Quiz.objects.get(pk=id)
+    if quiz.generated_by.id == user.id:
+        questions = quiz.questions
+        questions = re.sub(r"'", '"',questions)
+        questions = json.loads(questions)
+        return render(request, 'quiz3.html', {'questions':questions['questions'], 'id':quiz.id})
+    
+    quizs = Quiz.objects.all().filter(generated_by= user)
+    return render(request, 'my_quizes.html', {"quizes":quizs})
+    
 
 def handle_quiz_submit(request, id):
     quiz = Quiz.objects.get(pk=id)
