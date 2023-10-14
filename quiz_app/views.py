@@ -204,10 +204,12 @@ def upload(request):
 @login_required(login_url='login')
 def myquizes(request):
     user = request.user
-    
+
 
 def quiz(request):
-    questions = urllib.parse.unquote(request.GET.get('questions'))
+    questions = request.GET.get('questions')
+    if questions is not None:
+        questions = urllib.parse.unquote(questions)
     return render(request, 'quiz3.html', {'questions':questions})
 
 
