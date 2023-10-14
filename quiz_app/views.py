@@ -141,14 +141,19 @@ def get_quiz(request, id):
     
     quizs = Quiz.objects.all().filter(generated_by= user)
     return render(request, 'my_quizes.html', {"quizes":quizs})
-    
 
-def handle_quiz_submit(request, id):
+
+def handle_quiz_submit(request):
+    id = request.POST.get('id')
+    score = request.POST.get('score')
+    
+    print('adsc'*20, id, score)
     quiz = Quiz.objects.get(pk=id)
-    score = request.GET.get(score)
+    
     quiz.user_score = score
     quiz.save()
-    return JsonResponse({"saved"})
+    return JsonResponse({"status":"okay"}, safe=False)
+
 
 @login_required(login_url='login')
 def myquizes(request):

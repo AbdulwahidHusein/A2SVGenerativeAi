@@ -1,5 +1,19 @@
 
-function test(shuffledQuestions){
+function test(shuffledQuestions, QuizId){
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
 
 //let shuffledQuestions = questionss//empty array to hold shuffled selected questions
 length = shuffledQuestions.length
@@ -146,9 +160,43 @@ function handleEndGame() {
     document.getElementById('wrong-answers').innerHTML = wrongAttempt
     document.getElementById('right-answers').innerHTML = playerScore
     document.getElementById('score-modal').style.display = "flex"
-}
 
-let explanationArea = document.getElementById('explanations')
+    //send ajax request
+    //use QuizId
+   // Retrieve the CSRF token from the Django template
+   var csrftoken = getCookie('csrftoken');
+   var formData = new FormData();
+   formData.append('id', QuizId);
+   formData.append('score', playerScore);
+   
+// Add CSRF token to request headers
+$.ajaxSetup({
+  beforeSend: function(xhr, settings) {
+    if (!this.crossDomain) {
+      xhr.setRequestHeader('X-CSRFToken', csrftoken);
+    }
+  }
+});
+
+$.ajax({
+  type: 'POST',
+  url: '/update_quiz/',
+  data: formData,
+  processData: false,
+  contentType: false,
+  success: function(response) {
+    console.log(response);
+    // Handle the success response here
+  },
+  error: function(xhr, status, error) {
+    console.log(error);
+    // Handle the error response here
+  }
+});
+
+
+    }
+    
 
 function showExplanation() {
     document.getElementsByClassName('main')[0].style.display = 'none';
@@ -179,17 +227,6 @@ function showExplanation() {
                 '</div>';
         }
     }
-}
-
-//closes score modal and resets game
-function closeScoreModal() {
-    questionNumber = 0
-    playerScore = 0
-    wrongAttempt = 0
-    indexNumber = 0
-    //shuffledQuestions = []
-    NextQuestion(indexNumber)
-    document.getElementById('score-modal').style.display = "none"
 }
 
 //function to close warning modal

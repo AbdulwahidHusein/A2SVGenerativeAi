@@ -8,10 +8,12 @@
 
 <body style="background:black">
         <script defer>
+            let QuizId = {{id|safe}};
+
             let shuffledQuestions  = {{ questions|safe }};
             console.log(shuffledQuestions);
             //shuffledQuestions = JSON.parse(shuffledQuestions);
-            test(shuffledQuestions)
+            test(shuffledQuestions, QuizId);
             
         </script>
     <main class="main">
