@@ -13,19 +13,22 @@
     </style>
     <body>
         <div class="container-xxl py-5 custom-container">
-            <div class="container">
+            <div class="container text-center">
                 {% if quizes %}
                     {% for quiz in quizes %}
-                        <div class="row border border-primary rounded p-3 mt-3">
+                        <div class="row border border-primary rounded p-3 mt-3 d-flex justify-content-center align-items-center">
                             <div class="col-md-6">
                                 {{ quiz.title }}
                             </div>
                             <div class="col-md-3">
-                                Your previous Score: {{ quiz.score }}
+                                Your previous Score: {{ quiz.user_score }} / {{quiz.size}}
                             </div>
                             <div class="col-md-3">
                                 <a href="{%url 'quiz' quiz.id %}">Retake quiz</a>
                             </div>
+                            <Button class="btn btn-primary" style="margin-top:20px; width:50%">
+                                Export
+                            </Button>
                         </div>
                     {% endfor %}
                 {% else %}
