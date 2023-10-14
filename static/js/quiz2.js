@@ -1,115 +1,11 @@
-const questionss = [
-    {
-      question: "Which law of thermodynamics states that energy cannot be created or destroyed, only transferred or transformed?",
-      optionA: "First Law of Thermodynamics",
-      optionB: "Second Law of Thermodynamics",
-      optionC: "Third Law of Thermodynamics",
-      optionD: "Zeroth Law of Thermodynamics",
-      correctOption: "optionA",
-      explanation: "The First Law of Thermodynamics, also known as the Law of Energy Conservation, states that energy is conserved in any thermodynamic process."
-    },
-    {
-      question: "Which law of thermodynamics states that the total entropy of an isolated system always increases over time?",
-      optionA: "First Law of Thermodynamics",
-      optionB: "Second Law of Thermodynamics",
-      optionC: "Third Law of Thermodynamics",
-      optionD: "Zeroth Law of Thermodynamics",
-      correctOption: "optionB",
-      explanation: "The Second Law of Thermodynamics states that the entropy of an isolated system tends to increase over time, leading to the concept of irreversibility in nature."
-    },
-    {
-      question: "Which law of thermodynamics defines the concept of absolute zero?",
-      optionA: "First Law of Thermodynamics",
-      optionB: "Second Law of Thermodynamics",
-      optionC: "Third Law of Thermodynamics",
-      optionD: "Zeroth Law of Thermodynamics",
-      correctOption: "optionC",
-      explanation: "The Third Law of Thermodynamics states that as the temperature approaches absolute zero, the entropy of a pure, perfect crystal approaches zero."
-    },
-    {
-      question: "Which law of thermodynamics states that if two systems are each in thermal equilibrium with a third system, then they are in thermal equilibrium with each other?",
-      optionA: "First Law of Thermodynamics",
-      optionB: "Second Law of Thermodynamics",
-      optionC: "Third Law of Thermodynamics",
-      optionD: "Zeroth Law of Thermodynamics",
-      correctOption: "optionD",
-      explanation: "The Zeroth Law of Thermodynamics establishes the concept of temperature and thermal equilibrium."
-    },
-    {
-      question: "Which process involves the transfer of heat energy through direct physical contact between particles?",
-      optionA: "Conduction",
-      optionB: "Convection",
-      optionC: "Radiation",
-      optionD: "Evaporation",
-      correctOption: "optionA",
-      explanation: "Conduction is the process of heat transfer between objects or substances in direct physical contact."
-    },
-    {
-      question: "Which process involves the transfer of heat energy through the movement of fluid or gas particles?",
-      optionA: "Conduction",
-      optionB: "Convection",
-      optionC: "Radiation",
-      optionD: "Evaporation",
-      correctOption: "optionB",
-      explanation: "Convection occurs when heat is transferred through the bulk movement of a fluid or gas."
-    },
-    {
-      question: "Which process involves the transfer of heat energy through electromagnetic waves?",
-      optionA: "Conduction",
-      optionB: "Convection",
-      optionC: "Radiation",
-      optionD: "Evaporation",
-      correctOption: "optionC",
-      explanation: "Radiation is the transfer of heat energy through electromagnetic waves, such as infrared radiation."
-    },
-    {
-      question: "Which process involves the phase change of a liquid into a gas at the surface of the liquid?",
-      optionA: "Conduction",
-      optionB: "Convection",
-      optionC: "Radiation",
-      optionD: "Evaporation",
-      correctOption: "optionD",
-      explanation: "Evaporation is the process by which a liquid changes into a gas at the surface, typically due to heat energy."
-    },
-    {
-      question: "Which process involves the phase change of a gas into a liquid?",
-      optionA: "Condensation",
-      optionB: "Melting",
-      optionC: "Sublimation",
-      optionD: "Freezing",
-      correctOption: "optionA",
-      explanation: "Condensation is the process by which a gas changes into a liquid, typically due to cooling or compression."
-    },
-    {
-      question: "Which process involves the phase change of a solid directly into a gas without passing through the liquid phase?",
-      optionA: "Condensation",
-      optionB: "Melting",
-      optionC: "Sublimation",
-      optionD: "Freezing",
-      correctOption: "optionC",
-      explanation: "Sublimation is the process by which a solid changes directly into a gas without becoming a liquid first."
-    },
-  ];
-  
-
 
 function test(shuffledQuestions){
 
 //let shuffledQuestions = questionss//empty array to hold shuffled selected questions
 length = shuffledQuestions.length
-/*
-function handleQuestions() { 
-    //function to shuffle and push 10 questions to shuffledQuestions array
-    while (shuffledQuestions.length <= 9) {
-        const random = questions[Math.floor(Math.random() * questions.length)]
-        if (!shuffledQuestions.includes(random)) {
-            shuffledQuestions.push(random)
-        }
-    }
-}*/
 let correctAnswers = {}
 let userAnswers = {}
-let questionNumber = 1
+let questionNumber = 0
 let playerScore = 0  
 let wrongAttempt = 0 
 let indexNumber = 0
@@ -117,19 +13,17 @@ let indexNumber = 0
 // function for displaying next question in the array to dom
 function NextQuestion(index) {
     //handleQuestions()
-    if (indexNumber <length){
         const currentQuestion = shuffledQuestions[index]
-        document.getElementById("question-number").innerHTML = questionNumber + " / "+ length
-        document.getElementById("player-score").innerHTML = playerScore + " / "+ length
-        document.getElementById("display-question").innerHTML = currentQuestion.question;
-        document.getElementById("option-one-label").innerHTML = currentQuestion.optionA;
-        document.getElementById("option-two-label").innerHTML = currentQuestion.optionB;
-        document.getElementById("option-three-label").innerHTML = currentQuestion.optionC;
-        document.getElementById("option-four-label").innerHTML = currentQuestion.optionD;
-    
-    }
+            document.getElementById("question-number").innerHTML = parseInt(index)+1 + " / "+ length
+            document.getElementById("player-score").innerHTML = playerScore + " / "+ length
+            document.getElementById("display-question").innerHTML = currentQuestion.question;
+            document.getElementById("option-one-label").innerHTML = currentQuestion.optionA;
+            document.getElementById("option-two-label").innerHTML = currentQuestion.optionB;
+            document.getElementById("option-three-label").innerHTML = currentQuestion.optionC;
+            document.getElementById("option-four-label").innerHTML = currentQuestion.optionD;
+        }
    
-}
+
 
 
 function checkForAnswer() {
@@ -181,12 +75,15 @@ function checkForAnswer() {
             }, 1000)
         }
     })
+
 }
 
 
 
 //called when the next button is called
 function handleNextQuestion() {
+    if (indexNumber <= length-1) {
+
     checkForAnswer()
     unCheckRadioButtons()
     //delays next question displaying for a second
@@ -199,6 +96,10 @@ function handleNextQuestion() {
         }
         resetOptionBackground()
     }, 1000);
+}
+else{
+    handleEndGame()
+}
 }
 
 //sets options background back to null after display the right/wrong colors
@@ -245,41 +146,48 @@ function handleEndGame() {
     document.getElementById('wrong-answers').innerHTML = wrongAttempt
     document.getElementById('right-answers').innerHTML = playerScore
     document.getElementById('score-modal').style.display = "flex"
-   closeScoreModal()
 }
 
 let explanationArea = document.getElementById('explanations')
 
-function showExplanation(){
-document.getElementsByClassName('main')[0].style.display = 'none'
-let explanationArea = document.getElementById('explanations')
-
-    for (let [key, value] in Object.entries(correctAnswers)){
-        if (value == 1 || value =='1'){
-            explanationArea.innerHTML += '<p class="explanation-question"><h>Question ' +parseInt(key)+1 + ': </h>'+ shuffledQuestions[key].question +'</p>'
-            explanationArea.innerHTML += '<p class="explanation-correctAnswer"><h> Correct Answer: </h>' + shuffledQuestions[key][shuffledQuestions[key].correctOption] +'</p>'
+function showExplanation() {
+    document.getElementsByClassName('main')[0].style.display = 'none';
+    let explanationArea = document.getElementById('explanations');
+    explanationArea.innerHTML += "this is for the test "
+    //console.log(correctAnswers)
+    console.log(shuffledQuestions)
+    
+    for (let [key, value] of Object.entries(correctAnswers)) {
+        if (value == 1 || value == '1') {
+            explanationArea.innerHTML += 
+            '<div class="single-result correct-answer">' +
+            '<p class="explanation-question"><h>Question ' + (parseInt(key) + 1) + ': </h>' + shuffledQuestions[key].question + '</p>'
+            + '<p class="explanation-correctAnswer"><h> Correct Answer: </h>' + shuffledQuestions[key][shuffledQuestions[key].correctOption] + '</p>'+
+            '<p class="explanation-correctAnswer"><h> Explanation:</h> ' + shuffledQuestions[key].explanation + ' </p>' +
+            '</div>'
+        } else {
+            let query = 'Provide me Explanation about the following question ' + shuffledQuestions[key].question;
+            query += ' and the choices are ' + ' ' + shuffledQuestions[key].optionA + ' ' + shuffledQuestions[key].optionB + ' ' + shuffledQuestions[key].optionC + ' ' + shuffledQuestions[key].optionD + ' what is the correct answer and tell me the reason';
+            query += ' and some user answered this question as '+ shuffledQuestions[key][userAnswers[key]] +' explain him why the he is wrong and what may be his approach'
+            explanationArea.innerHTML +=
+                '<div class="single-result">' +
+                '<p class="explanation-question"><h>Question ' + (parseInt(key) + 1) + ':</h> ' + shuffledQuestions[key].question + '</p>' +
+                '<p class="explanation-correctAnswer"><h> Your Answer:</h> ' + shuffledQuestions[key][userAnswers[key]] + '</p>' +
+                '<p class="explanation-correctAnswer"><h> Correct Answer:</h> ' + shuffledQuestions[key][shuffledQuestions[key].correctOption] + '</p>' +
+                '<p class="explanation-correctAnswer"><h> Explanation:</h> ' + shuffledQuestions[key].explanation + ' </p>' +
+                `<a class="more-exp-link" href="chat/${query}" >More Explanations </a>` +
+                '</div>';
         }
-        else{
-        let query = 'Provide me Explanation about the following question ' + shuffledQuestions[key].question
-       query +=  ' and the choices are '+ ' '+shuffledQuestions[key].optionA+' '+shuffledQuestions[key].optionB + ' '+shuffledQuestions[key].optionC +' '+shuffledQuestions[key].optionD + 'what is the correct answer and tell me the reason '
-        explanationArea.innerHTML += 
-        '<div class="single-result">'+
-        '<p class="explanation-question"><h>Question '+parseInt(key)+':</h> '+ shuffledQuestions[key].question +'</p>'
-     + '<p class="explanation-correctAnswer"><h> Your Answer:</h> ' + shuffledQuestions[key][userAnswers[key]] +'</p>'
-       + '<p class="explanation-correctAnswer"><h> Correct Answer:</h> ' + shuffledQuestions[key][shuffledQuestions[key].correctOption] +'</p>'
-         + '<p class="explanation-correctAnswer"><h> Explanation:</h> '+ shuffledQuestions[key].explanation + ' </p>'
-         + `<a class="more-exp-link" href="chat/${query}" >More Explanations </a>`
-    }
     }
 }
 
 //closes score modal and resets game
 function closeScoreModal() {
-    questionNumber = 1
+    questionNumber = 0
     playerScore = 0
     wrongAttempt = 0
     indexNumber = 0
-    shuffledQuestions = []
+    //shuffledQuestions = []
     NextQuestion(indexNumber)
     document.getElementById('score-modal').style.display = "none"
 }
@@ -293,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
 document.getElementById('next').addEventListener('click', handleNextQuestion)
 document.getElementById('exp-btn').addEventListener('click', showExplanation)
 document.getElementById('close-modal-btn').addEventListener('click', closeOptionModal)
-NextQuestion(1);
+NextQuestion(0);
 })
 
 
