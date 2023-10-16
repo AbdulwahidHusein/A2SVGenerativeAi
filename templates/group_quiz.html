@@ -1,0 +1,95 @@
+{% extends 'index2.html' %}
+
+{% block content %}
+{% load static %}
+<style>
+    .custom-container {
+        min-height: 80vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .actions {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .actions button.standings {
+        border: 1px solid;
+        min-height: 50px;
+        min-width: 100px;
+        background-color: #FF800F;
+        color: white;
+        transition: .5s all;
+    }
+
+    .actions button.standings:hover {
+        border-radius: 5px;
+        border: 1px solid #FF800F;
+        background-color: white;
+        color: black;
+    }
+
+    .actions .timer {
+        font-size: 20px;
+        font-weight: bold;
+    }
+</style>
+
+<body>
+    <div class="actions">
+        <button class="standings">Standings</button>
+        <div class="timer">
+            <!-- {{ timer_minutes }}:{{ timer_seconds }} If the time is passed as a prop -->
+            00 : 00
+        </div>
+        <script>
+            // Sample timer with js
+            var minutes = timer_minutes;
+            var seconds = timer_seconds;
+            setInterval(function () {
+                if (seconds === 0) {
+                    if (minutes === 0) {
+                        // I guess u wanna do something here?
+                        clearInterval();
+                    } else {
+                        minutes--;
+                        seconds = 59;
+                    }
+                } else {
+                    seconds--;
+                }
+                document.getElementById("timer").innerHTML = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+            }, 1000);
+        </script>
+    </div>
+    <div class="container-xxl py-5 custom-container">
+        <div class="container text-center">
+            {% if quizes %}
+            {% for quiz in quizes %}
+            <div class="row border border-primary rounded p-3 mt-3 d-flex justify-content-center align-items-center">
+                <div class="col-md-6">
+                    {{ quiz.title }}
+                </div>
+                <div class="col-md-3">
+                    Your previous Score: {{ quiz.user_score }} / {{quiz.size}}
+                </div>
+                <div class="col-md-3">
+                    <a href="{%url 'quiz' quiz.id %}">Retake quiz</a>
+                </div>
+                <Button class="btn btn-primary" style="margin-top:20px; width:50%">
+                    Export
+                </Button>
+            </div>
+            {% endfor %}
+            {% else %}
+            <h1>You haven't taken any quizzes yet.</h1>
+            {% endif %}
+        </div>
+    </div>
+</body>
+{% endblock content %}
