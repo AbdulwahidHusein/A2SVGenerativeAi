@@ -32,9 +32,13 @@
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
 </head>
 <body>
+
     <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
         <div class="spinner-grow text-primary" role="status"></div>
     </div>
+    <div id="loader" style="position:fixed; left:50vw; top:50vh; z-index:1000; display:none" class="spinner-border text-primary" role="status">
+        <span class="visually-hidden"></span>
+      </div>
     <!-- Spinner End -->
     
 

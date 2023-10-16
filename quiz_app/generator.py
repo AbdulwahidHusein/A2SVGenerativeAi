@@ -34,10 +34,13 @@ def get_question(file, num_of_questions, difficulty, start_page, end_page, mode,
     summerized_data = read_summerize_split(file, start_page, end_page)
     
     response = {}
-    question_generator = api_caller.GenerateQuestionRequest(summerized_data[0], model)
-    questions = question_generator.make_request(num_of_questions, difficulty, mode)
-    
-    return questions
+    if summerized_data:
+        question_generator = api_caller.GenerateQuestionRequest(summerized_data[0], model)
+        questions = question_generator.make_request(num_of_questions, difficulty, mode)
+        
+        return questions
+    else:
+        return ""
 
 
 if __name__ == '__main__':
