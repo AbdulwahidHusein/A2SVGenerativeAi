@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from datetime import datetime
+from django.utils import timezone
 
 class CustomUser(AbstractUser):
     first_name = models.CharField(null=True, max_length=50)
@@ -49,7 +49,7 @@ class GroupQuiz(models.Model):
         return f"Group Quiz {self.pk} - Quiz: {self.quiz} - Start Time: {self.start_time}"
     
     def update_status(self):
-        current_time = datetime.now()
+        current_time = timezone.now()
         if self.start_time > current_time:
             self.is_in_progress = False
             self.completed = False

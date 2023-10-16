@@ -188,8 +188,8 @@ def get_group_quiz_info(request, id):
     
     #joined_members = group_quiz.joined_members.all()
     scores = ScoreHolder.objects.all().filter(group_quiz=group_quiz).order_by('score')
-    data['scores'] =scores
-    return render(request, 'joined_group.html')
+    data['scores'] = scores
+    return render(request, 'group_quiz_comp.html', data)
     
 @login_required(login_url='login')   
 def handle_join_group(request, id):
@@ -237,7 +237,9 @@ def create_group_quiz(request):
 
         group_quiz.save()
         group_quiz.joined_members.add(user)
+        print("time"*100, group_quiz.start_time)
         group_quiz.save()
+        
         return redirect('group_quizes')
     quizzes = Quiz.objects.all().filter(generated_by=user)
     return render(request, 'create_group_quiz.html', {'quizzes':quizzes})
