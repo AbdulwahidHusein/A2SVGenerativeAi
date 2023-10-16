@@ -15,12 +15,12 @@ def read_summerize_split(file, start_page, end_page):
     if file_content:
         summerizer =  file_summerizer.Summerizer(file_content)
         summerized = summerizer.summarize(divider)#1/3 of the original number of sentence
-        splitted = file_chunk.split_text_into_groups(summerized, 100, 1500)
+        splitted = file_chunk.split_text_into_groups(summerized, 100, 500)
         
         while len(splitted) > 5:
             summerizer =  file_summerizer.Summerizer(' '.join(splitted))
             summerized = summerizer.summarize(divider)#1/3 of the original number of sentence
-            splitted = file_chunk.split_text_into_groups(summerized, 100, 800)
+            splitted = file_chunk.split_text_into_groups(summerized, 100, 500)
             
         return splitted
     else:

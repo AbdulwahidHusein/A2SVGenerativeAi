@@ -208,21 +208,21 @@ function showExplanation() {
     for (let [key, value] of Object.entries(correctAnswers)) {
         if (value == 1 || value == '1') {
             explanationArea.innerHTML += 
-            '<div class="single-result correct-answer">' +
-            '<p class="explanation-question"><h>Question ' + (parseInt(key) + 1) + ': </h>' + shuffledQuestions[key].question + '</p>'
-            + '<p class="explanation-correctAnswer"><h> Correct Answer: </h>' + shuffledQuestions[key][shuffledQuestions[key].correctOption] + '</p>'+
-            '<p class="explanation-correctAnswer"><h> Explanation:</h> ' + shuffledQuestions[key].explanation + ' </p>' +
+            '<div class="single-result  border border-primary rounded p-3 mt-3">' +
+            '<p class="exp explanation-question"><h>Question ' + (parseInt(key) + 1) + ': </h>' + shuffledQuestions[key].question + '</p>'
+            + '<p class="exp explanation-correctAnswer"><h> Correct Answer: </h>' + shuffledQuestions[key][shuffledQuestions[key].correctOption] + '</p>'+
+            '<p class="exp explanation-correctAnswer"><h> Explanation:</h> ' + shuffledQuestions[key].explanation + ' </p>' +
             '</div>'
         } else {
             let query = 'Provide me Explanation about the following question ' + shuffledQuestions[key].question;
             query += ' and the choices are ' + ' ' + shuffledQuestions[key].optionA + ' ' + shuffledQuestions[key].optionB + ' ' + shuffledQuestions[key].optionC + ' ' + shuffledQuestions[key].optionD + ' what is the correct answer and tell me the reason';
             query += ' and some user answered this question as '+ shuffledQuestions[key][userAnswers[key]] +' explain him why the he is wrong and what may be his approach'
             explanationArea.innerHTML +=
-                '<div class="single-result">' +
-                '<p class="explanation-question"><h>Question ' + (parseInt(key) + 1) + ':</h> ' + shuffledQuestions[key].question + '</p>' +
-                '<p class="explanation-correctAnswer"><h> Your Answer:</h> ' + shuffledQuestions[key][userAnswers[key]] + '</p>' +
-                '<p class="explanation-correctAnswer"><h> Correct Answer:</h> ' + shuffledQuestions[key][shuffledQuestions[key].correctOption] + '</p>' +
-                '<p class="explanation-correctAnswer"><h> Explanation:</h> ' + shuffledQuestions[key].explanation + ' </p>' +
+                '<div class="single-result border border-primary rounded p-3 mt-3">' +
+                '<p class="exp explanation-question"><h>Question ' + (parseInt(key) + 1) + ':</h> ' + shuffledQuestions[key].question + '</p>' +
+                '<p class="exp explanation-correctAnswer"><h> Your Answer:</h> ' + shuffledQuestions[key][userAnswers[key]] + '</p>' +
+                '<p class="exp explanation-correctAnswer"><h> Correct Answer:</h> ' + shuffledQuestions[key][shuffledQuestions[key].correctOption] + '</p>' +
+                '<p class="exp explanation-correctAnswer"><h> Explanation:</h> ' + shuffledQuestions[key].explanation + ' </p>' +
                 `<a class="more-exp-link" href="chat/${query}" >More Explanations </a>` +
                 '</div>';
         }

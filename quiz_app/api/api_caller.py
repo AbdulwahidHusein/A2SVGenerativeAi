@@ -75,7 +75,6 @@ class GenerateQuestionRequest:
         else:
             bard = BardEx(BARD_API_KEY)
             generated_questions = bard.get_answer(prompt)
-            print("originalllllllllllllllllllllllllllllllllllllllllllllllllll", generated_questions)
             parsed = ResponseParser(generated_questions, mode)
             parsed = parsed.get_json_data()
             return parsed
