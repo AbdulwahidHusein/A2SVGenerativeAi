@@ -4,9 +4,10 @@ from django.http import JsonResponse
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from .models import CustomUser, Message, Quiz
+from .models import CustomUser, Message, Quiz, GroupQuiz, ScoreHolder
 from .generator import get_question
 import json, re
+import datetime
 
 def user_login(request):
     if request.method == "POST":
@@ -142,12 +143,10 @@ def get_quiz(request, id):
     quizs = Quiz.objects.all().filter(generated_by= user)
     return render(request, 'my_quizes.html', {"quizes":quizs})
 
-
+@login_required(login_url='login')
 def handle_quiz_submit(request):
     id = request.POST.get('id')
     score = request.POST.get('score')
-    
-    print('adsc'*20, id, score)
     quiz = Quiz.objects.get(pk=id)
     
     quiz.user_score = score
@@ -165,3 +164,76 @@ def myquizes(request):
 
 def chat(request):
     return render(request, 'chat2.html')
+
+
+
+@login_required(login_url='login')
+def user_group_quizs(request):
+    user = request.user
+    group_quizzes = GroupQuiz.objects.filter(joined_members=user)
+    return render(request, "group_quiz.html", {"group_quizzes":group_quizzes})
+
+def get_group_quiz_info(request, id):
+    data = {}
+    group_quiz = GroupQuiz.objects.get(pk=id)
+    quiz = group_quiz.quiz
+    questions = quiz.questions
+    questions = re.sub(r"'", '"',questions)
+    questions = json.loads(questions)
+    group_quiz.quiz.questions = questions#may not be possible but lets try it  
+    group_quiz.update_status()
+    data['group_quiz'] = group_quiz
+    
+    #joined_members = group_quiz.joined_members.all()
+    scores = ScoreHolder.objects.all().filter(group_quiz=group_quiz).order_by('score')
+    data['scores'] =scores
+    return render
+    
+@login_required(login_url='login')   
+def handle_join_group(request, id):
+    user = request.user
+    group_quiz = GroupQuiz.objects.get(pk=id)
+    group_quiz.update_status()
+    group_quiz.joined_members.add(user)
+    score = ScoreHolder(score=0,competitor=user, group_quiz=group_quiz)
+    score.save()
+    
+    return
+
+@login_required(login_url='login')
+def create_group_quiz(request, id):
+    # from datetime import datetime
+
+    # # User-provided inputs
+    # user_date = '2023-10-15'  # User-provided date
+    # user_time = '14:30:00'    # User-provided time
+
+    # # Current year
+    # current_year = datetime.now().year
+
+    # # Combine date, time, and current year
+    # combined_datetime_str = f'{current_year}-{user_date} {user_time}'
+
+    # # Create datetime object
+    # combined_datetime = datetime.strptime(combined_datetime_str, '%Y-%m-%d %H:%M:%S')
+
+    # # Store combined_datetime in the database or perform other operations
+    
+    start_time_str = request.POST.get('start_time')
+    end_time_str = request.POST.get('end_time')
+        
+        # Convert datetime strings to datetime objects
+    start_time = datetime.strptime(start_time_str, '%Y-%m-%dT%H:%M')
+    end_time = datetime.strptime(end_time_str, '%Y-%m-%dT%H:%M')
+    user  = request.user
+    quiz = Quiz.objects.get(pk=id)
+    
+    group_quiz = GroupQuiz(quiz=quiz, start_time=start_time, end_time=end_time, created_by=user)
+    group_quiz.joined_members.add(user)
+    group_quiz.save()
+    
+    return
+    
+    
+    
+    

@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
+from datetime import datetime
 
 class CustomUser(AbstractUser):
     first_name = models.CharField(null=True, max_length=50)
@@ -40,10 +40,27 @@ class GroupQuiz(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     start_time = models.DateTimeField()
     completed = models.BooleanField(default=False)
-    joined_members = models.ManyToManyField(CustomUser)
+    joined_members = models.ManyToManyField(CustomUser, related_name="members")
+    end_time = models.DateTimeField(null=True, blank=True)
+    is_in_progress = models.BooleanField(default=False)
+    created_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return f"Group Quiz {self.pk} - Quiz: {self.quiz} - Start Time: {self.start_time}"
+    
+    def update_status(self):
+        current_time = datetime.now()
+        if self.start_time > current_time:
+            self.is_in_progress = False
+            self.completed = False
+        elif current_time < self.end_time:
+            self.is_in_progress = True
+            self.completed = False
+        else:
+            self.is_in_progress = False
+            self.completed = True
+        
+        return True
 
 
 class ScoreHolder(models.Model):

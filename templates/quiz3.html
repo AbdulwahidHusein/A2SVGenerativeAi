@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="{% static 'css/quiz2.css' %}" />
 <script src="{% static 'js/quiz2.js' %}"></script>
 
-<body style="background:black">
+<body style="">
         <script defer>
             let QuizId = {{id|safe}};
 
@@ -22,7 +22,7 @@
           
             <div class="modal-content-container">
               
-                <h1>Congratulations, Quiz Completed.</h1>
+                <h1>Quiz Completed.</h1>
               
                 <div class="grade-details">
                     <p>Wrong Answers: <span id="wrong-answers"></span></p>
@@ -41,8 +41,8 @@
         <div class="game-quiz-container">
           
             <div class="game-details-container">
-                <h1 style="color:white">Score: <span id="player-score"></span></h1>
-                <h1 style="color:white">Question: <span style="color:white" id="question-number"></span></h1>
+                <h1 style="">Score: <span id="player-score"></span></h1>
+                <h1 style="">Question: <span style="" id="question-number"></span></h1>
             </div>
 
             <div class="game-question-container">
@@ -64,25 +64,25 @@
                  
                </div>
               
-                <span>
+                <span class="border border-primary rounded p-3 mt-3">
                     <input type="radio" id="option-one" name="option" class="radio" value="optionA" />
                     <label for="option-one" class="option" id="option-one-label"></label>
                 </span>
               
 
-                <span>
+                <span class="border border-primary rounded p-3 mt-3">
                     <input type="radio" id="option-two" name="option" class="radio" value="optionB" />
                     <label for="option-two" class="option" id="option-two-label"></label>
                 </span>
               
 
-                <span>
+                <span class="border border-primary rounded p-3 mt-3">
                     <input type="radio" id="option-three" name="option" class="radio" value="optionC" />
                     <label for="option-three" class="option" id="option-three-label"></label>
                 </span>
               
 
-                <span>
+                <span class="border border-primary rounded p-3 mt-3">
                     <input type="radio" id="option-four" name="option" class="radio" value="optionD" />
                     <label for="option-four" class="option" id="option-four-label"></label>
                 </span>
@@ -90,7 +90,7 @@
                 
             </div>
 
-            <div class="next-button-container">
+            <div class="next-button-container border border-primary rounded p-3 mt-3">
                 <button id="next" >Next Question</button>
             </div>
 

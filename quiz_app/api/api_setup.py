@@ -18,17 +18,11 @@ class PromptGenerator:
             
     def make_multiple_choice_prompt(self, number_of_questions, question_format):
         
-        prompt  = f'''Dear AI Model, dont return if the response is not in required format!!!
-            Please generate a quiz that consists of {number_of_questions} different multiple-choice questions.{self.difficulty_sentences} Each question should have a unique context and four choices. Set the difficulty level to {self.difficulty}. The questions must be returned in the following format: {question_format}. 
-
-            Please note that each question and explanation should not be more than two lines. It is important to ensure that all items are quoted to avoid JSON errors. Do not use quoted words that may interfere with the string's quotation. Remember to quote each item properly.
-
+        prompt  = f'''You are helpful Quiz generator
+            Please generate a quiz that consists of {number_of_questions} different multiple-choice questions.{self.difficulty_sentences} Each question should have a unique context and four choices. The questions must be returned in the following format: {question_format}. 
+            Please note that each question and explanation should not be more than two lines and explanations should not repeat the correct choice. It is important to ensure that all items are quoted to avoid JSON errors. Do not use quoted words that may interfere with the string's quotation. Remember to quote each item properly.
             NEVER INSERT NEW LINES WITHIN A SINGLE ITEM THAT ITEM MAY BE Question, CHOICE, OR EXPLANATION The question itself should be a valid JSON format with appropriate quotes and commas. The correct option should be written as "option" followed by the option letter, e.g., optionA.
-
             Please use the provided text to generate the quiz THE TEXT: {self.text}, along with this note Please Enusre to respond in correct format I give above other wise it raises a great error.
-
-            Thank you for your assistance in generating the quiz.
-
             Sincerely,
             '''
         self.prompt = prompt
