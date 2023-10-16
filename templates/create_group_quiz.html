@@ -1,0 +1,52 @@
+{% extends 'index2.html' %}
+
+{% block content %}
+    {% load static %}
+    <style>
+        .custom-container {
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+    <body>
+        <div class="row">
+            <div class="container-xxl py-5 custom-container">
+                <div class="col-md-6">
+                    <div class="container text-center border border-primary rounded p-3 mt-3">
+                        {% if quizzes %}
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label class="form-control" for="select">select a quiz to be converted</label>
+                                    <select name="id" class="form-control" id="select">
+                                        {% for quiz in quizzes %}
+                                            <option value="{{quiz.id}}">
+                                                {{quiz.title}}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sdate">Choose the date and time where the quiz starts</label>
+                                    <input name="start_time"  class="form-control" type="datetime-local">
+                                </div>
+                                <div class="form-group">
+                                    <label for="edate">Choose the date and time where the quiz ends</label>
+                                    <input  name="end_time" class="form-control" type="datetime-local">
+                                </div>
+                                <button type="submit" class="btn btn-primary" style="margin-top:20px; width:50%">
+                                    Create
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                {% else %}
+                    <h1>You haven't generated any quizzes yet. Please Generate First</h1>
+                {% endif %}
+            </div>
+        </div>
+    </body>
+{% endblock content %}
