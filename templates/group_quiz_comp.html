@@ -1,0 +1,106 @@
+{% extends 'index2.html' %}
+
+{% block content %}
+{% load static %}
+<style>
+    .custom-container {
+        min-height: 80vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .actions {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .actions button.standings {
+        border: 1px solid;
+        min-height: 50px;
+        min-width: 100px;
+        background-color: #FF800F;
+        color: white;
+        transition: .5s all;
+    }
+
+    .actions button.standings:hover {
+        border-radius: 5px;
+        border: 1px solid #FF800F;
+        background-color: white;
+        color: black;
+    }
+
+    .actions .timer {
+        font-size: 20px;
+        font-weight: bold;
+    }
+</style>
+
+<body>
+    <div class="actions">
+        <button class="standings">Standings</button>
+        <div id="timer">
+            <!-- {{ timer_minutes }}:{{ timer_seconds }} If the time is passed as a prop -->
+          Starts in  00 : 00
+        </div>
+        <script>
+            // Assuming group_quiz.start_time and currentDateTime are already defined
+
+// Parse the start time and current time strings
+const startTime = new Date("{{ group_quiz.start_time|date:'Y-m-d\\TH:i:s' }}");
+const currentTime = new Date("{% now 'Y-m-d\\TH:i:s' %}");
+
+// Calculate the difference in milliseconds
+const timeDiff = currentTime.getTime() - startTime.getTime();
+
+// Convert the time difference to years, months, days, hours, minutes, and seconds
+const diffInSeconds = Math.floor(timeDiff / 1000);
+const diffInMinutes = Math.floor(diffInSeconds / 60);
+const diffInHours = Math.floor(diffInMinutes / 60);
+const diffInDays = Math.floor(diffInHours / 24);
+
+const diffInYears = Math.floor(diffInDays / 365);
+const diffInMonths = Math.floor(diffInDays / 30);
+const remainingDays = diffInDays % 30;
+const remainingHours = diffInHours % 24;
+const remainingMinutes = diffInMinutes % 60;
+const remainingSeconds = diffInSeconds % 60;
+
+
+console.log("Difference:");
+console.log("Years:", diffInYears);
+console.log("Months:", diffInMonths);
+console.log("Days:", remainingDays);
+console.log("Hours:", remainingHours);
+console.log("Minutes:", remainingMinutes);
+console.log("Seconds:", remainingSeconds);
+
+            var days = remainingDays;
+            var hours = remainingHours;
+            var minutes = remainingMinutes;
+            var seconds = remainingSeconds;
+            setInterval(function () {
+                if (seconds === 0) {
+                    if (minutes === 0) {
+                        // I guess u wanna do something here?
+                        clearInterval();
+                    } else {
+                        minutes--;
+                        seconds = 59;
+                    }
+                } else {
+                    seconds--;
+                }
+                document.getElementById("timer").innerHTML ="starts in "+hours + ":"+ minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+            }, 1000);
+        </script>
+    </div>
+    <div class="container-xxl py-5 custom-container">
+        
+    </div>
+</body>
+{% endblock content %}
