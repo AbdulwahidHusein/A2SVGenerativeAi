@@ -69,26 +69,27 @@
     </div>
     <div class="container-xxl py-5 custom-container">
         <div class="container text-center">
-            {% if quizes %}
-            {% for quiz in quizes %}
+            {% if group_quizes %}
+            {% for quiz in group_quizes %}
             <div class="row border border-primary rounded p-3 mt-3 d-flex justify-content-center align-items-center">
                 <div class="col-md-6">
-                    {{ quiz.title }}
+                    {{ quiz.quiz.title }}
                 </div>
                 <div class="col-md-3">
-                    Your previous Score: {{ quiz.user_score }} / {{quiz.size}}
+                    Starts in: {{ quiz.quiz.start_time }}
                 </div>
                 <div class="col-md-3">
-                    <a href="{%url 'quiz' quiz.id %}">Retake quiz</a>
+                    <a href="{%url 'quiz' quiz.id %}">More info</a>
                 </div>
-                <Button class="btn btn-primary" style="margin-top:20px; width:50%">
-                    Export
-                </Button>
             </div>
             {% endfor %}
             {% else %}
-            <h1>You haven't taken any quizzes yet.</h1>
+            <h1>You haven't any groups quizzes yet.</h1>
+            
             {% endif %}
+            <Button onclick="window.location.href = '{%url 'create_group_quiz'%}';" class="btn btn-primary" style="margin-top:20px; width:50%">
+                Create new Group
+            </Button>
         </div>
     </div>
 </body>

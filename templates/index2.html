@@ -51,7 +51,7 @@
                 <a href="{%url 'home' %}" class="nav-item nav-link active">Home</a>
                 <a href="{%url 'upload' %}" class="nav-item nav-link">Get Started</a>
                 <a href="{%url 'my_quizes'%}" class="nav-item nav-link">My Quizes</a>
-                <a href="#" class="nav-item nav-link">Group Quizes</a>
+                <a href="{%url 'group_quizes'%}" class="nav-item nav-link">Group Quizes</a>
                 <a href="{%url 'chat' %}" class="nav-item nav-link">chat</a>
                 {% if auth %}
                 <a href="{%url 'register' %}" class="nav-item nav-link">Logout</a>
@@ -77,7 +77,6 @@
             <div class="row g-5">
                 <div class="col-md-6">
                     <h1 class="text-white mb-4"><img class="img-fluid me-3" src="{% static 'img/icon/icon-02-light.png' %}" alt="">Quiz Me</h1>
-                    <span>Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit.</span>
                 </div>
                 <div class="col-md-6">
                     <h5 class="text-light mb-4">Contact Us</h5>

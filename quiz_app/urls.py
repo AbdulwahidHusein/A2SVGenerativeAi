@@ -15,8 +15,10 @@ urlpatterns = [
     path('quiz/<int:id>', views.get_quiz, name="quiz"),
     path('home', views.home, name="home"),
     path('upload', views.upload, name="upload"),
-    path('chat', views.chat, name="chat"),
+    path('chat', views.chat, name="chat"),  
     path('my_quizes', views.myquizes, name='my_quizes'),
     path("update_quiz/", views.handle_quiz_submit, name="handle_quiz_submit"),
-    path('group_quiz/', views.get_quiz, name="quiz"),
+    path('group_quiz/<int:id>', views.get_group_quiz_info, name="group_quiz"),
+    path('my_group_quizzes', views.user_group_quizs, name="group_quizes"),
+    path('create_group_quiz',views.create_group_quiz, name="create_group_quiz"),
 ]

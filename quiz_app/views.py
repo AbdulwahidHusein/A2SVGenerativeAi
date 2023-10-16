@@ -4,10 +4,11 @@ from django.http import JsonResponse
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from .models import CustomUser, Message, Quiz, GroupQuiz, ScoreHolder
 from .generator import get_question
 import json, re
-import datetime
+from dateutil import parser
 
 def user_login(request):
     if request.method == "POST":
@@ -171,11 +172,12 @@ def chat(request):
 def user_group_quizs(request):
     user = request.user
     group_quizzes = GroupQuiz.objects.filter(joined_members=user)
-    return render(request, "group_quiz.html", {"group_quizzes":group_quizzes})
+    return render(request, "joined_group_quizes.html", {"group_quizes":group_quizzes})
 
 def get_group_quiz_info(request, id):
     data = {}
-    group_quiz = GroupQuiz.objects.get(pk=id)
+    group_quiz = get_object_or_404(GroupQuiz, pk=id)
+    #GroupQuiz.objects.get(pk=id)
     quiz = group_quiz.quiz
     questions = quiz.questions
     questions = re.sub(r"'", '"',questions)
@@ -187,7 +189,7 @@ def get_group_quiz_info(request, id):
     #joined_members = group_quiz.joined_members.all()
     scores = ScoreHolder.objects.all().filter(group_quiz=group_quiz).order_by('score')
     data['scores'] =scores
-    return render
+    return render(request, 'joined_group.html')
     
 @login_required(login_url='login')   
 def handle_join_group(request, id):
@@ -201,7 +203,9 @@ def handle_join_group(request, id):
     return
 
 @login_required(login_url='login')
-def create_group_quiz(request, id):
+def create_group_quiz(request):
+    user  = request.user
+    date_string = "2023-10-16 10:30:00"
     # from datetime import datetime
 
     # # User-provided inputs
@@ -218,21 +222,25 @@ def create_group_quiz(request, id):
     # combined_datetime = datetime.strptime(combined_datetime_str, '%Y-%m-%d %H:%M:%S')
 
     # # Store combined_datetime in the database or perform other operations
-    
-    start_time_str = request.POST.get('start_time')
-    end_time_str = request.POST.get('end_time')
+    if request.method == "POST":
+        id = request.POST.get('id')
+        start_time_str = request.POST.get('start_time')
+        end_time_str = request.POST.get('end_time')
+            
+            # Convert datetime strings to datetime objects
+        parsed_start_date_time = parser.parse(start_time_str)
+        parsed_end_date_time = parser.parse(end_time_str)
+
+        quiz = Quiz.objects.get(pk=id)
         
-        # Convert datetime strings to datetime objects
-    start_time = datetime.strptime(start_time_str, '%Y-%m-%dT%H:%M')
-    end_time = datetime.strptime(end_time_str, '%Y-%m-%dT%H:%M')
-    user  = request.user
-    quiz = Quiz.objects.get(pk=id)
-    
-    group_quiz = GroupQuiz(quiz=quiz, start_time=start_time, end_time=end_time, created_by=user)
-    group_quiz.joined_members.add(user)
-    group_quiz.save()
-    
-    return
+        group_quiz = GroupQuiz(quiz=quiz, start_time=parsed_start_date_time, end_time=parsed_end_date_time, created_by=user)
+
+        group_quiz.save()
+        group_quiz.joined_members.add(user)
+        group_quiz.save()
+        return redirect('group_quizes')
+    quizzes = Quiz.objects.all().filter(generated_by=user)
+    return render(request, 'create_group_quiz.html', {'quizzes':quizzes})
     
     
     
