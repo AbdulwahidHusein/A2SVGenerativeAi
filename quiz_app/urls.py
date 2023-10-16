@@ -18,4 +18,5 @@ urlpatterns = [
     path('chat', views.chat, name="chat"),
     path('my_quizes', views.myquizes, name='my_quizes'),
     path("update_quiz/", views.handle_quiz_submit, name="handle_quiz_submit"),
+    path('group_quiz/', views.get_quiz, name="quiz"),
 ]
