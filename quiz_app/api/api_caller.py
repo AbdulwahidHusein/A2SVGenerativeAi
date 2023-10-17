@@ -21,7 +21,7 @@ multiple_choice_question_format = {
       "explanation": "Explanation."
     },
      {
-      "questio": "question1",
+      "question": "question1",
       "optionA": "Choice a",
       "optionB": "Choice B",
       "optionC": "Choice c",
