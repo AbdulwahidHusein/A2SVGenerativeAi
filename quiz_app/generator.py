@@ -1,6 +1,6 @@
 import sys
 sys.path.append("..") 
-from quiz_app.api import api_caller
+from quiz_app.api import api_caller_v2
 from quiz_app.file_processor import file_reader, file_summerizer, file_chunk
 
 def read_summerize_split(file, start_page, end_page):
@@ -30,12 +30,13 @@ def read_summerize_split(file, start_page, end_page):
     
     
 def get_question(file, num_of_questions, difficulty, start_page, end_page, mode, model):
+    num_of_questions = max(int(num_of_questions), 10)
     #mode can be multiple_choice or short_answer
     summerized_data = read_summerize_split(file, start_page, end_page)
     
     response = {}
     if summerized_data:
-        question_generator = api_caller.GenerateQuestionRequest(summerized_data[0], model)
+        question_generator = api_caller_v2.GenerateQuestionRequest(summerized_data[0], model)
         questions = question_generator.make_request(num_of_questions, difficulty, mode)
         
         return questions

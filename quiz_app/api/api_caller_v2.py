@@ -2,8 +2,8 @@ import os
 import sys
 sys.path.append('..')
 from dotenv import load_dotenv
-from api_setup_v2 import PromptGenerator, OpenAi
-from parse_response_v2 import ResponseParser
+from .api_setup_v2 import PromptGenerator, OpenAi
+from .parse_response_v2 import ResponseParser
 
 load_dotenv()
 BARD_API_KEY = os.getenv("BARD_API_KEY")
@@ -11,7 +11,7 @@ OPEN_AI_API_KEY  = os.getenv('OPEN_AI_API_KEY')
 
 multiple_choice_question_format = '''
 [
-1. Why is cybersecurity important?
+9. Why is cybersecurity important?
 A. To prevent financial loss
 B. To maintain business continuity
 C. To protect sensitive data
@@ -19,7 +19,7 @@ D. All of the above
 CorrectOption: optionD
 Explanation: Cybersecurity is crucial to prevent financial loss, maintain business continuity, and protect sensitive data from unauthorized access. It also helps in preventing reputational damage and legal consequences.
 $$$$
-8. What does the threat landscape in cyberspace include?
+10. What does the threat landscape in cyberspace include?
 A. Malware
 B. Phishing attacks
 C. Ransomware
