@@ -122,7 +122,7 @@ def upload(request):
         epage = int(request.POST.get('epage'))
         comment = request.POST.get('additional_comment')
         
-        questions = get_question(uploaded_file, 5, difficulty, spage, epage, 'multiple_choice', 'chatgpt')
+        questions = get_question(uploaded_file, num_of_questions, difficulty, spage, epage, 'multiple_choice', 'chatgpt')
         print(questions)
         title = questions['questions'][0]['question']
         quiz = Quiz.objects.create(generated_by=user, questions=str(questions),size=5, title=title)
@@ -137,7 +137,10 @@ def get_quiz(request, id):
     quiz = Quiz.objects.get(pk=id)
     if quiz.generated_by.id == user.id:
         questions = quiz.questions
+        
         questions = re.sub(r"'", '"',questions)
+        #questions = re.sub(r"(\b\w+)\"(\w+\b)", r"\1 \2", questions)
+        print(questions)
         questions = json.loads(questions)
         return render(request, 'quiz3.html', {'questions':questions['questions'], 'id':quiz.id})
     
@@ -243,7 +246,3 @@ def create_group_quiz(request):
         return redirect('group_quizes')
     quizzes = Quiz.objects.all().filter(generated_by=user)
     return render(request, 'create_group_quiz.html', {'quizzes':quizzes})
-    
-    
-    
-    
