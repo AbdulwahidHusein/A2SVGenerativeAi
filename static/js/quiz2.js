@@ -216,14 +216,14 @@ function showExplanation() {
         } else {
             let query = 'Provide me Explanation about the following question ' + shuffledQuestions[key].question;
             query += ' and the choices are ' + ' ' + shuffledQuestions[key].optionA + ' ' + shuffledQuestions[key].optionB + ' ' + shuffledQuestions[key].optionC + ' ' + shuffledQuestions[key].optionD + ' what is the correct answer and tell me the reason';
-            query += ' and some user answered this question as '+ shuffledQuestions[key][userAnswers[key]] +' explain him why the he is wrong and what may be his approach'
+            query += ' and I answered this question as '+ shuffledQuestions[key][userAnswers[key]] +' explain me why I am wrong and what may be the reason that me conclude this and what should I always remember'
             explanationArea.innerHTML +=
                 '<div class="single-result border border-primary rounded p-3 mt-3">' +
                 '<p class="exp explanation-question"><h>Question ' + (parseInt(key) + 1) + ':</h> ' + shuffledQuestions[key].question + '</p>' +
                 '<p class="exp explanation-correctAnswer"><h> Your Answer:</h> ' + shuffledQuestions[key][userAnswers[key]] + '</p>' +
                 '<p class="exp explanation-correctAnswer"><h> Correct Answer:</h> ' + shuffledQuestions[key][shuffledQuestions[key].correctOption] + '</p>' +
                 '<p class="exp explanation-correctAnswer"><h> Explanation:</h> ' + shuffledQuestions[key].explanation + ' </p>' +
-                `<a class="more-exp-link" href="chat/${query}" >More Explanations </a>` +
+                `<a class="more-exp-link" href="http://127.0.0.1:8000/chat/?query=${query}" >More Explanations </a>` +
                 '</div>';
         }
     }

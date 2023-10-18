@@ -36,6 +36,7 @@ def get_question(file, num_of_questions, difficulty, start_page, end_page, mode,
     
     response = {}
     if summerized_data:
+        print(summerized_data[0])
         question_generator = api_caller_v2.GenerateQuestionRequest(summerized_data[0], model)
         questions = question_generator.make_request(num_of_questions, difficulty, mode)
         
