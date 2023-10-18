@@ -48,10 +48,11 @@ class PromptGenerator:
 class OpenAi:
 
     def __init__(self, API_KEY):
+        
         self.api_key = API_KEY
         openai.api_key = self.api_key
         
-    def chat(history, query):
+    def chat(self, history, query):
         conversation_history = [{'role': 'system', 'content': 'You are a helpful assistant.'}]
         for chat in history:
             if chat.is_recieved:

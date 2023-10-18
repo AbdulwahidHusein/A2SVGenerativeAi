@@ -7,6 +7,7 @@ class CustomUser(AbstractUser):
     email = models.EmailField(max_length=20, unique=True)
     carrier = models.CharField(max_length=20, null=True, blank=True)
     gender = models.CharField(max_length=5, null=True, blank=True)
+    
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name']

@@ -9,6 +9,12 @@ from .models import CustomUser, Message, Quiz, GroupQuiz, ScoreHolder
 from .generator import get_question
 import json, re
 from dateutil import parser
+from quiz_app.api.api_caller import OpenAi
+import os
+from dotenv import load_dotenv
+load_dotenv()
+OPEN_AI_API_KEY  = os.getenv('OPEN_AI_API_KEY')
+
 
 def user_login(request):
     if request.method == "POST":
@@ -60,40 +66,54 @@ def user_register(request):
 def get_chat(request):
     user_query = request.GET.get('query')
     user = request.user
-    chats = Message.objects.all().filter(user=user).order_by('-sent_date')[:6]
-    last_3_chats= chats
-    response = 'this is response'#bard_api.gpt_chat_session(last_3_chats, user_query)
+    chats = Message.objects.all().filter(user=user).order_by('-sent_date')[:4][::-1]
+    response = ""#bard_api.gpt_chat_session(last_3_chats, user_query)
     #print('sddddddddddddddddddddddddddddddddddddddddddddddddd'+user_query)
     #ask_bard(user_query)
     # Process the user_query and generate the chat response
     #chat_response = process_chat_query(user_query)
-    message1  = Message.objects.create(user=user, text=user_query, is_recieved = False)
-    message1.save()
-    message2  = Message.objects.create(user=user, text=response, is_recieved = True)
-    message2.save()
+    opena = OpenAi(OPEN_AI_API_KEY)
+    response = opena.chat(chats, user_query)
+        
+    if response:
+            #message1 = Message.objects.create(user=user, text=query, is_received=False)
+            #message1.save()
+        message1  = Message.objects.create(user=user, text=user_query, is_received = False)
+        message1.save()
+        message2 = Message.objects.create(user=user, text=response, is_received=True)
+        message2.save()
+    
     res = {}
     res['answer'] = response
     return JsonResponse(res)
 
 
 @login_required(login_url='login')
-def chat(request, query):
+def chat(request):
+    query = request.GET.get("query")
+    print("query"*100, query)
     user = request.user
-    chats = Message.objects.all().filter(user=user).order_by('-sent_date')[:10]
-    #answer = ask_bard(query)
-    last_3_chats = chats
-    if len(last_3_chats) > 6:
-        last_3_chats = last_3_chats[:6]     
-    response = 'this is response' #bard_api.gpt_chat_session(last_3_chats, query)
-    
-    if response:
-        message1  = Message.objects.create(user=user, text=query, is_recieved = False)
-        message1.save()
-        message2  = Message.objects.create(user=user, text=response, is_recieved = True)
-        message2.save()
-       
-    return render(request, 'chat.html', {'prev_chats':chats, 'response':response})
+    chats = Message.objects.all().filter(user=user).order_by('-sent_date')[:10][::-1]
+    #chats.reverse()
+    response = ""
+    if query:
+        last_3_chats = chats  # Initialize last_3_chats with chats
 
+        if len(last_3_chats) > 6:
+            last_3_chats = last_3_chats[:6]
+        
+        response = 'this is response' #bard_api.gpt_chat_session(last_3_chats, query)
+        if query:
+            opena = OpenAi(OPEN_AI_API_KEY)
+            response = opena.chat({}, query)
+        
+        if response:
+            #message1 = Message.objects.create(user=user, text=query, is_received=False)
+            #message1.save()
+            message2 = Message.objects.create(user=user, text=response, is_received=True)
+            message2.save()
+
+    return render(request, 'chat2.html', {'prev_chats': chats, 'response': response})
 
 def user_logout(request):
     logout(request)
@@ -164,10 +184,6 @@ def myquizes(request):
     quizs = Quiz.objects.all().filter(generated_by= user)
     return render(request, 'my_quizes.html', {"quizes":quizs})
     
-
-
-def chat(request):
-    return render(request, 'chat2.html')
 
 
 

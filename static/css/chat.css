@@ -1,27 +1,19 @@
-.card-bordered {
-    border: 1px solid #ebebeb;
-}
-body{
-    height: 100vh;
-    width: 100vw;
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-}
 
+.container{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    place-items: center;
+}
 .ccard {
-    border: 0;
-    border-radius: 0;
-    margin-bottom: 20px;
-    background-color: #262439;
-    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.03);
+    background-color: white;
+    box-shadow: 0 2px 3px rgba(136, 134, 134, 0.03);
     transition: 0.5s;
-    height: 80vh;
-    width: 80vw;
+    min-height: 80vh;
+    max-height: 90vh;
     overflow: scroll;
+    margin-top: 5px;
   }
 
 .padding {
@@ -40,9 +32,8 @@ body{
     justify-content: space-between;
     -webkit-box-align: center;
     align-items: center;
-    padding: 15px 20px;
     background-color: transparent;
-    border-bottom: 1px solid rgba(77,82,89,0.07);
+    border-bottom: 3px solid rgba(96, 100, 107, 0.07);
 }
 
 .card-header .card-title {
@@ -63,12 +54,7 @@ h4.card-title {
     margin-right: 8px;
 }
 
-.btn-secondary {
-    color: #4d5259 !important;
-    background-color: #e4e7ea;
-    border-color: #e4e7ea;
-    color: #fff;
-}
+
 
 .btn-xs {
     font-size: 11px;
@@ -92,28 +78,6 @@ h4.card-title {
 }
 
 
-.ps-container {
-    position: relative;
-}
-
-.ps-container {
-    -ms-touch-action: auto;
-    touch-action: auto;
-    overflow: hidden!important;
-    -ms-overflow-style: none;
-}
-
-.media-chat {
-    padding-right: 64px;
-    margin-bottom: 0;
-}
-
-.media {
-    padding: 16px 12px;
-    -webkit-transition: background-color .2s linear;
-    transition: background-color .2s linear;
-}
-
 .media .avatar {
     flex-shrink: 0;
 }
@@ -131,15 +95,6 @@ h4.card-title {
     text-transform: uppercase;
 }
 
-.media-chat .media-body {
-    -webkit-box-flex: initial;
-    flex: initial;
-    display: table;
-}
-
-.media-body {
-    min-width: 0;
-}
 
 .media-chat .media-body p {
     position: relative;
@@ -172,22 +127,6 @@ h4.card-title {
     font-weight: 400;
 }
 
-.media {
-    padding: 16px 12px;
-    -webkit-transition: background-color .2s linear;
-    transition: background-color .2s linear;
-}
-
-.media-meta-day::before {
-    margin-right: 16px;
-}
-
-.media-meta-day::before, .media-meta-day::after {
-    content: '';
-    -webkit-box-flex: 1;
-    flex: 1 1;
-    border-top: 1px solid #ebebeb;
-}
 
 .media-meta-day::after {
     content: '';
@@ -201,15 +140,12 @@ h4.card-title {
 }
 
 .media-chat.media-chat-reverse {
-    padding-right: 12px;
-    padding-left: 64px;
     -webkit-box-orient: horizontal;
     -webkit-box-direction: reverse;
     flex-direction: row-reverse;
 }
 
 .media-chat {
-    padding-right: 64px;
     margin-bottom: 0;
 }
 
@@ -251,7 +187,7 @@ h4.card-title {
     -webkit-box-align: center;
     align-items: center;
     padding: 12px 20px;
-    background-color: #f9fafb;
+    background-color: #eaeef2;
 }
 
 .publisher>*:first-child {
