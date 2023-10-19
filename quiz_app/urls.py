@@ -14,7 +14,7 @@ urlpatterns = [
     #new paths
     path('quiz/<int:id>', views.get_quiz, name="quiz"),
     path('home', views.home, name="home"),
-    path('upload', views.upload, name="upload"),
+    path('upload', views.handle_upload, name="upload"),
     path('chat/', views.chat, name="chat"),  
     path('my_quizes', views.myquizes, name='my_quizes'),
     path("update_quiz/", views.handle_quiz_submit, name="handle_quiz_submit"),
