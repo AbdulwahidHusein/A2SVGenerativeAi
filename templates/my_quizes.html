@@ -21,12 +21,12 @@
                                 {{ quiz.title }}
                             </div>
                             <div class="col-md-3">
-                                Your previous Score: {{ quiz.user_score }} / {{quiz.size}}
+                                Your previous Score: {{ quiz.user_score }} / 10
                             </div>
                             <div class="col-md-3">
                                 <a href="{%url 'quiz' quiz.id %}">Retake quiz</a>
                             </div>
-                            <Button class="btn btn-primary" style="margin-top:20px; width:50%">
+                            <Button onClick="exportQuiz({{quiz.id}})" class="btn btn-primary" style="margin-top:20px; width:50%">
                                 Export
                             </Button>
                         </div>
@@ -37,4 +37,12 @@
             </div>
         </div>
     </body>
+    <script>
+        function exportQuiz(quiz){
+            let quizz = ""
+           {% for q in quizes %}
+           
+           {%endfor%}
+        }
+    </script>
 {% endblock content %}
