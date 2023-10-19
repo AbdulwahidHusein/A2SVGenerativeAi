@@ -1,8 +1,4 @@
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+
   
 html, body{
     height: 100%;
@@ -49,8 +45,10 @@ main{
 }
 
 .game-question-container h1{
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 1.1rem;
     text-align: center;
+    color: #333333;
     padding: 3px;
 }
 
@@ -65,7 +63,8 @@ main{
 .game-options-container span{
     width: 100%;
     border-radius: 20px;
-    overflow:hidden;
+    overflow-wrap: break-word; /* For Bootstrap 4 */
+    word-wrap: break-word;
 }
 span label{
     width: 100%;
@@ -74,7 +73,7 @@ span label{
     display: flex;
     font-size: 1.1rem;
     font-family: "Font Awesome 5 Free";
-    color:black;
+    color:#333333;
     align-items: center;
     justify-content: center;
     cursor: pointer;
@@ -97,7 +96,7 @@ input[type="radio"] {
 
 
 input[type=radio]:checked ~ .option {
-	background: rgb(172, 249, 249);
+	background: rgb(135, 139, 11);
 }
 
 .next-button-container{

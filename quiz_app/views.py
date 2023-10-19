@@ -6,7 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from .models import CustomUser, Message, Quiz, GroupQuiz, ScoreHolder
-from .generator import get_question
+from .generator import get_question, get_q
+
 import json, re
 from dateutil import parser
 from quiz_app.api.api_caller import OpenAi
@@ -132,9 +133,11 @@ def handle_upload(request):
         spage = int(request.POST.get('spage'))
         epage = int(request.POST.get('epage'))
         comment = request.POST.get('additional_comment')
+        try:
+            questions = get_question(uploaded_file, num_of_questions, difficulty, spage, epage, 'multiple_choice', 'chatgpt')
+        except:
+            questions = get_q()    
         
-        questions = get_question(uploaded_file, num_of_questions, difficulty, spage, epage, 'multiple_choice', 'chatgpt')
-        print(questions)
         if questions:
             title = questions['questions'][0]['question']
             quiz = Quiz.objects.create(generated_by=user, questions=str(questions),size=5, title=title)
