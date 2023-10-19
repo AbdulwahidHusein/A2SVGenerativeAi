@@ -201,7 +201,6 @@ $.ajax({
 function showExplanation() {
     document.getElementsByClassName('main')[0].style.display = 'none';
     let explanationArea = document.getElementById('explanations');
-    explanationArea.innerHTML += "this is for the test "
     //console.log(correctAnswers)
     console.log(shuffledQuestions)
     
@@ -223,7 +222,7 @@ function showExplanation() {
                 '<p class="exp explanation-correctAnswer"><h> Your Answer:</h> ' + shuffledQuestions[key][userAnswers[key]] + '</p>' +
                 '<p class="exp explanation-correctAnswer"><h> Correct Answer:</h> ' + shuffledQuestions[key][shuffledQuestions[key].correctOption] + '</p>' +
                 '<p class="exp explanation-correctAnswer"><h> Explanation:</h> ' + shuffledQuestions[key].explanation + ' </p>' +
-                `<a class="more-exp-link" href="http://127.0.0.1:8000/chat/?query=${query}" >More Explanations </a>` +
+                `<a class="more-exp-link" href="http://127.0.0.1:8000/chat/?query=${query}"  target="_blank" >More Explanations </a>` +
                 '</div>';
         }
     }

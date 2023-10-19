@@ -63,21 +63,17 @@ def user_register(request):
 
 
 
+@login_required(login_url='login')
 def get_chat(request):
     user_query = request.GET.get('query')
     user = request.user
     chats = Message.objects.all().filter(user=user).order_by('-sent_date')[:4][::-1]
-    response = ""#bard_api.gpt_chat_session(last_3_chats, user_query)
-    #print('sddddddddddddddddddddddddddddddddddddddddddddddddd'+user_query)
-    #ask_bard(user_query)
-    # Process the user_query and generate the chat response
-    #chat_response = process_chat_query(user_query)
+    response = ""
+    
     opena = OpenAi(OPEN_AI_API_KEY)
     response = opena.chat(chats, user_query)
         
     if response:
-            #message1 = Message.objects.create(user=user, text=query, is_received=False)
-            #message1.save()
         message1  = Message.objects.create(user=user, text=user_query, is_received = False)
         message1.save()
         message2 = Message.objects.create(user=user, text=response, is_received=True)
@@ -91,35 +87,30 @@ def get_chat(request):
 @login_required(login_url='login')
 def chat(request):
     query = request.GET.get("query")
-    print("query"*100, query)
     user = request.user
     chats = Message.objects.all().filter(user=user).order_by('-sent_date')[:10][::-1]
     #chats.reverse()
     response = ""
     if query:
-        last_3_chats = chats  # Initialize last_3_chats with chats
+        last_3_chats = chats  # Initialize last_3_chats to train the ai
 
         if len(last_3_chats) > 6:
             last_3_chats = last_3_chats[:6]
         
-        response = 'this is response' #bard_api.gpt_chat_session(last_3_chats, query)
         if query:
             opena = OpenAi(OPEN_AI_API_KEY)
             response = opena.chat({}, query)
         
         if response:
-            #message1 = Message.objects.create(user=user, text=query, is_received=False)
-            #message1.save()
             message2 = Message.objects.create(user=user, text=response, is_received=True)
             message2.save()
 
     return render(request, 'chat2.html', {'prev_chats': chats, 'response': response})
 
+@login_required(login_url='login')
 def user_logout(request):
     logout(request)
     return redirect('login')
-
-
 
 def home(request):
     user = request.user
@@ -132,10 +123,10 @@ def home(request):
 
 
 @login_required(login_url='login')
-def upload(request):
+def handle_upload(request):
     user = request.user
     if request.method == 'POST':
-        uploaded_file = request.FILES['file']
+        uploaded_file = request.FILES.get('file')
         num_of_questions = request.POST.get('qnumber')
         difficulty = request.POST.get('difficulty')
         spage = int(request.POST.get('spage'))
@@ -144,9 +135,10 @@ def upload(request):
         
         questions = get_question(uploaded_file, num_of_questions, difficulty, spage, epage, 'multiple_choice', 'chatgpt')
         print(questions)
-        title = questions['questions'][0]['question']
-        quiz = Quiz.objects.create(generated_by=user, questions=str(questions),size=5, title=title)
-        quiz.save()
+        if questions:
+            title = questions['questions'][0]['question']
+            quiz = Quiz.objects.create(generated_by=user, questions=str(questions),size=5, title=title)
+            quiz.save()
         #redirect_url = 'quiz/?questions={}'.format(questions['questions'])
         return render(request, 'quiz3.html', {'questions':questions['questions'], 'id':quiz.id})
     

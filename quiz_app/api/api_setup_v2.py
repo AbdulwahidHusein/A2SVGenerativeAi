@@ -19,13 +19,15 @@ class PromptGenerator:
         prompt = f'''You are helpful Quiz generator
             Please generate a quiz containing {number_of_questions} multiple-choice questions. {self.difficulty_sentences}. The quiz should follow the strict rules below:
     - the quiz must be enclosed in square brackets [ ].
-    - Each question should consist of a question, four options, the correct option, and an explanation.
-    - The quiz should be generated in the following format or demo but the number of questions you generate is {number_of_questions} here is the format : " {question_format}". Note the use of A., B., C., and D., and the placement of the correct option followed by the option letter.
+    - Each question should consist of a question, four options, the correct option, and an explanation Note The quiz should contain {number_of_questions} questions!!.
+    - The quiz should be generated in the following format or demo but the number of questions you generate is {number_of_questions} here is the format : """" {question_format}"""". Note the use of A., B., C., and D., and the placement of the correct option followed by the option letter.
     - The quiz should be enclosed in square brackets [ ], and each question should be separated by four dollar signs $$$$ as indicated in the format. Ensure that the text, options, and explanations for each question are on a single line, even if they are long.
     - The quiz should resemble an academic quiz that helps students prepare for an exam.
 
-    Use the following text to generate the quiz, noting the relevant topics:
-    "{self.text}"
+    the following keywords are extracted from the book from which the quiz is to be generated. therefore generate the quiz that is related 
+    to these topics and their relationships
+    """"{self.text}""""
+    Thank You for your assistance and for understanding my context!
     '''
         return prompt
     
@@ -57,12 +59,13 @@ class OpenAi:
     
     def generate_question(self, prompt):
         prompt_token_length = len([w for w in prompt.split()])
-        max_tokens = 3700 - prompt_token_length
+        max_tokens = 3100 - prompt_token_length 
         parameters = {
-            'model': 'text-davinci-003',  # Choose the model you want to use
+            'model': 'text-davinci-003',  
+            
             'prompt': prompt,
-            'max_tokens': max_tokens,  # Adjust the length of the generated reply as needed
-            'temperature': 0.1,  # Adjust the temperature to control the randomness of the output
+            'max_tokens': max_tokens,
+            'temperature': 0.7,  # Adjust the temperature to control the randomness of the output
             'n': 1,  # Generate a single reply
             'stop': None,  # You can specify a stop sequence to control the length of the completion
         }

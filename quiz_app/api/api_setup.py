@@ -55,7 +55,7 @@ class OpenAi:
     def chat(self, history, query):
         conversation_history = [{'role': 'system', 'content': 'You are a helpful assistant.'}]
         for chat in history:
-            if chat.is_recieved:
+            if chat.is_received:
                 hist = {'role':'assistant', 'content':chat.text}
                 conversation_history.append(hist)
             else:
