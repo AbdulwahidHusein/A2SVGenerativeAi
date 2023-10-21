@@ -196,12 +196,16 @@ def get_group_quiz_info(request, id):
     if group_quiz.joined_members.contains(user):
         has_user_joined = True
     #GroupQuiz.objects.get(pk=id)
+    group_quiz.update_status()
     quiz = group_quiz.quiz
     questions = quiz.questions
     questions = re.sub(r"'", '"',questions)
     questions = json.loads(questions)
-    group_quiz.quiz.questions = questions#may not be possible but lets try it  
-    group_quiz.update_status()
+    if group_quiz.is_in_progress:
+        data['questions'] = questions['questions']#may not be possible but lets try it 
+    else:
+        data['questions'] = {}
+        
     data['has_user_joined'] = has_user_joined
     data['group_quiz'] = group_quiz
     

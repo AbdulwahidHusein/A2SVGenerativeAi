@@ -54,12 +54,14 @@ class GroupQuiz(models.Model):
         if self.start_time > current_time:
             self.is_in_progress = False
             self.completed = False
+            
         elif current_time < self.end_time:
             self.is_in_progress = True
             self.completed = False
         else:
             self.is_in_progress = False
             self.completed = True
+        self.save()
         
         return True
 

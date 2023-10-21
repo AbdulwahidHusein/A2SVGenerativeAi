@@ -2,60 +2,25 @@
 
 {% block content %}
 {% load static %}
-<style>
-    .custom-container {
-        min-height: 80vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .actions {
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        padding: 20px;
-    }
-
-    .actions button.standings {
-        border: 1px solid;
-        min-height: 50px;
-        min-width: 100px;
-        background-color: #FF800F;
-        color: white;
-        transition: .5s all;
-    }
-
-    .actions button.standings:hover {
-        border-radius: 5px;
-        border: 1px solid #FF800F;
-        background-color: white;
-        color: black;
-    }
-
-    .actions .timer {
-        font-size: 20px;
-        font-weight: bold;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'css/quiz2.css' %}" />
+<link rel="stylesheet" href="{% static 'css/timer.css' %}" />
+<script src="{% static 'js/quiz2.js' %}"></script>
 
 <body>
-    <div class="actions">
-        {%if has_user_joined %} <button class="standings">Standings</button> {%endif%}
-        <div id="timer">
-            <!-- {{ timer_minutes }}:{{ timer_seconds }} If the time is passed as a prop -->
-          Starts in  00 : 00 
-        </div>
-        {%if has_user_joined %}<p>Joined</p>
-        {%else%}
-        <form method="post" action="{%url 'join_group' group_quiz.id %}">
-            {% csrf_token %}
-        <input type="hidden" name="id" value="{{group_quiz.id}}">
-        <button type="submit" class="standings">Join</button>
-        </form>
-        {%endif%}
-        <script>
+    <script defer>
+        let QuizId = {{group_quiz.quiz.id|safe}};
+        let shuffledQuestions  = {{ questions|safe }};
+        console.log(shuffledQuestions);
+        //shuffledQuestions = JSON.parse(shuffledQuestions);
+        {% if group_quiz.is_in_progress %}
+        test(shuffledQuestions, QuizId);
+        {% endif %}
+
+        var started = false;
+        var completed = false;
+        var inprogress = false;
+        var ref = 0;
+
             // Assuming group_quiz.start_time and group_quiz.end_time are already defined as datetime fields in the context
             const startTime = new Date("{{ group_quiz.start_time | date:'Y-m-d\\TH:i:s' }}");
             const endTime = new Date("{{ group_quiz.end_time | date:'Y-m-d\\TH:i:s' }}");
@@ -69,8 +34,18 @@
         
                     if (timeDiff <= 0) {
                         clearInterval(); // Stop the timer if end time has passed
-                        document.getElementById("timer").innerHTML = "Completed"; // Update the timer element with a message
+                        i
+                            document.getElementById("timer").innerHTML = "Completed"; 
+                            
+                        
+                        // Update the timer element with a message
+                        completed  = true;
                     } else {
+                        started = true;
+                        if (ref < 1){
+                        document.getElementById('quiz-main').style.display = 'block'
+                        ref = parseInt(ref) +1;
+                        }
                         //display the quiz here
 
                         const diffInSeconds = Math.floor(timeDiff / 1000);
@@ -93,6 +68,7 @@
                         document.getElementById("timer").innerHTML = formattedTime; // Update the timer element with the remaining time
                     }
                 } else if (currentTime < startTime) {
+                    
                     // Quiz has not started yet
                     const timeDiff = startTime.getTime() - currentTime.getTime(); // Calculate the difference between current time and start time
         
@@ -123,7 +99,113 @@
                     document.getElementById("timer").innerHTML = "Completed"; // Update the timer element with a message
                 }
             }, 1000);
-        </script>
+            if (started){
+                document.getElementById('quiz-main').style.display = 'block'
+            }
+        
+    </script>
+
+    <div class="actions">
+        {%if has_user_joined %} <button class="standings">Standings</button> {%endif%}
+        <div id="timer">
+            <!-- {{ timer_minutes }}:{{ timer_seconds }} If the time is passed as a prop -->
+          Starts in  00 : 00 
+        </div>
+        {%if has_user_joined %}<p>Joined</p>
+        {%else%}
+        <form method="post" action="{%url 'join_group' group_quiz.id %}">
+            {% csrf_token %}
+        <input type="hidden" name="id" value="{{group_quiz.id}}">
+        <button type="submit" class="standings">Join</button>
+        </form>
+        {%endif%}
+    </div>
+
+    {%if has_user_joined %}
+        <main id="quiz-main" style="display:none" class="main">
+            <!-- creating a modal for when quiz ends -->
+            <div class="modal-container" id="score-modal">
+              
+                <div class="modal-content-container">
+                  
+                    <h1>Quiz Completed.</h1>
+                  
+                    <div class="grade-details">
+                        <p>Wrong Answers: <span id="wrong-answers"></span></p>
+                        <p>Right Answers: <span id="right-answers"></span></p>
+                        <p>Grade: <span id="grade-percentage"></span>%</p>
+                        <p><span id="remarks"></span></p>
+                    </div>
+                  
+                    <div class="modal-button-container">
+                        <button class="view-explanation" id="exp-btn">View Explanations</button>
+                    </div>
+                </div>
+              
+            </div>
+            
+            <div class="game-quiz-container">
+              
+                <div class="game-details-container">
+                    <h1 style="">Score: <span id="player-score"></span></h1>
+                    <h1 style="">Question: <span style="" id="question-number"></span></h1>
+                </div>
+    
+                <div class="game-question-container">
+                    <h1 id="display-question" style=""></h1>
+                </div>
+    
+                <div class="game-options-container">
+                  
+                   <div class="modal-container" id="option-modal">
+                     
+                        <div class="modal-content-container">
+                             <h1>Please Pick An Option</h1>
+                          
+                             <div class="modal-button-container">
+                                <button id="close-modal-btn" >Continue</button>
+                            </div>
+                          
+                        </div>
+                     
+                   </div>
+                  
+                    <span class="border border-primary rounded p-3 mt-3">
+                        <input type="radio" id="option-one" name="option" class="radio" value="optionA" />
+                        <label for="option-one" class="option" id="option-one-label"></label>
+                    </span>
+                  
+    
+                    <span class="border border-primary rounded p-3 mt-3">
+                        <input type="radio" id="option-two" name="option" class="radio" value="optionB" />
+                        <label for="option-two" class="option" id="option-two-label"></label>
+                    </span>
+                  
+    
+                    <span class="border border-primary rounded p-3 mt-3">
+                        <input type="radio" id="option-three" name="option" class="radio" value="optionC" />
+                        <label for="option-three" class="option" id="option-three-label"></label>
+                    </span>
+                  
+    
+                    <span class="border border-primary rounded p-3 mt-3">
+                        <input type="radio" id="option-four" name="option" class="radio" value="optionD" />
+                        <label for="option-four" class="option" id="option-four-label"></label>
+                    </span>
+    
+                    
+                </div>
+    
+                <div class="next-button-container border border-primary rounded p-3 mt-3">
+                    <button id="next" >Next Question</button>
+                </div>
+    
+            </div>
+        </main>
+        {% endif %}
+        <div id="explanations" style="">
+        </div>
+        <script src="index.js"></script>
     </div>
     <div class="container-xxl py-5 custom-container">
         
