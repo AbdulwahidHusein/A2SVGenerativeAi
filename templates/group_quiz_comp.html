@@ -42,11 +42,19 @@
 
 <body>
     <div class="actions">
-        <button class="standings">Standings</button>
+        {%if has_user_joined %} <button class="standings">Standings</button> {%endif%}
         <div id="timer">
             <!-- {{ timer_minutes }}:{{ timer_seconds }} If the time is passed as a prop -->
-          Starts in  00 : 00
+          Starts in  00 : 00 
         </div>
+        {%if has_user_joined %}<p>Joined</p>
+        {%else%}
+        <form method="post" action="{%url 'join_group' group_quiz.id %}">
+            {% csrf_token %}
+        <input type="hidden" name="id" value="{{group_quiz.id}}">
+        <button type="submit" class="standings">Join</button>
+        </form>
+        {%endif%}
         <script>
             // Assuming group_quiz.start_time and group_quiz.end_time are already defined as datetime fields in the context
             const startTime = new Date("{{ group_quiz.start_time | date:'Y-m-d\\TH:i:s' }}");
@@ -63,6 +71,8 @@
                         clearInterval(); // Stop the timer if end time has passed
                         document.getElementById("timer").innerHTML = "Completed"; // Update the timer element with a message
                     } else {
+                        //display the quiz here
+
                         const diffInSeconds = Math.floor(timeDiff / 1000);
                         const diffInMinutes = Math.floor(diffInSeconds / 60);
                         const diffInHours = Math.floor(diffInMinutes / 60);

@@ -21,5 +21,6 @@ urlpatterns = [
     path('group_quiz/<int:id>', views.get_group_quiz_info, name="group_quiz"),
     path('my_group_quizzes', views.user_group_quizs, name="group_quizes"),
     path('create_group_quiz',views.create_group_quiz, name="create_group_quiz"),
+    path('join_quiz/<int:id>', views.handle_join_group, name='join_group'),
 
 ]
