@@ -72,7 +72,7 @@ def get_chat(request):
     response = ""
     
     opena = OpenAi(OPEN_AI_API_KEY)
-    response = opena.chat(chats, user_query)
+    response = opena.chat(chats, user_query, user)
         
     if response:
         message1  = Message.objects.create(user=user, text=user_query, is_received = False)
@@ -100,7 +100,7 @@ def chat(request):
         
         if query:
             opena = OpenAi(OPEN_AI_API_KEY)
-            response = opena.chat({}, query)
+            response = opena.chat({}, query, user)
         
         if response:
             message2 = Message.objects.create(user=user, text=response, is_received=True)
