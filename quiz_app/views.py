@@ -189,8 +189,12 @@ def user_group_quizs(request):
     return render(request, "joined_group_quizes.html", {"group_quizes":group_quizzes})
 
 def get_group_quiz_info(request, id):
+    user = request.user
     data = {}
     group_quiz = get_object_or_404(GroupQuiz, pk=id)
+    has_user_joined = False
+    if group_quiz.joined_members.contains(user):
+        has_user_joined = True
     #GroupQuiz.objects.get(pk=id)
     quiz = group_quiz.quiz
     questions = quiz.questions
@@ -198,6 +202,7 @@ def get_group_quiz_info(request, id):
     questions = json.loads(questions)
     group_quiz.quiz.questions = questions#may not be possible but lets try it  
     group_quiz.update_status()
+    data['has_user_joined'] = has_user_joined
     data['group_quiz'] = group_quiz
     
     #joined_members = group_quiz.joined_members.all()
@@ -214,7 +219,7 @@ def handle_join_group(request, id):
     score = ScoreHolder(score=0,competitor=user, group_quiz=group_quiz)
     score.save()
     
-    return
+    return redirect("group_quiz", id=group_quiz.id)
 
 @login_required(login_url='login')
 def create_group_quiz(request):
