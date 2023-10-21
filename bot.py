@@ -9,6 +9,7 @@ sys.path.append("..")
 from telegram import (
     Message,
     ChatAction,
+    Poll,
     Update,
     InlineKeyboardButton,
     InlineKeyboardMarkup,
@@ -36,9 +37,9 @@ logging.basicConfig(level=logging.INFO)
 # some global variables for storing data.
 user_data = {}
 question_format = {}
+user_answers = []
 START_PAGE = 0
 END_PAGE = 1
-difficulty = "not difficult"
 
 
 def help(update: Update, context: CallbackContext):
@@ -101,8 +102,12 @@ def Enterfile(update: Update, context: CallbackContext):
 
     reply_text = f"Recieved file: {user_data['file_name']}"
     user_data["file_name"] = file_name
+    context.bot.send_chat_action(
+        chat_id=update.effective_chat.id, action=ChatAction.TYPING
+    )
     context.bot.send_message(
-        chat_id=update.effective_chat.id, text=reply_text + "\nEnter start page:"
+        chat_id=update.effective_chat.id,
+        text=reply_text + "\nEnter start page:",
     )
     return START_PAGE
 
@@ -120,8 +125,39 @@ def button_callback(update: Update, context: CallbackContext):
         send_request(update=update, context=context)
 
 
+# def start_quiz(update: Update, context: CallbackContext):
+
+
+def send_quiz(update: Update, context: CallbackContext):
+    print(len(question_format["questions"]))
+    # for current_question in range(len(question_format["questions"])):
+    #     question_data = question_format["questions"][current_question]
+    #     question_text = question_data["question"]
+    #     options = [
+    #         question_data["optionA"],
+    #         question_data["optionB"],
+    #         question_data["optionC"],
+    #         question_data["optionD"],
+    #     ]
+    #     correct_option = question_data["correctOption"]
+
+    #     context.bot.send_poll(
+    #         chat_id=update.effective_chat.id,
+    #         question=question_text,
+    #         options=options,
+    #         type=Poll.QUIZ,
+    #         correct_option_id=ord(correct_option[-1]) - ord("A"),
+    #         is_anonymous=False,
+    #         explanation=f'Correct Answer: {question_data["explanation"]}',
+    #         open_period=60,
+    #     )
+
+
 # this function sends request to erither openAi or Bard, it uses Bard if OpnAI fails. currently works on openAi only
 def send_request(update: Update, context: CallbackContext):
+    context.bot.send_chat_action(
+        chat_id=update.effective_chat.id, action=ChatAction.TYPING
+    )
     global user_data
     global question_format
     with open(user_data["file"], "rb") as f:
@@ -134,10 +170,31 @@ def send_request(update: Update, context: CallbackContext):
             mode="multiple_choice",
             model="chatgpt",
         )
+    send_quiz(update=update, context=context)
 
     logging.info("request sent")
-    print(question_format)
-    context.bot.send_message(chat_id=update.effective_chat.id, text=question_format)
+    print(len(question_format["questions"]))
+    for current_question in range(5):
+        question_data = question_format["questions"][current_question]
+        question_text = question_data["question"]
+        options = [
+            question_data["optionA"],
+            question_data["optionB"],
+            question_data["optionC"],
+            question_data["optionD"],
+        ]
+        correct_option = question_data["correctOption"]
+
+        context.bot.send_poll(
+            chat_id=update.effective_chat.id,
+            question=question_text,
+            options=options,
+            type=Poll.QUIZ,
+            correct_option_id=ord(correct_option[-1]) - ord("A"),
+            is_anonymous=False,
+            explanation=f'Correct Answer: {question_data["explanation"]}',
+            open_period=60,
+        )
 
 
 def register(dispatcher):
@@ -152,6 +209,10 @@ def register(dispatcher):
     )
     dispatcher.add_handler(conv_handler)
     dispatcher.add_handler(CallbackQueryHandler(button_callback))
+
+    # dispatcher.add_handler(
+    #     MessageHandler(Filters.text & ~Filters.command, handle_quiz_format)
+    # )
     dispatcher.add_handler(CommandHandler("help", help))
 
 
