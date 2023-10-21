@@ -15,27 +15,27 @@
         <div class="row">
             <div class="container-xxl py-5 custom-container">
                 <div class="col-md-6">
-                    <div class="container text-center border border-primary rounded p-3 mt-3">
+                    <div class="container text-center">
                         {% if quizzes %}
                             <form method="post">
                                 {% csrf_token %}
-                                <div class="form-group">
+                                <div class="form-group border border-primary rounded p-3 mt-3">
                                     <label class="form-control" for="select">select a quiz to be converted</label>
-                                    <select name="id" class="form-control" id="select">
+                                    <select name="id" class="form-control" id="select" required>
                                         {% for quiz in quizzes %}
-                                            <option value="{{quiz.id}}">
+                                            <option value="{{quiz.id}}" required>
                                                 {{quiz.title}}
                                             </option>
                                         {% endfor %}
                                     </select>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group border border-primary rounded p-3 mt-3">
                                     <label for="sdate">Choose the date and time where the quiz starts</label>
-                                    <input name="start_time"  class="form-control" type="datetime-local">
+                                    <input name="start_time"  class="form-control" type="datetime-local" required>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group border border-primary rounded p-3 mt-3">
                                     <label for="edate">Choose the date and time where the quiz ends</label>
-                                    <input  name="end_time" class="form-control" type="datetime-local">
+                                    <input  name="end_time" class="form-control" type="datetime-local" required>
                                 </div>
                                 <button type="submit" class="btn btn-primary" style="margin-top:20px; width:50%">
                                     Create
