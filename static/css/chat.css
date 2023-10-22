@@ -1,227 +1,115 @@
-
-.containerr{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-        height: 100%;
-        padding: 0 10px; 
-}
-.ccard {
-    background-color: var(--light);
-    box-shadow: 0 2px 3px rgba(136, 134, 134, 0.03);
-    transition: 0.5s;
-    overflow: scroll;
-    margin-top: 5px;
-    width: 80%; 
+.containerr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 0 10px;
   }
   
-  @media (max-width: 768px) {
-    .ccard {
-      margin-top: 10px;
-      box-shadow: none;
-      width:100%;
-    }
+  .ccard {
+    background-color: #f7f7f7;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    margin-top: 10px;
+    padding: 15px;
   }
-
-.padding {
-    padding: 3rem !important
-}
-
-.card-header:first-child {
-    border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;
-}
-
-
-.card-header {
-    display: -webkit-box;
+  
+  .card-header {
     display: flex;
-    -webkit-box-pack: justify;
-    justify-content: space-between;
-    -webkit-box-align: center;
     align-items: center;
-    background-color: transparent;
-    border-bottom: 3px solid rgba(96, 100, 107, 0.07);
-}
-
-.card-header .card-title {
-    padding: 0;
-    border: none;
-}
-
-h4.card-title {
-    font-size: 17px;
-}
-
-.card-header>*:last-child {
-    margin-right: 0;
-}
-
-.card-header>* {
-    margin-left: 8px;
-    margin-right: 8px;
-}
-
-
-
-.btn-xs {
-    font-size: 11px;
-    padding: 2px 8px;
-    line-height: 18px;
-}
-.btn-xs:hover{
-    color:#fff !important;
-}
-
-.card-title {
-    font-family: Roboto,sans-serif;
-    font-weight: 300;
-    line-height: 1.5;
-    margin-bottom: 0;
-    padding: 15px 20px;
-    border-bottom: 1px solid rgba(77,82,89,0.07);
-}
-
-
-.media .avatar {
-    flex-shrink: 0;
-}
-
-.avatar {
-    position: relative;
-    display: inline-block;
-    width: 36px;
-    height: 36px;
-    line-height: 36px;
-    text-align: center;
-    border-radius: 100%;
-    background-color: #f5f6f7;
-    color: #8b95a5;
-    text-transform: uppercase;
-}
-
-.media-chat .media-body p {
-    position: relative;
-    padding: 6px 8px;
-    background-color: #f5f6f7;
-    border-radius: 3px;
-    font-weight: 100;
-    color:#9b9b9b;
-}
-
-.media>* {
-    margin: 0 8px;
-}
-
-.media-chat .media-body p.meta {
-    background-color: transparent !important;
-    padding: 0;
-    opacity: .8;
-}
-
-.media-meta-day {
-    -webkit-box-pack: justify;
     justify-content: space-between;
-    -webkit-box-align: center;
-    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .card-title {
     margin-bottom: 0;
-    color: var(--primary);
-    opacity: .8;
-    font-weight: 400;
-}
-
-
-.media-meta-day::after {
-    content: '';
-    -webkit-box-flex: 1;
-    flex: 1 1;
-    border-top: 1px solid #ebebeb;
-}
-
-.media-meta-day::after {
-    margin-left: 16px;
-}
-
-.media-chat.media-chat-reverse {
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: reverse;
+  }
+  
+  .media-meta-day {
+    font-size: 14px;
+    color: #888888;
+    padding: 5px 0;
+    border-bottom: 1px solid #888888;
+    margin-bottom: 10px;
+  }
+  
+  .media-chat {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 15px;
+  }
+  
+  .media-chat-reverse {
     flex-direction: row-reverse;
-    width: 100%;
-}
-
-.media-chat {
-    margin-bottom: 0;
-}
-
-.media {
-    -webkit-transition: background-color .2s linear;
-    transition: background-color .2s linear;
-}
-
-.media-chat.media-chat-reverse .media-body p {
-    max-width:100%;
-    float: right;
-    clear: right;
-    background-color: var(--dark);
-    color: #fff;
-}
-
-.media-chat .media-body p {
-    max-width:100%;
-    position: relative;
-    padding: 6px 8px;
-    background-color: var(--secondary);
-    color: white;
-    border-radius: 3px;
-}
-
-
-.border-light {
-    border-color: #f1f2f3 !important;
-}
-
-.bt-1 {
-    border-top: 1px solid #ebebeb !important;
-}
-
-.publisher {
-    width: 80%;
-    display: flex;
-    -webkit-box-align: center;
-    align-items: center;
-    background-color: #eaeef2;
-}
-@media (max-width: 768px) {
-    .publisher {
-      width:100%;
-    }
   }
-
-.publisher>* {
-    margin: 0 8px;
-}
-
-.publisher-input {
-    flex-grow: 1;
+  
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .media-body {
+    flex: 1;
+    padding: 5px;
+  }
+  
+  .media-chat .media-body {
+    color: black;
+    align-self: flex-start;
+    background-color: #f2f2f2;
+    border: 1px solid #e4e4e4;
+    border-radius: 20px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
+  }
+  
+  .media-chat-reverse .media-body {
+    align-self: flex-end;
+    color: black;
+    background-color: #b0b39b;
+    border: 1px solid #f5f8db;
+    border-radius: 20px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .meta {
+    font-size: 12px;
+    color: #888888;
+    margin-top: 5px;
+  }
+  
+  .publisher {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid #888888;
+    padding-top: 10px;
+    margin-top: 15px;
+  }
+  
+  .publisher-input {
+    flex: 1;
     border: none;
-    outline: none !important;
-    background-color: transparent;
-}
-
-button, input, optgroup, select, textarea {
-    font-family: Roboto,sans-serif;
-    font-weight: 300;
-}
-
-
-
-.publisher-btn {
-    background-color: transparent;
-    border: none;
-    color: #cac7c7;
-    font-size: 16px;
+    outline: none;
+    font-size: 14px;
+    padding: 10px;
+    border-radius: 20px;
+    background-color: #f2f2f2;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .publisher-btn {
+    color: var(--primary);
+    font-size: 20px;
     cursor: pointer;
-    overflow: -moz-hidden-unscrollable;
-    -webkit-transition: .2s linear;
-    transition: .2s linear;
-} 
+    margin-left: 10px;
+  }
+  
+ 
+  
+  /* Add any additional styling as needed */
