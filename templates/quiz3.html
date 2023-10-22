@@ -2,104 +2,139 @@
 {% load static %}
 
 {% block content %}
-
 <link rel="stylesheet" href="{% static 'css/quiz2.css' %}" />
 <script src="{% static 'js/quiz2.js' %}"></script>
 
-<body style="">
-        <script defer>
-            let QuizId = {{id|safe}};
+<div class="container">
+  <script defer>
+    let QuizId = {{id|safe}};
 
-            let shuffledQuestions  = {{ questions|safe }};
-            console.log(shuffledQuestions);
-            //shuffledQuestions = JSON.parse(shuffledQuestions);
-            test(shuffledQuestions, QuizId);
-            
-        </script>
-        
-    <main class="main">
-        <!-- creating a modal for when quiz ends -->
-        <div class="modal-container" id="score-modal">
-          
-            <div class="modal-content-container">
-              
-                <h1>Quiz Completed.</h1>
-              
-                <div class="grade-details">
-                    <p>Wrong Answers: <span id="wrong-answers"></span></p>
-                    <p>Right Answers: <span id="right-answers"></span></p>
-                    <p>Grade: <span id="grade-percentage"></span>%</p>
-                    <p><span id="remarks"></span></p>
-                </div>
-              
-                <div class="modal-button-container">
-                    <button class="view-explanation" id="exp-btn">View Explanations</button>
-                </div>
-            </div>
-          
+    let shuffledQuestions = {{ questions|safe }};
+    console.log(shuffledQuestions);
+    //shuffledQuestions = JSON.parse(shuffledQuestions);
+    test(shuffledQuestions, QuizId);
+  </script>
+
+  <main class="main" style="display:nne">
+    <div style="display:none; z-index:50" class="modal-container" id="score-modal">
+      <div class="modal-content-container">
+        <h1>Quiz Completed.</h1>
+        <div class="grade-details">
+          <p>Wrong Answers: <span id="wrong-answers"></span></p>
+          <p>Right Answers: <span id="right-answers"></span></p>
+          <p>Grade: <span id="grade-percentage"></span>%</p>
+          <p><span id="remarks"></span></p>
         </div>
-        
-        <div class="game-quiz-container">
-          
-            <div class="game-details-container">
-                <h1 style="">Score: <span id="player-score"></span></h1>
-                <h1 style="">Question: <span style="" id="question-number"></span></h1>
-            </div>
-
-            <div class="game-question-container">
-                <h1 id="display-question" style=""></h1>
-            </div>
-
-            <div class="game-options-container">
-              
-               <div class="modal-container" id="option-modal">
-                 
-                    <div class="modal-content-container">
-                         <h1>Please Pick An Option</h1>
-                      
-                         <div class="modal-button-container">
-                            <button id="close-modal-btn" >Continue</button>
-                        </div>
-                      
-                    </div>
-                 
-               </div>
-              
-                <span class="border border-primary rounded p-3 mt-3">
-                    <input type="radio" id="option-one" name="option" class="radio" value="optionA" />
-                    <label for="option-one" class="option" id="option-one-label"></label>
-                </span>
-              
-
-                <span class="border border-primary rounded p-3 mt-3">
-                    <input type="radio" id="option-two" name="option" class="radio" value="optionB" />
-                    <label for="option-two" class="option" id="option-two-label"></label>
-                </span>
-              
-
-                <span class="border border-primary rounded p-3 mt-3">
-                    <input type="radio" id="option-three" name="option" class="radio" value="optionC" />
-                    <label for="option-three" class="option" id="option-three-label"></label>
-                </span>
-              
-
-                <span class="border border-primary rounded p-3 mt-3">
-                    <input type="radio" id="option-four" name="option" class="radio" value="optionD" />
-                    <label for="option-four" class="option" id="option-four-label"></label>
-                </span>
-
-                
-            </div>
-
-            <div class="next-button-container border border-primary rounded p-3 mt-3">
-                <button id="next" >Next Question</button>
-            </div>
-
+        <div class="modal-button-container">
+          <button class="view-explanation" id="exp-btn">View Explanations</button>
         </div>
-    </main>
-    <div id="explanations" style="">
+      </div>
     </div>
-    <script src="index.js"></script>
-</body>
+
+    <div class="game-quiz-container">
+      <div class="game-details-container">
+        <h1>Score: <span id="player-score"></span></h1>
+        <h1>Question: <span id="question-number"></span></h1>
+      </div>
+
+      <div class="game-question-container">
+        <h1 id="display-question"></h1>
+      </div>
+
+      <div class="game-options-container">
+        <div class="modal-container" id="option-modal">
+          <div class="modal-content-container">
+            <h1>Please Pick An Option</h1>
+            <div class="modal-button-container">
+              <button id="close-modal-btn">Continue</button>
+            </div>
+          </div>
+        </div>
+
+        <span class="choice">
+          <input type="radio" id="option-one" name="option" class="radio" value="optionA" />
+          <label for="option-one" class="option" id="option-one-label"></label>
+        </span>
+
+        <span class="choice">
+          <input type="radio" id="option-two" name="option" class="radio" value="optionB" />
+          <label for="option-two" class="option" id="option-two-label"></label>
+        </span>
+
+        <span class="choice">
+          <input type="radio" id="option-three" name="option" class="radio" value="optionC" />
+          <label for="option-three" class="option" id="option-three-label"></label>
+        </span>
+
+        <span class="choice">
+          <input type="radio" id="option-four" name="option" class="radio" value="optionD" />
+          <label for="option-four" class="option" id="option-four-label"></label>
+        </span>
+      </div>
+
+      <div class="next-button-container">
+        <button id="next">Next Question</button>
+      </div>
+    </div>
+  </main>
+
+  <div id="explanations" style="display:none">
+    {% for quest in questions %}
+    <div class="single-result border border-primary rounded p-3 mt-3">
+      <p class="exp explanation-question"><h>Question {{ quest.id }}:</h>{{ quest.question }}</p>
+      <p class="exp explanation-correctAnswer"><h>Correct Answer:</h>{{ quest.correctOption }}</p>
+      <p class="exp explanation-correctAnswer"><h>Explanation:</h>{{ quest.explanation }}</p>
+      
+      <form>
+        {% csrf_token %}
+        <input name="question" type="hidden" value="{{ quest.question }}">
+        <input type="hidden" name="id" value="element_{{ forloop.counter }}">
+        <input type="hidden" name="query">
+        <button class="btn btn-primary" type="submit">View more Explanations</button>
+      </form>
+      <div id="element_{{ forloop.counter }}l" class="loader" style="display:none"></div>
+      <div id="element_{{ forloop.counter }}" class="more-explanation-area"></div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <script src="index.js"></script>
+</div>
+
+<script>
+    let forms = document.querySelectorAll('form');
+
+    forms.forEach((form) => {
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        //add some loader
+        
+        const question = form.querySelector('input[name="question"]').value;
+        const div_id = form.querySelector('input[name="id"]').value;
+        let queryInput = form.querySelector('input[name="query"]');
+        let query = getQuery(question);
+        queryInput.value = query;
+
+        dv = document.getElementById(div_id);
+        document.getElementById(div_id+"l").style.display = 'block'
+        
+
+        var url = '{% url "get_chat" %}' + '?query=' + encodeURIComponent(query); // Construct the URL with the query parameter
+
+        $.get(url, function (response) {
+
+          dv.innerHTML = 
+                `<p>${response.answer}</p>`
+                
+          // Handle the response received from the server
+          document.getElementById(div_id+"l").style.display = 'none'
+          console.log(response.answer);
+        });
+
+      });
+    });
+</script>
+
+
 
 {% endblock content %}

@@ -1,5 +1,8 @@
-
+let correctAnswers = {}
+let qs = {}
+let userAnswers = {}
 function test(shuffledQuestions, QuizId){
+    qs = shuffledQuestions;
     function getCookie(name) {
         var cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -17,8 +20,7 @@ function test(shuffledQuestions, QuizId){
 
 //let shuffledQuestions = questionss//empty array to hold shuffled selected questions
 length = shuffledQuestions.length
-let correctAnswers = {}
-let userAnswers = {}
+
 let questionNumber = 0
 let playerScore = 0  
 let wrongAttempt = 0 
@@ -64,7 +66,7 @@ function checkForAnswer() {
     //checking if checked radio button is same as answer
     options.forEach((option) => {
         if (option.checked === true && option.value === currentQuestionAnswer) {
-            document.getElementById(correctOption).style.backgroundColor = "green"
+            // document.getElementById(correctOption).style.backgroundColor = "green"
             correctAnswers[indexNumber] = 1
             userAnswers[indexNumber] = option.value
             playerScore++
@@ -77,8 +79,8 @@ function checkForAnswer() {
 
         else if (option.checked && option.value !== currentQuestionAnswer) {
             const wrongLabelId = option.labels[0].id
-            document.getElementById(wrongLabelId).style.backgroundColor = "red"
-            document.getElementById(correctOption).style.backgroundColor = "green"
+            // document.getElementById(wrongLabelId).style.backgroundColor = "red"
+            // document.getElementById(correctOption).style.backgroundColor = "green"
             correctAnswers[indexNumber] = 0
             userAnswers[indexNumber] = option.value
             wrongAttempt++
@@ -201,33 +203,37 @@ $.ajax({
 function showExplanation() {
     document.getElementsByClassName('main')[0].style.display = 'none';
     let explanationArea = document.getElementById('explanations');
-    //console.log(correctAnswers)
-    console.log(shuffledQuestions)
-    
-    for (let [key, value] of Object.entries(correctAnswers)) {
-        if (value == 1 || value == '1') {
-            explanationArea.innerHTML += 
-            '<div class="single-result  border border-primary rounded p-3 mt-3">' +
-            '<p class="exp explanation-question"><h>Question ' + (parseInt(key) + 1) + ': </h>' + shuffledQuestions[key].question + '</p>'
-            + '<p class="exp explanation-correctAnswer"><h> Correct Answer: </h>' + shuffledQuestions[key][shuffledQuestions[key].correctOption] + '</p>'+
-            '<p class="exp explanation-correctAnswer"><h> Explanation:</h> ' + shuffledQuestions[key].explanation + ' </p>' +
-            '</div>'
-        } else {
-            let query = 'Provide me Explanation about the following question ' + shuffledQuestions[key].question;
-            query += ' and the choices are ' + ' ' + shuffledQuestions[key].optionA + ' ' + shuffledQuestions[key].optionB + ' ' + shuffledQuestions[key].optionC + ' ' + shuffledQuestions[key].optionD + ' what is the correct answer and tell me the reason';
-            query += ' and I answered this question as '+ shuffledQuestions[key][userAnswers[key]] +' explain me why I am wrong and what may be the reason that me conclude this and what should I always remember'
-            explanationArea.innerHTML +=
-                '<div class="single-result border border-primary rounded p-3 mt-3">' +
-                '<p class="exp explanation-question"><h>Question ' + (parseInt(key) + 1) + ':</h> ' + shuffledQuestions[key].question + '</p>' +
-                '<p class="exp explanation-correctAnswer"><h> Your Answer:</h> ' + shuffledQuestions[key][userAnswers[key]] + '</p>' +
-                '<p class="exp explanation-correctAnswer"><h> Correct Answer:</h> ' + shuffledQuestions[key][shuffledQuestions[key].correctOption] + '</p>' +
-                '<p class="exp explanation-correctAnswer"><h> Explanation:</h> ' + shuffledQuestions[key].explanation + ' </p>' +
-                `<a class="more-exp-link" href="http://127.0.0.1:8000/chat/?query=${query}"  target="_blank" >More Explanations </a>` +
-                '</div>';
-        }
-    }
-}
+    explanationArea.style.display = 'block';
 
+    // //console.log(correctAnswers)
+    // //console.log(shuffledQuestions)
+    
+    // for (let [key, value] of Object.entries(correctAnswers)) {
+    //     let query = 'Provide me Explanation about the following question ' + shuffledQuestions[key].question;
+    //         query += ' and the choices are ' + ' ' + shuffledQuestions[key].optionA + ' ' + shuffledQuestions[key].optionB + ' ' + shuffledQuestions[key].optionC + ' ' + shuffledQuestions[key].optionD + ' what is the correct answer and tell me the reason';
+    //         query += ' and I answered this question as '+ shuffledQuestions[key][userAnswers[key]] +' explain me why I am wrong and what may be the reason that me conclude this and what should I always remember'
+
+    //     if (value == 1 || value == '1') {
+    //         explanationArea.innerHTML += 
+    //         '<div class="single-result  border border-primary rounded p-3 mt-3">' +
+    //         '<p class="exp explanation-question"><h>Question ' + (parseInt(key) + 1) + ': </h>' + shuffledQuestions[key].question + '</p>'
+    //         + '<p class="exp explanation-correctAnswer"><h> Correct Answer: </h>' + shuffledQuestions[key][shuffledQuestions[key].correctOption] + '</p>'+
+    //         '<p class="exp explanation-correctAnswer"><h> Explanation:</h> ' + shuffledQuestions[key].explanation + ' </p>' +
+    //         '</div>'
+    //     } else {
+            
+    //         explanationArea.innerHTML +=
+    //         `<div class="single-result border border-primary rounded p-3 mt-3">
+    //             <p class="exp explanation-question"><h>Question ${parseInt(key) + 1}:</h> ${shuffledQuestions[key].question}</p>
+    //             <p class="exp explanation-correctAnswer"><h> Your Answer:</h> ${shuffledQuestions[key][userAnswers[key]]}</p>
+    //             <p class="exp explanation-correctAnswer"><h> Correct Answer:</h> ${shuffledQuestions[key][shuffledQuestions[key].correctOption]}</p>
+    //             <p class="exp explanation-correctAnswer"><h> Explanation:</h> ${shuffledQuestions[key].explanation}</p>
+    //             <form action="{% url 'get_chat' %}" method="post">{% csrf_token %} <input name="query" value="${ query }" type="hidden"><button type="submit">View More Explanations</button></form>
+    //         </div>`;
+    //     }
+    //}
+}
+//`<a class="more-exp-link" href="http://127.0.0.1:8000/chat/?query=${query}"  target="_blank" >More Explanations </a>`
 //function to close warning modal
 function closeOptionModal() {
     //explanationArea.style.display = 'block'
@@ -241,4 +247,24 @@ NextQuestion(0);
 })
 
 
+}
+function getQuery(question){
+    
+    var index = qs.findIndex(function(q) {
+        return q.question === question;
+      });
+
+    let query = "";
+    if (userAnswers[index] === '1'){
+        query += 'Provide me Explanation about the following question ' + qs[index].question;
+        query += ' and the choices are ' + ' ' + qs[index].optionA + ' ' + qs[index].optionB + ' ' + qs[index].optionC + ' ' + qs[index].optionD + ' what is the correct answer and tell me the reason';
+        query += ' and our user answered this question as '+ qs[index][userAnswers[index]] +' explain weather they are right or wrong. and if wrong what may be the reason that made the answer like this. conclude this and what should they always remember'
+    }
+    else{
+        query += 'Provide me Explanation about the following question ' + qs[index].question;
+        query += ' and the choices are ' + ' ' + qs[index].optionA + ' ' + qs[index].optionB + ' ' + qs[index].optionC + ' ' + qs[index].optionD + ' what is the correct answer and tell me the reason';
+        query += ' and our user answered this question as '+ qs[index][userAnswers[index]] +' explain weather they are right or wrong. and if wrong what may be the reason that made the answer like this. conclude this and what should they always remember'
+    }
+   
+    return query
 }
