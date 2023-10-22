@@ -2,10 +2,10 @@
 {% load static %}
 
 {% block content %}
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
     <link rel="stylesheet" href="{% static 'css/chat.css' %}" />
-
-    <div class="container">
+    
+    <div class="containerr">
       <div id="card" class="ccard border border-primary rounded p-3 mt-3 col-md-9 col-sm-12">
         <div class="card-header">
           <h4 class="card-title"><strong>Chat</strong></h4>
@@ -30,10 +30,11 @@
             <p class="meta"><time datetime="2023">00:07</time></p>
           </div>
         </div>
-      <br />
+       <br />
         {% endif %}
         {% endfor %}
         {% endif %}
+
         {%if response %}
         <div class="media media-chat">
           <img class="avatar" src="{% static 'images/AIlogo.png' %}" alt="...">
@@ -43,17 +44,10 @@
           </div>
         </div>
         {%endif%}
-
-        <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;">
-          <div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div>
-        </div>
-        <div class="ps-scrollbar-y-rail" style="top: 0px; height: 0px; right: 2px;">
-          <div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 2px;"></div>
-        </div>
+        <div class="media media-meta-day">Now</div>
       </div>
 
-      <div class="publisher col-md-9 col-sm-12 bt-1 border border-primary rounded p-3 mt-3">
-        <img class="avatar avatar-xs" src="https://img.icons8.com/color/36/000000/user-male.png" alt="...">
+      <div class="publisher bt-1 border border-primary rounded p-3 mt-3">
         <input id="prompt" class="publisher-input" type="text" placeholder="Write something">
         <!--file
 

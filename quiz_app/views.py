@@ -5,7 +5,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from .models import CustomUser, Message, Quiz, GroupQuiz, ScoreHolder
+from .models import CustomUser, Message, Quiz, GroupQuiz, ScoreHolder, File
 from .generator import get_question, get_q
 
 import json, re
@@ -60,8 +60,6 @@ def user_register(request):
             return render(request, 'registeration.html', {'error': 'Passwords did not match.'})
         
     return render(request, 'registeration.html')
-
-
 
 
 @login_required(login_url='login')
@@ -142,6 +140,8 @@ def handle_upload(request):
             title = questions['questions'][0]['question']
             quiz = Quiz.objects.create(generated_by=user, questions=str(questions),size=5, title=title)
             quiz.save()
+        file = File.objects.create(subject=" ", uploaded_by=user)
+        file.save
         #redirect_url = 'quiz/?questions={}'.format(questions['questions'])
         return render(request, 'quiz3.html', {'questions':questions['questions'], 'id':quiz.id})
     
