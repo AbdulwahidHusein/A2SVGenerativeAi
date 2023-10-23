@@ -1,63 +1,93 @@
 {% extends 'index2.html' %}
 
 {% block content %}
-{% load static %}
+  {% load static %}
 
   <div class="container">
     <div class="login-box">
       {% if error %}
         <div id="alert" class="alert alert-danger">
-        <p style="color: white">{{error}}</p>
-        <script>
+          <p style="color: white">{{ error }}</p>
+          <script>
             setTimeout(() => {
               document.getElementById('alert').innerHTML = '';
               document.getElementById('alert').classList = '';
             }, 2000);
           </script>
-          </div>
-          {% endif %}
-
-    <!-- Contact Start -->
-    <div class="container-xxl py-5">
-        <div class="container">
-            <div class="row g-5">
-                <div class="col-lg-12 wow fadeIn" data-wow-delay="0.1s">
-                    <p class="display-6 mb-5">Please Register to access our service</p>
-                    <br />
-                    {%if error %}
-                    <div id="alertContainer" class="alert alert-danger" role="alert">
-                      {{error}}
-                      <script>
-                        setTimeout(3000, ()=>{document.getElementById("alertContainer").style.display = "none";
-                      })
-                      </script>
-                    </div>
-                    {%endif%}
-                    <form method="post">
-                        {% csrf_token %}
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="email" name="email" class="form-control" id="email" placeholder="Your Email">
-                                    <label for="email">Email</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input class="form-control" type="password" name="password" placeholder="Leave a message here" id="message">
-                                    <label for="message">Password</label>
-                                </div>
-                            </div>
-                        
-                            <div class="col-12">
-                                <button class="btn btn-primary py-3 w-100 px-5" type="submit">Submit</button>
-                            </div>
-                            <a class="text-center" href="{%url 'register' %}">New here? Signup</a>
-                        </div>
-                    </form>
-                </div>
-            </div>
         </div>
+      {% endif %}
+
+      <div class="container-xxl py-5">
+        <div class="container">
+          <div class="row g-5">
+            <div class="col-lg-12 wow fadeIn" data-wow-delay="0.1s">
+              <p class="display-6 mb-5">Please Login to access our service</p>
+              <br />
+              {% if error %}
+                <div id="alertContainer" class="alert alert-danger" role="alert">
+                  {{ error }}
+                  <script>
+                    setTimeout(() => {
+                      document.getElementById("alertContainer").style.display = "none";
+                    }, 3000);
+                  </script>
+                </div>
+              {% endif %}
+              <form method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="form-floating">
+                      <input type="email" name="email" class="form-control" id="email" placeholder="Your Email" required>
+                      <label for="email">Email</label>
+                      <div class="invalid-feedback">
+                        Please enter a valid email address.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-floating">
+                      <input class="form-control" type="password" name="password" placeholder="Your Password" id="password" required>
+                      <label for="password">Password</label>
+                      <div class="invalid-feedback">
+                        Please enter your password.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-12">
+                    <button class="btn btn-primary py-3 w-100 px-5" type="submit">Submit</button>
+                  </div>
+                  <a class="text-center" href="{% url 'register' %}">New here? Signup</a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <!-- Contact End -->
+  </div>
+
+  <script>
+    // Enable form validation
+    (function() {
+      'use strict';
+
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.querySelectorAll('.needs-validation');
+
+      // Loop over them and prevent submission
+      Array.prototype.slice.call(forms)
+        .forEach(function(form) {
+          form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+
+            form.classList.add('was-validated');
+          }, false);
+        });
+    })();
+  </script>
 {% endblock content %}

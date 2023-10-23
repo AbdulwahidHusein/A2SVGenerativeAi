@@ -14,7 +14,7 @@
     //shuffledQuestions = JSON.parse(shuffledQuestions);
     test(shuffledQuestions, QuizId);
   </script>
-
+<div class="quiz-page">
   <main class="main" style="display:nne">
     <div style="display:none; z-index:50" class="modal-container" id="score-modal">
       <div class="modal-content-container">
@@ -26,7 +26,7 @@
           <p><span id="remarks"></span></p>
         </div>
         <div class="modal-button-container">
-          <button class="view-explanation" id="exp-btn">View Explanations</button>
+          <button  class="view-explanation" id="exp-btn">View Explanations</button>
         </div>
       </div>
     </div>
@@ -90,7 +90,7 @@
         <input name="question" type="hidden" value="{{ quest.question }}">
         <input type="hidden" name="id" value="element_{{ forloop.counter }}">
         <input type="hidden" name="query">
-        <button class="btn btn-primary" type="submit">View more Explanations</button>
+        <button id="element_{{ forloop.counter }}b" class="btn btn-primary" type="submit">View more Explanations</button>
       </form>
       <div id="element_{{ forloop.counter }}l" class="loader" style="display:none"></div>
       <div id="element_{{ forloop.counter }}" class="more-explanation-area"></div>
@@ -117,7 +117,7 @@
 
         dv = document.getElementById(div_id);
         document.getElementById(div_id+"l").style.display = 'block'
-        
+        document.getElementById(div_id+"b").style.display = 'none'
 
         var url = '{% url "get_chat" %}' + '?query=' + encodeURIComponent(query); // Construct the URL with the query parameter
 
@@ -134,7 +134,7 @@
       });
     });
 </script>
-
+</div>
 
 
 {% endblock content %}
