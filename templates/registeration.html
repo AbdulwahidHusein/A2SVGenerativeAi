@@ -1,87 +1,108 @@
 {% extends 'index2.html' %}
 
 {% block content %}
-{% load static %}
-      <div id="alert" class="alert alert-danger">
-        {% if error %}
-        <p style="color: white">{{error}}</p>
-        {% endif %}
-      </div>
-        <script>
-            setTimeout(() => {
-              document.getElementById('alert').innerHTML = '';
-              document.getElementById('alert').classList = '';
-            }, 2000);
-          </script>
-    <!-- Contact Start -->
-    <div class="container-xxl py-5">
-        <div class="container">
-            <div class="row g-5">
-                <div class="col-lg-12 wow fadeIn" data-wow-delay="0.1s">
-                    <p class="display-6 mb-5">Please Register to access our service</p>
-                    <br />
-                    {%if error %}
-                    <div id="alertContainer" class="alert alert-danger" role="alert">
-                      {{error}}
-                      <script>
-                        setTimeout(3000, ()=>{document.getElementById("alertContainer").style.display = "none";
-                      })
-                      </script>
-                    </div>
-                    {%endif%}
-                    <form method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="text" name="fullname" class="form-control" id="fullname" placeholder="Your Email">
-                                    <label for="email">Full Name</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="email" name="email" class="form-control" id="email" placeholder="Your Email">
-                                    <label for="email">Email</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input class="form-control" type="password" name="password1" placeholder="Leave a message here" id="password">
-                                    <label for="message">Password</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                              <div class="form-floating">
-                                  <input class="form-control" type="password" name="password2" placeholder="Leave a message here" id="confirm-password" >
-                                  <label for="message">Re Type Password</label>
-                              </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="form-floating">
-                                <input class="form-control" name="profession" placeholder="Leave a message here" id="profession" >
-                                <label for="message">Profession</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="agreeCheckbox">
-                            <label class="form-check-label" for="agreeCheckbox">
-                              I agree to the terms and conditions
-                            </label>
-                          </div>
-                        </div>
-                        
-                            <div class="col-12">
-                                <button class="btn btn-primary py-3 w-100 px-5" type="submit">Submit</button>
-                            </div>
-                            <a class="text-center" href="{%url 'login' %}">Dou you have an account? Login</a>
-                        </div>
-                    </form>
+  {% load static %}
+
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title mb-4">Registration</h5>
+            {% if error %}
+              <div id="alertContainer" class="alert alert-danger" role="alert">
+                {{ error }}
+              </div>
+              <script>
+                setTimeout(() => {
+                  document.getElementById("alertContainer").style.display = "none";
+                }, 2000);
+              </script>
+            {% endif %}
+            <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+              {% csrf_token %}
+              <div class="mb-3">
+                <label for="fullname" class="form-label">Full Name</label>
+                <input type="text" name="fullname" class="form-control" id="fullname" placeholder="Your Full Name" required>
+                <div class="invalid-feedback">
+                  Please enter your full name.
                 </div>
-            </div>
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" id="email" placeholder="Your Email" required>
+                <div class="invalid-feedback">
+                  Please enter a valid email address.
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input class="form-control" type="password" name="password1" placeholder="Your Password" id="password" required>
+                <div class="invalid-feedback">
+                  Please enter a password.
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="confirm-password" class="form-label">Confirm Password</label>
+                <input class="form-control" type="password" name="password2" placeholder="Confirm Password" id="confirm-password" required>
+                <div class="invalid-feedback">
+                  Please confirm the password.
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="profession" class="form-label">Profession</label>
+                <input class="form-control" name="profession" placeholder="Your Profession" id="profession" required>
+                <div class="invalid-feedback">
+                  Please enter your profession.
+                </div>
+              </div>
+              <div class="mb-3 form-check">
+                <input class="form-check-input" type="checkbox" id="agreeCheckbox" required>
+                <label class="form-check-label" for="agreeCheckbox">
+                  I agree to the terms and conditions
+                </label>
+                <div class="invalid-feedback">
+                  Please agree to the terms and conditions.
+                </div>
+              </div>
+              <div class="d-grid mt-4">
+                <button class="btn btn-primary" type="submit" id="submitBtn" disabled>Submit</button>
+              </div>
+              <div class="mt-3 text-center">
+                <a href="{% url 'login' %}">Already have an account? Login</a>
+              </div>
+            </form>
+          </div>
         </div>
+      </div>
     </div>
-    <!-- Contact End -->
+  </div>
 
+  <script>
+    // Enable form validation
+    (function() {
+      'use strict';
 
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.querySelectorAll('.needs-validation');
+
+      // Loop over them and prevent submission
+      Array.prototype.slice.call(forms)
+        .forEach(function(form) {
+          form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+
+            form.classList.add('was-validated');
+          }, false);
+        });
+    })();
+
+    // Enable/disable submit button based on agreement checkbox
+    document.getElementById('agreeCheckbox').addEventListener('change', function() {
+      document.getElementById('submitBtn').disabled = !this.checked;
+    });
+  </script>
 {% endblock content %}

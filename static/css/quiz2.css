@@ -1,6 +1,7 @@
 * {
     font-family: Roboto, sans-serif;
   }
+ 
   
   .container {
     display: flex;
@@ -17,6 +18,7 @@
   
   .game-quiz-container {
     width: 100%;
+    min-height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -42,7 +44,7 @@
   .game-question-container h1 {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 1.1rem;
-    color: #333333;
+    color: #454444;
     padding: 3px;
   }
   
@@ -82,7 +84,7 @@
   }
   
   .game-options-container .choice label:hover {
-    background-color: #7a79a9;
+    background-color: #292863;
   }
   
   .next-button-container {
@@ -101,20 +103,22 @@
   }
   
   .modal-container {
-    display: none;
     position: fixed;
+    display: none;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width:25%;
+    height: 25%;
+    left:37%;
+    top:37%;
     display: none;
     justify-content: center;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color:var(--secondary);
   }
   
   .modal-content-container {
-    background-color: white;
+    background-color: var(--secondary);
     padding: 20px;
     border-radius: 10px;
     display: flex;
@@ -225,6 +229,7 @@
         border: 4px solid var(--primary);
         border-top: 4px solid #3498db; 
         border-radius: 50%;
+        margin-top: 20px;
         width: 40px;
         height: 40px;
         animation: spin 2s linear infinite; 
@@ -239,3 +244,52 @@
           transform: rotate(360deg); /* Ending position of the circle (full rotation) */
         }
       }
+
+.standings-overlay{
+    display: none; 
+    position: fixed;
+    top: 0; left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background-color: rgba(0, 0, 0, 0.5);
+}
+.standings-dv{
+  display: flex;
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%);
+     background-color: white; 
+     padding: 20px;
+}
+.standings-dv {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.standings-heading {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.standings-row {
+  display: flex;
+  justify-content: space-between;
+  width: 300px;
+  margin-bottom: 5px;
+}
+
+.standings-row p {
+  font-weight: bold;
+}
+
+.standings-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 300px;
+}
+.quiz-page{
+  min-height: 100vh;
+}
