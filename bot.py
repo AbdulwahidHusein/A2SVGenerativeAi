@@ -125,35 +125,28 @@ def button_callback(update: Update, context: CallbackContext):
         send_request(update=update, context=context)
 
 
-# def start_quiz(update: Update, context: CallbackContext):
+def send_result(update: Update, context: CallbackContext):
+    job = context.chat_data.get("job")
+    if job:
+        job.schedule_removal()
+
+    result_message = "Here is the result:\n"
+
+    # # Placeholder for user_answers
+    # user_answers = ["Answer 1", "Answer 2", "Answer 3", "Answer 4", "Answer 5"]
+
+    for i, question_data in enumerate(question_format["questions"]):
+        result_message += f"Question {i + 1}: {question_data['question']}\n"
+
+        # Retrieve user's answer based on question index
+        # user_answer = user_answers[i]
+        # result_message += f"Your Answer: {user_answer}\n"
+
+        result_message += f"Explanation: {question_data['explanation']}\n\n"
+
+    context.bot.send_message(chat_id=update.effective_chat.id, text=result_message)
 
 
-def send_quiz(update: Update, context: CallbackContext):
-    print(len(question_format["questions"]))
-    # for current_question in range(len(question_format["questions"])):
-    #     question_data = question_format["questions"][current_question]
-    #     question_text = question_data["question"]
-    #     options = [
-    #         question_data["optionA"],
-    #         question_data["optionB"],
-    #         question_data["optionC"],
-    #         question_data["optionD"],
-    #     ]
-    #     correct_option = question_data["correctOption"]
-
-    #     context.bot.send_poll(
-    #         chat_id=update.effective_chat.id,
-    #         question=question_text,
-    #         options=options,
-    #         type=Poll.QUIZ,
-    #         correct_option_id=ord(correct_option[-1]) - ord("A"),
-    #         is_anonymous=False,
-    #         explanation=f'Correct Answer: {question_data["explanation"]}',
-    #         open_period=60,
-    #     )
-
-
-# this function sends request to erither openAi or Bard, it uses Bard if OpnAI fails. currently works on openAi only
 def send_request(update: Update, context: CallbackContext):
     context.bot.send_chat_action(
         chat_id=update.effective_chat.id, action=ChatAction.TYPING
@@ -170,12 +163,9 @@ def send_request(update: Update, context: CallbackContext):
             mode="multiple_choice",
             model="chatgpt",
         )
-    send_quiz(update=update, context=context)
-
     logging.info("request sent")
-    print(len(question_format["questions"]))
-    for current_question in range(5):
-        question_data = question_format["questions"][current_question]
+
+    for question_data in question_format["questions"]:
         question_text = question_data["question"]
         options = [
             question_data["optionA"],
@@ -185,16 +175,21 @@ def send_request(update: Update, context: CallbackContext):
         ]
         correct_option = question_data["correctOption"]
 
-        context.bot.send_poll(
-            chat_id=update.effective_chat.id,
-            question=question_text,
-            options=options,
-            type=Poll.QUIZ,
-            correct_option_id=ord(correct_option[-1]) - ord("A"),
-            is_anonymous=False,
-            explanation=f'Correct Answer: {question_data["explanation"]}',
-            open_period=60,
-        )
+        try:
+            context.bot.send_poll(
+                chat_id=update.effective_chat.id,
+                question=question_text,
+                options=options,
+                type=Poll.QUIZ,
+                correct_option_id=ord(correct_option[-1]) - ord("A"),
+                is_anonymous=False,
+                explanation=f'Correct Answer: {question_data["explanation"]}',
+                open_period=60,
+            )
+        except:
+            pass
+    # job = context.job_queue.run_once(send_result, 60, context=update.effective_chat.id)
+    # context.chat_data["job"] = job
 
 
 def register(dispatcher):
@@ -209,10 +204,8 @@ def register(dispatcher):
     )
     dispatcher.add_handler(conv_handler)
     dispatcher.add_handler(CallbackQueryHandler(button_callback))
+    dispatcher.add_handler(CommandHandler("result", send_result))
 
-    # dispatcher.add_handler(
-    #     MessageHandler(Filters.text & ~Filters.command, handle_quiz_format)
-    # )
     dispatcher.add_handler(CommandHandler("help", help))
 
 
