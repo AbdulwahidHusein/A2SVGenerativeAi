@@ -1,13 +1,13 @@
 from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import render, redirect, HttpResponse
-from django.http import JsonResponse
+from django.shortcuts import render, redirect, HttpResponseRedirect
+from django.http import JsonResponse, Http404
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from .models import CustomUser, Message, Quiz, GroupQuiz, ScoreHolder, File
 from .generator import get_question, get_q
-from django.core import serializers
+from django.urls import reverse
 
 import json, re
 from dateutil import parser
@@ -132,88 +132,126 @@ def handle_upload(request):
         spage = int(request.POST.get('spage'))
         epage = int(request.POST.get('epage'))
         comment = request.POST.get('additional_comment')
-        try:
-            questions = get_question(uploaded_file, num_of_questions, difficulty, spage, epage, 'multiple_choice', 'chatgpt')
-        except:
-            questions = get_q()    
         
-        if questions:
-            title = questions['questions'][0]['question']
-            quiz = Quiz.objects.create(generated_by=user, questions=str(questions),size=5, title=title)
-            quiz.save()
-        file = File.objects.create(subject=" ", uploaded_by=user)
-        file.save
-        #redirect_url = 'quiz/?questions={}'.format(questions['questions'])
-        return render(request, 'quiz3.html', {'questions':questions['questions'], 'id':quiz.id})
+        if not uploaded_file or not num_of_questions or not difficulty or not spage or not epage:
+            return HttpResponseRedirect(reverse('upload'))  # Redirect to upload page or appropriate URL
+        
+        try:
+            file = File.objects.create(file=uploaded_file, subject=uploaded_file.file_name, uploaded_by=user)
+            file.save()
+            
+            try:
+                questions = get_question(uploaded_file, num_of_questions, difficulty, spage, epage, 'multiple_choice', 'chatgpt')
+                if questions:
+                    title = questions['questions'][0]['question']
+                    quiz = Quiz.objects.create(generated_by=user, questions=str(questions), size=5, title=title)
+                    quiz.save()
+                    return render(request, 'quiz3.html', {'questions': questions['questions'], 'id': quiz.id})
+                else:
+                    # Handle case when questions are not available
+                    return HttpResponseRedirect(reverse('upload')) 
+            except Exception as e:
+                print(f"Error generating questions: {str(e)}")
+                return HttpResponseRedirect(reverse('upload')) 
+        
+        except Exception as e:
+            print(f"Error creating File object: {str(e)}")
+            return HttpResponseRedirect(reverse('upload'))  # Redirect to upload page or appropriate URL
     
     return render(request, 'upload.html')
 
 def get_quiz(request, id):
-    user = request.user
-    quiz = Quiz.objects.get(pk=id)
-    if quiz.generated_by.id == user.id:
-        questions = quiz.questions
-        
-        questions = re.sub(r"'", '"',questions)
-        #questions = re.sub(r"(\b\w+)\"(\w+\b)", r"\1 \2", questions)
-        print(questions)
-        questions = json.loads(questions)
-        return render(request, 'quiz3.html', {'questions':questions['questions'], 'id':quiz.id})
-    
-    quizs = Quiz.objects.all().filter(generated_by= user)
-    return render(request, 'my_quizes.html', {"quizes":quizs})
+    try:
+        user = request.user
+        quiz = Quiz.objects.get(pk=id)
+
+        if quiz.generated_by.id == user.id:
+            questions = quiz.questions
+            questions = re.sub(r"'", '"', questions)
+            print(questions)
+            questions = json.loads(questions)
+            return render(request, 'quiz3.html', {'questions': questions['questions'], 'id': quiz.id})
+
+        quizs = Quiz.objects.filter(generated_by=user)
+        return render(request, 'my_quizes.html', {"quizes": quizs})
+
+    except Quiz.DoesNotExist:
+        raise Http404("Quiz does not exist")
+    except Exception as e:
+        return redirect('error_page') 
 
 @login_required(login_url='login')
 def handle_quiz_submit(request):
-    id = request.POST.get('id')
-    score = request.POST.get('score')
-    quiz = Quiz.objects.get(pk=id)
-    
-    quiz.user_score = score
-    quiz.save()
-    return JsonResponse({"status":"okay"}, safe=False)
+    try:
+        id = request.POST.get('id')
+        score = request.POST.get('score')
+        quiz = get_object_or_404(Quiz, pk=id)
 
+        quiz.user_score = score
+        quiz.save()
+        return JsonResponse({"status": "okay"}, safe=False)
+
+    except KeyError:
+        return JsonResponse({"status": "error", "message": "Invalid request parameters"}, status=400)
+    except Quiz.DoesNotExist:
+        return JsonResponse({"status": "error", "message": "Quiz does not exist"}, status=404)
+    except Exception as e:
+        return JsonResponse({"status": "error", "message": str(e)}, status=500)
 
 @login_required(login_url='login')
 def myquizes(request):
-    user = request.user
-    quizs = Quiz.objects.all().filter(generated_by= user)
-    return render(request, 'my_quizes.html', {"quizes":quizs})
-    
+    try:
+        user = request.user
+        quizs = Quiz.objects.filter(generated_by=user)
+        return render(request, 'my_quizes.html', {"quizes": quizs})
 
-
-
+    except Exception as e:
+        return render(request, 'error_page.html', {"error_message": str(e)})
 @login_required(login_url='login')
 def user_group_quizs(request):
-    user = request.user
-    group_quizzes = GroupQuiz.objects.filter(joined_members=user)
-    return render(request, "joined_group_quizes.html", {"group_quizes":group_quizzes})
+    try:
+        user = request.user
+        group_quizzes = GroupQuiz.objects.filter(joined_members=user)
+        return render(request, "joined_group_quizes.html", {"group_quizes": group_quizzes})
 
-def get_group_quiz_info(request, id):
-    user = request.user
-    data = {}
-    group_quiz = get_object_or_404(GroupQuiz, pk=id)
-    has_user_joined = False
-    if group_quiz.joined_members.contains(user):
-        has_user_joined = True
-    #GroupQuiz.objects.get(pk=id)
-    group_quiz.update_status()
-    quiz = group_quiz.quiz
-    questions = quiz.questions
-    questions = re.sub(r"'", '"',questions)
-    questions = json.loads(questions)
-    if group_quiz.is_in_progress:
-        data['questions'] = questions['questions']#may not be possible but lets try it 
-    else:
-        data['questions'] = {}
-          
-    data['has_user_joined'] = has_user_joined
-    data['group_quiz'] = group_quiz
+    except Exception as e:
+        return render(request, 'error_page.html', {"error_message": str(e)})
     
-    #joined_members = group_quiz.joined_members.all()
-    scores = ScoreHolder.objects.all().filter(group_quiz=group_quiz).order_by('score')[::-1]
-    data['scores'] = scores
-    return render(request, 'group_quiz_comp.html', data)
+@login_required(login_url='login')
+def get_group_quiz_info(request, id):
+    try:
+        user = request.user
+        data = {}
+        group_quiz = get_object_or_404(GroupQuiz, pk=id)
+
+        has_user_joined = False
+        if group_quiz.joined_members.filter(id=user.id).exists():
+            has_user_joined = True
+
+        group_quiz.update_status()
+
+        quiz = group_quiz.quiz
+        questions = quiz.questions
+        questions = re.sub(r"'", '"', questions)
+        questions = json.loads(questions)
+
+        if group_quiz.is_in_progress:
+            data['questions'] = questions['questions']
+        else:
+            data['questions'] = {}
+
+        data['has_user_joined'] = has_user_joined
+        data['group_quiz'] = group_quiz
+
+        scores = ScoreHolder.objects.filter(group_quiz=group_quiz).order_by('-score')
+        data['scores'] = scores
+
+        return render(request, 'group_quiz_comp.html', data)
+
+    except GroupQuiz.DoesNotExist:
+        raise Http404("Group quiz does not exist")
+    except Exception as e:
+        return render(request, 'error_page.html', {"error_message": str(e)})
     
 @login_required(login_url='login')   
 def handle_join_group(request, id):
@@ -258,6 +296,7 @@ def update_scoreboard(request):
     score_holder.save()
     return JsonResponse({"status":"okay"}, safe=False)
 
+@login_required(login_url='login')
 def get_scoreboard(request):
     id = request.GET.get('id')
     data = {}
@@ -266,3 +305,10 @@ def get_scoreboard(request):
         data[score.competitor.first_name] = score.score
         
     return JsonResponse(data)
+
+@login_required(login_url='login')
+def get_user_files(request):
+    user = request.user
+    
+    
+    

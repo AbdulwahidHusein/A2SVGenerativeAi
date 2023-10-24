@@ -102,20 +102,6 @@
     transition: background-color 0.3s ease;
   }
   
-  .modal-container {
-    position: fixed;
-    display: none;
-    top: 0;
-    left: 0;
-    width:25%;
-    height: 25%;
-    left:37%;
-    top:37%;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    background-color:var(--secondary);
-  }
   
   .modal-content-container {
     background-color: var(--secondary);
@@ -296,11 +282,11 @@
 }
 
 .single-result {
-  border: 2px solid #007bff;
+  border: 2px solid #f7f9fb;
   border-radius: 8px;
   padding: 20px;
   margin-bottom: 20px;
-  background-color: #f8f9fa;
+  background-color: #d8dfe5;
 }
 
 .exp {
