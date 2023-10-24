@@ -141,8 +141,9 @@ def send_request(update: Update, context: CallbackContext):
             mode="multiple_choice",
             model="chatgpt",
         )
-
     logging.info("request sent")
+
+    # context.bot.send_message(chat_id=update.effective_chat.id, text=question_format)
     for question_data in question_format["questions"]:
         question_text = question_data["question"]
         options = [
@@ -153,16 +154,19 @@ def send_request(update: Update, context: CallbackContext):
         ]
         correct_option = question_data["correctOption"]
 
-        context.bot.send_poll(
-            chat_id=update.effective_chat.id,
-            question=question_text,
-            options=options,
-            type=Poll.QUIZ,
-            correct_option_id=ord(correct_option[-1]) - ord("A"),
-            is_anonymous=False,
-            explanation=f'Correct Answer: {question_data["explanation"]}',
-            open_period=60,
-        )
+        try:
+            context.bot.send_poll(
+                chat_id=update.effective_chat.id,
+                question=question_text,
+                options=options,
+                type=Poll.QUIZ,
+                correct_option_id=ord(correct_option[-1]) - ord("A"),
+                is_anonymous=False,
+                explanation=f'Correct Answer: {question_data["explanation"]}',
+                open_period=60,
+            )
+        except:
+            pass
 
 
 def register(dispatcher):
