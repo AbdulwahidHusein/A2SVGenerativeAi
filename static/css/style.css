@@ -13,7 +13,9 @@
     bottom: 30px;
     z-index: 99;
 }
-
+body{
+    overflow-x: hidden;
+}
 
 /*** Spinner ***/
 #spinner {
@@ -96,7 +98,7 @@
     outline: none;
 }
 nav{
-    background-color: #0d1b62;
+    background-color: var(--dark);
 }
 
 .navbar .navbar-nav .nav-link:hover,
@@ -119,7 +121,7 @@ nav{
     }
 
     .navbar .navbar-nav {
-        margin-top: 20px;
+        margin-top: 12px;
         margin-bottom: 15px;
     }
 
@@ -159,7 +161,7 @@ nav{
     align-items: center;
     justify-content: center;
     text-align: center;
-    background: rgba(1, 10, 53, .8);
+    background: rgba(40, 49, 104, 0.8);
     z-index: 1;
 }
 

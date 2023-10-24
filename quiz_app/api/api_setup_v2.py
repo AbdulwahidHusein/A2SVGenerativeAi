@@ -43,10 +43,10 @@ class OpenAi:
         conversation_history = [{'role': 'system', 'content': 'You are a helpful assistant.'}]
         for chat in history:
             if chat.is_recieved:
-                hist = {'role':'assistant', 'content':chat.text}
+                hist = {'role':'assistant', 'content':chat.text[-500:]}
                 conversation_history.append(hist)
             else:
-                hist = {'role':'user', 'content':chat.text}
+                hist = {'role':'user', 'content':chat.text[-500:]}
                 conversation_history.append(hist)
         conversation_history.append({'role':'user','content':query})
         

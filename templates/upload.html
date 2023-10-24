@@ -9,7 +9,7 @@
                 <div class="col-lg-12 wow fadeIn" data-wow-delay="0.1s">
                     <p class="display-6 mb-5">Upload Your Documents So that we Prepare a quiz for you!</p>
                     <br />
-                    <form method="post" enctype="multipart/form-data" onsubmit="showLoader()">
+                    <form method="post" enctype="multipart/form-data" id="quizForm">
                         {% csrf_token %}
                         <div class="row g-3">
                             <div class="col-md-6">
@@ -17,49 +17,54 @@
                                     <input type="file" name="file" class="form-control" id="name" >
                                     <label for="name">Your Document</label>
                                 </div>
+                                <small id="fileError" class="text-danger"></small>
                             </div>
                             
                             <div class="col-md-6">
                                 <div class="form-floating">
                                     <select id="difficulty" name="difficulty" class="form-control" >
-                                        <option>
+                                        <option value="easy">
                                             Easy
                                         </option>
-                                        <option>
+                                        <option value="medium">
                                             Medium
                                         </option>
-                                        <option>
+                                        <option value="hard">
                                             Hard
                                         </option>
                                     </select>
-                                    <label for="email">Difficulty</label>
+                                    <label for="difficulty">Difficulty</label>
                                 </div>
+                                <small id="difficultyError" class="text-danger"></small>
                             </div>
 
-                            <p class="">Specify the range of pages in you Document for generation of the quiz</p>
+                            <p class="">Specify the range of pages in your Document for generation of the quiz</p>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="number" name="spage" class="form-control" id="email" placeholder="Your Email">
-                                    <label for="email">Start Page</label>
+                                    <input type="number" name="spage" class="form-control" id="startPage" placeholder="Start Page">
+                                    <label for="startPage">Start Page</label>
                                 </div>
+                                <small id="spageError" class="text-danger"></small>
                             </div>
                             <div class="col-6">
                                 <div class="form-floating">
-                                    <input type="number" name="epage" class="form-control" id="email" placeholder="Your Email">
-                                    <label for="email">end Page</label>
+                                    <input type="number" name="epage" class="form-control" id="endPage" placeholder="End Page">
+                                    <label for="endPage">End Page</label>
                                 </div>
+                                <small id="epageError" class="text-danger"></small>
                             </div>
-                            <p class="">specify number of questions</p>
+                            <p class="">Specify the number of questions</p>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="number" name="qnumber" class="form-control" id="email" placeholder="Your Email">
-                                    <label for="email">Number of Questions maximum (20)</label>
+                                    <input type="number" name="qnumber" class="form-control" id="questionNumber" placeholder="Question Number">
+                                    <label for="questionNumber">Number of Questions maximum (20)</label>
                                 </div>
+                                <small id="qnumberError" class="text-danger"></small>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <textarea class="form-control" name="additional_comment" placeholder="Leave a message here" id="message" style="height: 100px"></textarea>
-                                    <label for="message">Additional Comments</label>
+                                    <textarea class="form-control" name="additional_comment" placeholder="Leave a message here" id="additionalComment" style="height: 100px"></textarea>
+                                    <label for="additionalComment">Additional Comments</label>
                                 </div>
                             </div>
                             <div class="col-12">
@@ -76,9 +81,66 @@
     </div>
     <script>
         function showLoader() {
-          document.getElementById('loader').style.display = 'block';
+            document.getElementById('loader').style.display = 'block';
         }
-        </script>
+    
+        document.getElementById('quizForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            resetErrors();
+    
+            var fileInput = document.getElementById('name');
+            var difficultyInput = document.getElementById('difficulty');
+            var startPageInput = document.getElementById('startPage');
+            var endPageInput = document.getElementById('endPage');
+            var questionNumberInput = document.getElementById('questionNumber');
+    
+            var errors = false;
+    
+            if (fileInput.files.length === 0) {
+                document.getElementById('fileError').textContent = 'Please select a file.';
+                errors = true;
+            }
+    
+            if (difficultyInput.value === '') {
+                document.getElementById('difficultyError').textContent = 'Please select a difficulty.';
+                errors = true;
+            }
+    
+            if (startPageInput.value === '') {
+                document.getElementById('spageError').textContent = 'Please enter the start page.';
+                errors = true;
+            }
+    
+            if (endPageInput.value === '') {
+                document.getElementById('epageError').textContent = 'Please enter the end page.';
+                errors = true;
+            }
+    
+            if (questionNumberInput.value === '' || isNaN(questionNumberInput.value) || questionNumberInput.value < 1 || questionNumberInput.value > 20) {
+                document.getElementById('qnumberError').textContent = 'Please enter a valid number of questions between 1 and 20.';
+                errors = true;
+            }
+    
+            if (errors) {
+                return;
+            }
+    
+            // If there are no errors, show the loader
+            showLoader();
+            
+            // Submit the form after showing the loader
+            this.submit();
+        });
+    
+        function resetErrors() {
+            document.getElementById('fileError').textContent = '';
+            document.getElementById('difficultyError').textContent = '';
+            document.getElementById('spageError').textContent = '';
+            document.getElementById('epageError').textContent = '';
+            document.getElementById('qnumberError').textContent = '';
+        }
+    </script>
+    
     <!-- Contact End -->
 
 

@@ -5,8 +5,9 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from .models import CustomUser, Message, Quiz, GroupQuiz, ScoreHolder
+from .models import CustomUser, Message, Quiz, GroupQuiz, ScoreHolder, File
 from .generator import get_question, get_q
+from django.core import serializers
 
 import json, re
 from dateutil import parser
@@ -62,8 +63,6 @@ def user_register(request):
     return render(request, 'registeration.html')
 
 
-
-
 @login_required(login_url='login')
 def get_chat(request):
     user_query = request.GET.get('query')
@@ -72,7 +71,7 @@ def get_chat(request):
     response = ""
     
     opena = OpenAi(OPEN_AI_API_KEY)
-    response = opena.chat(chats, user_query)
+    response = opena.chat(chats, user_query, user)
         
     if response:
         message1  = Message.objects.create(user=user, text=user_query, is_received = False)
@@ -100,7 +99,7 @@ def chat(request):
         
         if query:
             opena = OpenAi(OPEN_AI_API_KEY)
-            response = opena.chat({}, query)
+            response = opena.chat({}, query, user)
         
         if response:
             message2 = Message.objects.create(user=user, text=response, is_received=True)
@@ -142,6 +141,8 @@ def handle_upload(request):
             title = questions['questions'][0]['question']
             quiz = Quiz.objects.create(generated_by=user, questions=str(questions),size=5, title=title)
             quiz.save()
+        file = File.objects.create(subject=" ", uploaded_by=user)
+        file.save
         #redirect_url = 'quiz/?questions={}'.format(questions['questions'])
         return render(request, 'quiz3.html', {'questions':questions['questions'], 'id':quiz.id})
     
@@ -189,19 +190,28 @@ def user_group_quizs(request):
     return render(request, "joined_group_quizes.html", {"group_quizes":group_quizzes})
 
 def get_group_quiz_info(request, id):
+    user = request.user
     data = {}
     group_quiz = get_object_or_404(GroupQuiz, pk=id)
+    has_user_joined = False
+    if group_quiz.joined_members.contains(user):
+        has_user_joined = True
     #GroupQuiz.objects.get(pk=id)
+    group_quiz.update_status()
     quiz = group_quiz.quiz
     questions = quiz.questions
     questions = re.sub(r"'", '"',questions)
     questions = json.loads(questions)
-    group_quiz.quiz.questions = questions#may not be possible but lets try it  
-    group_quiz.update_status()
+    if group_quiz.is_in_progress:
+        data['questions'] = questions['questions']#may not be possible but lets try it 
+    else:
+        data['questions'] = {}
+          
+    data['has_user_joined'] = has_user_joined
     data['group_quiz'] = group_quiz
     
     #joined_members = group_quiz.joined_members.all()
-    scores = ScoreHolder.objects.all().filter(group_quiz=group_quiz).order_by('score')
+    scores = ScoreHolder.objects.all().filter(group_quiz=group_quiz).order_by('score')[::-1]
     data['scores'] = scores
     return render(request, 'group_quiz_comp.html', data)
     
@@ -214,46 +224,45 @@ def handle_join_group(request, id):
     score = ScoreHolder(score=0,competitor=user, group_quiz=group_quiz)
     score.save()
     
-    return
+    return redirect("group_quiz", id=group_quiz.id)
 
 @login_required(login_url='login')
 def create_group_quiz(request):
     user  = request.user
-    date_string = "2023-10-16 10:30:00"
-    # from datetime import datetime
-
-    # # User-provided inputs
-    # user_date = '2023-10-15'  # User-provided date
-    # user_time = '14:30:00'    # User-provided time
-
-    # # Current year
-    # current_year = datetime.now().year
-
-    # # Combine date, time, and current year
-    # combined_datetime_str = f'{current_year}-{user_date} {user_time}'
-
-    # # Create datetime object
-    # combined_datetime = datetime.strptime(combined_datetime_str, '%Y-%m-%d %H:%M:%S')
-
-    # # Store combined_datetime in the database or perform other operations
     if request.method == "POST":
         id = request.POST.get('id')
         start_time_str = request.POST.get('start_time')
-        end_time_str = request.POST.get('end_time')
-            
+        end_time_str = request.POST.get('end_time') 
             # Convert datetime strings to datetime objects
         parsed_start_date_time = parser.parse(start_time_str)
         parsed_end_date_time = parser.parse(end_time_str)
-
         quiz = Quiz.objects.get(pk=id)
-        
         group_quiz = GroupQuiz(quiz=quiz, start_time=parsed_start_date_time, end_time=parsed_end_date_time, created_by=user)
-
         group_quiz.save()
         group_quiz.joined_members.add(user)
-        print("time"*100, group_quiz.start_time)
         group_quiz.save()
+        score = ScoreHolder(score=0,competitor=user, group_quiz=group_quiz)
+        score.save()
         
         return redirect('group_quizes')
     quizzes = Quiz.objects.all().filter(generated_by=user)
     return render(request, 'create_group_quiz.html', {'quizzes':quizzes})
+
+@login_required(login_url='login')
+def update_scoreboard(request):
+    user = request.user
+    id = request.POST.get('id')
+    score = request.POST.get('score')
+    score_holder = ScoreHolder.objects.get(group_quiz__quiz__id=id, competitor=user)
+    score_holder.score = score
+    score_holder.save()
+    return JsonResponse({"status":"okay"}, safe=False)
+
+def get_scoreboard(request):
+    id = request.GET.get('id')
+    data = {}
+    score_holders = ScoreHolder.objects.all().filter(group_quiz__id=id)
+    for score in score_holders:
+        data[score.competitor.first_name] = score.score
+        
+    return JsonResponse(data)
