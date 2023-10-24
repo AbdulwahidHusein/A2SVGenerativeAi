@@ -6,16 +6,14 @@
 <link rel="stylesheet" href="{% static 'css/timer.css' %}" />
 <script src="{% static 'js/quiz2.js' %}"></script>
 
-<body>
     <script defer>
+        const groupQuiz = true;
+        const groupId = {{group_quiz.id}}
         let QuizId = {{group_quiz.quiz.id|safe}};
         let shuffledQuestions  = {{ questions|safe }};
         console.log(shuffledQuestions);
         //shuffledQuestions = JSON.parse(shuffledQuestions);
-        {% if group_quiz.is_in_progress %}
         test(shuffledQuestions, QuizId);
-        {% endif %}
-
         var started = false;
         var completed = false;
         var inprogress = false;
@@ -34,7 +32,6 @@
         
                     if (timeDiff <= 0) {
                         clearInterval(); // Stop the timer if end time has passed
-                        i
                             document.getElementById("timer").innerHTML = "Completed"; 
                             
                         
@@ -51,7 +48,6 @@
                         const diffInSeconds = Math.floor(timeDiff / 1000);
                         const diffInMinutes = Math.floor(diffInSeconds / 60);
                         const diffInHours = Math.floor(diffInMinutes / 60);
-        
                         const remainingHours = diffInHours % 24;
                         const remainingMinutes = diffInMinutes % 60;
                         const remainingSeconds = diffInSeconds % 60;
@@ -96,40 +92,20 @@
                 } else {
                     // Quiz has already ended
                     clearInterval(); // Stop the timer
+                    document.getElementById('quiz-main').style.display = 'none'
                     document.getElementById("timer").innerHTML = "Completed"; // Update the timer element with a message
                 }
             }, 1000);
             if (started){
                 document.getElementById('quiz-main').style.display = 'block'
             }
-        
     </script>
-    <script defer>
-    // ...
 
-    document.addEventListener('DOMContentLoaded', function() {
-        var standingsButton = document.querySelector('.standings');
-        var standingsOverlay = document.getElementById('standings-overlay');
-        var backButton = standingsOverlay.querySelector('button');
-
-        standingsButton.addEventListener('click', function() {
-            standingsOverlay.style.display = 'block';
-        });
-
-        backButton.addEventListener('click', function() {
-            standingsOverlay.style.display = 'none';
-        });
-    });
-
-    // ...
-</script>
 <div class="quiz-page">
-
     <div class="actions">
         {%if has_user_joined %} <button class="standings">Standings</button> {%endif%}
         <div id="timer">
             <!-- {{ timer_minutes }}:{{ timer_seconds }} If the time is passed as a prop -->
-          Starts in  00 : 00 
         </div>
         {%if has_user_joined %}<p>Joined</p>
         {%else%}
@@ -150,16 +126,17 @@
             <div class="standings-list">
                 {% for score in scores %}
                 <div class="standings-row">
-                    <p>{{ score.competitor }}</p>
+                    <p>{{forloop.counter}}. {{ score.competitor }}</p>
                     <p>{{ score.score }}</p>
                 </div>
                 {% endfor %}
             </div>
-            <button class="btn btn-primary" onclick="hideStandings()">Back</button>
+            <button class="btn btn-primary" >Back</button>
         </div>
     </div>
 
     {%if has_user_joined %}
+    
     <main id="quiz-main" class="main" style="display:none">
         <div style="display:none; z-index:505" class="modal-container" id="score-modal">
           <div class="modal-content-container">
@@ -225,11 +202,11 @@
     
       <div id="explanations" style="display:none">
         {% for quest in questions %}
-        <div class="single-result border border-primary rounded p-3 mt-3">
-          <p class="exp explanation-question"><h>Question {{ quest.id }}:</h>{{ quest.question }}</p>
-          <p class="exp explanation-correctAnswer"><h>Correct Answer:</h>{{ quest.correctOption }}</p>
-          <p class="exp explanation-correctAnswer"><h>Explanation:</h>{{ quest.explanation }}</p>
-          
+        <div class="single-result">
+          <p class="exp explanation-question"><h>Question {{ quest.id }}:</h> {{ quest.question }}</p>
+          <p class="exp explanation-correctAnswer"><h>Correct Answer:</h> {{ quest.correctOption }}</p>
+          <p class="exp explanation-correctAnswer"><h>Explanation:</h> {{ quest.explanation }}</p>
+        
           <form>
             {% csrf_token %}
             <input name="question" type="hidden" value="{{ quest.question }}">
@@ -281,5 +258,56 @@
         <script src="index.js"></script>
     </div>
 </div>
-</body>
+
+<script defer>
+    document.addEventListener('DOMContentLoaded', function() {
+        var standingsButton = document.querySelector('.standings');
+        var standingsOverlay = document.getElementById('standings-overlay');
+        var backButton = standingsOverlay.querySelector('button');
+
+        standingsButton.addEventListener('click', function() {
+
+            standingsOverlay.style.display = 'block';
+            updateScoreboard();
+        });
+
+        backButton.addEventListener('click', function() {
+            standingsOverlay.style.display = 'none';
+        });
+    });
+
+  function updateScoreboard() {
+
+    const url = `/get_scoreboard?id=${groupId}`;
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          console.log(data)
+            // Get the scoreboard container
+            const standingsList = document.querySelector('.standings-list');
+            standingsList.innerHTML = ''; // Clear the previous content
+
+            let index = 0;
+            Object.entries(data).forEach(([competitor, score]) => {
+                const standingsRow = document.createElement('div');
+                standingsRow.className = 'standings-row';
+
+                const nameParagraph = document.createElement('p');
+                nameParagraph.textContent = `${index + 1}. ${competitor}`;
+
+                const scoreParagraph = document.createElement('p');
+                scoreParagraph.textContent = score;
+
+                standingsRow.appendChild(nameParagraph);
+                standingsRow.appendChild(scoreParagraph);
+
+                standingsList.appendChild(standingsRow);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching scoreboard data:', error);
+        });
+}
+
+</script>
 {% endblock content %}
