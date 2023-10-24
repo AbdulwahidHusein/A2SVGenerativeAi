@@ -204,7 +204,7 @@ def register(dispatcher):
     )
     dispatcher.add_handler(conv_handler)
     dispatcher.add_handler(CallbackQueryHandler(button_callback))
-    dispatcher.add_handler(CommandHandler("result", send_result))
+    dispatcher.add_handler(CommandHandler("explain", send_result))
 
     dispatcher.add_handler(CommandHandler("help", help))
 
