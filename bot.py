@@ -125,35 +125,6 @@ def button_callback(update: Update, context: CallbackContext):
         send_request(update=update, context=context)
 
 
-# def start_quiz(update: Update, context: CallbackContext):
-
-
-def send_quiz(update: Update, context: CallbackContext):
-    print(len(question_format["questions"]))
-    # for current_question in range(len(question_format["questions"])):
-    #     question_data = question_format["questions"][current_question]
-    #     question_text = question_data["question"]
-    #     options = [
-    #         question_data["optionA"],
-    #         question_data["optionB"],
-    #         question_data["optionC"],
-    #         question_data["optionD"],
-    #     ]
-    #     correct_option = question_data["correctOption"]
-
-    #     context.bot.send_poll(
-    #         chat_id=update.effective_chat.id,
-    #         question=question_text,
-    #         options=options,
-    #         type=Poll.QUIZ,
-    #         correct_option_id=ord(correct_option[-1]) - ord("A"),
-    #         is_anonymous=False,
-    #         explanation=f'Correct Answer: {question_data["explanation"]}',
-    #         open_period=60,
-    #     )
-
-
-# this function sends request to erither openAi or Bard, it uses Bard if OpnAI fails. currently works on openAi only
 def send_request(update: Update, context: CallbackContext):
     context.bot.send_chat_action(
         chat_id=update.effective_chat.id, action=ChatAction.TYPING
@@ -170,12 +141,9 @@ def send_request(update: Update, context: CallbackContext):
             mode="multiple_choice",
             model="chatgpt",
         )
-    send_quiz(update=update, context=context)
 
     logging.info("request sent")
-    print(len(question_format["questions"]))
-    for current_question in range(5):
-        question_data = question_format["questions"][current_question]
+    for question_data in question_format["questions"]:
         question_text = question_data["question"]
         options = [
             question_data["optionA"],
@@ -210,9 +178,6 @@ def register(dispatcher):
     dispatcher.add_handler(conv_handler)
     dispatcher.add_handler(CallbackQueryHandler(button_callback))
 
-    # dispatcher.add_handler(
-    #     MessageHandler(Filters.text & ~Filters.command, handle_quiz_format)
-    # )
     dispatcher.add_handler(CommandHandler("help", help))
 
 
