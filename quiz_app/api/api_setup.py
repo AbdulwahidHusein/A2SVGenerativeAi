@@ -52,7 +52,7 @@ class OpenAi:
         self.api_key = API_KEY
         openai.api_key = self.api_key
         
-    def chat(self, history, query):
+    def chat(self, history, query, user):
         conversation_history = [{'role': 'system', 'content': 'You are a helpful assistant.'}]
         for chat in history:
             if chat.is_received:
@@ -61,6 +61,7 @@ class OpenAi:
             else:
                 hist = {'role':'user', 'content':chat.text}
                 conversation_history.append(hist)
+        conversation_history.append({'role':'user','content':"assume you are an assistant in quiz website called Quizme in which AI like you generates an interactive quiz from their study material and users ask more calarification about these questions. now you are assisting a person named "+user.first_name + "be freindly with them"})
         conversation_history.append({'role':'user','content':query})
         
         completion = openai.ChatCompletion.create(
