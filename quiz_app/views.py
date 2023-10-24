@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from .models import CustomUser, Message, Quiz, GroupQuiz, ScoreHolder, File
 from .generator import get_question, get_q
+from django.core import serializers
 
 import json, re
 from dateutil import parser
@@ -205,12 +206,12 @@ def get_group_quiz_info(request, id):
         data['questions'] = questions['questions']#may not be possible but lets try it 
     else:
         data['questions'] = {}
-        
+          
     data['has_user_joined'] = has_user_joined
     data['group_quiz'] = group_quiz
     
     #joined_members = group_quiz.joined_members.all()
-    scores = ScoreHolder.objects.all().filter(group_quiz=group_quiz).order_by('score')
+    scores = ScoreHolder.objects.all().filter(group_quiz=group_quiz).order_by('score')[::-1]
     data['scores'] = scores
     return render(request, 'group_quiz_comp.html', data)
     
@@ -228,41 +229,40 @@ def handle_join_group(request, id):
 @login_required(login_url='login')
 def create_group_quiz(request):
     user  = request.user
-    date_string = "2023-10-16 10:30:00"
-    # from datetime import datetime
-
-    # # User-provided inputs
-    # user_date = '2023-10-15'  # User-provided date
-    # user_time = '14:30:00'    # User-provided time
-
-    # # Current year
-    # current_year = datetime.now().year
-
-    # # Combine date, time, and current year
-    # combined_datetime_str = f'{current_year}-{user_date} {user_time}'
-
-    # # Create datetime object
-    # combined_datetime = datetime.strptime(combined_datetime_str, '%Y-%m-%d %H:%M:%S')
-
-    # # Store combined_datetime in the database or perform other operations
     if request.method == "POST":
         id = request.POST.get('id')
         start_time_str = request.POST.get('start_time')
-        end_time_str = request.POST.get('end_time')
-            
+        end_time_str = request.POST.get('end_time') 
             # Convert datetime strings to datetime objects
         parsed_start_date_time = parser.parse(start_time_str)
         parsed_end_date_time = parser.parse(end_time_str)
-
         quiz = Quiz.objects.get(pk=id)
-        
         group_quiz = GroupQuiz(quiz=quiz, start_time=parsed_start_date_time, end_time=parsed_end_date_time, created_by=user)
-
         group_quiz.save()
         group_quiz.joined_members.add(user)
-        print("time"*100, group_quiz.start_time)
         group_quiz.save()
+        score = ScoreHolder(score=0,competitor=user, group_quiz=group_quiz)
+        score.save()
         
         return redirect('group_quizes')
     quizzes = Quiz.objects.all().filter(generated_by=user)
     return render(request, 'create_group_quiz.html', {'quizzes':quizzes})
+
+@login_required(login_url='login')
+def update_scoreboard(request):
+    user = request.user
+    id = request.POST.get('id')
+    score = request.POST.get('score')
+    score_holder = ScoreHolder.objects.get(group_quiz__quiz__id=id, competitor=user)
+    score_holder.score = score
+    score_holder.save()
+    return JsonResponse({"status":"okay"}, safe=False)
+
+def get_scoreboard(request):
+    id = request.GET.get('id')
+    data = {}
+    score_holders = ScoreHolder.objects.all().filter(group_quiz__id=id)
+    for score in score_holders:
+        data[score.competitor.first_name] = score.score
+        
+    return JsonResponse(data)

@@ -28,6 +28,37 @@ let indexNumber = 0
 
 // function for displaying next question in the array to dom
 function NextQuestion(index) {
+    if (groupQuiz){
+        var csrftoken = getCookie('csrftoken');
+        var formData = new FormData();
+        formData.append('id', QuizId);
+        formData.append('score', playerScore);
+        
+     // Add CSRF token to request headers
+     $.ajaxSetup({
+       beforeSend: function(xhr, settings) {
+         if (!this.crossDomain) {
+           xhr.setRequestHeader('X-CSRFToken', csrftoken);
+         }
+       }
+     });
+     
+     $.ajax({
+       type: 'POST',
+       url: '/update_scoreboard/',
+       data: formData,
+       processData: false,
+       contentType: false,
+       success: function(response) {
+         console.log(response);
+         // Handle the success response here
+       },
+       error: function(xhr, status, error) {
+         console.log(error);
+         // Handle the error response here
+       }
+     });
+    }
     //handleQuestions()
         const currentQuestion = shuffledQuestions[index]
             document.getElementById("question-number").innerHTML = parseInt(index)+1 + " / "+ length
@@ -198,7 +229,7 @@ $.ajax({
 
 
     }
-    
+    //update_scoreboard
 
 function showExplanation() {
     document.getElementsByClassName('main')[0].style.display = 'none';
