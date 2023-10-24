@@ -125,6 +125,28 @@ def button_callback(update: Update, context: CallbackContext):
         send_request(update=update, context=context)
 
 
+def send_result(update: Update, context: CallbackContext):
+    job = context.chat_data.get("job")
+    if job:
+        job.schedule_removal()
+
+    result_message = "Here is the result:\n"
+
+    # # Placeholder for user_answers
+    # user_answers = ["Answer 1", "Answer 2", "Answer 3", "Answer 4", "Answer 5"]
+
+    for i, question_data in enumerate(question_format["questions"]):
+        result_message += f"Question {i + 1}: {question_data['question']}\n"
+
+        # Retrieve user's answer based on question index
+        # user_answer = user_answers[i]
+        # result_message += f"Your Answer: {user_answer}\n"
+
+        result_message += f"Explanation: {question_data['explanation']}\n\n"
+
+    context.bot.send_message(chat_id=update.effective_chat.id, text=result_message)
+
+
 def send_request(update: Update, context: CallbackContext):
     context.bot.send_chat_action(
         chat_id=update.effective_chat.id, action=ChatAction.TYPING
@@ -143,7 +165,6 @@ def send_request(update: Update, context: CallbackContext):
         )
     logging.info("request sent")
 
-    # context.bot.send_message(chat_id=update.effective_chat.id, text=question_format)
     for question_data in question_format["questions"]:
         question_text = question_data["question"]
         options = [
@@ -167,6 +188,8 @@ def send_request(update: Update, context: CallbackContext):
             )
         except:
             pass
+    # job = context.job_queue.run_once(send_result, 60, context=update.effective_chat.id)
+    # context.chat_data["job"] = job
 
 
 def register(dispatcher):
@@ -181,6 +204,7 @@ def register(dispatcher):
     )
     dispatcher.add_handler(conv_handler)
     dispatcher.add_handler(CallbackQueryHandler(button_callback))
+    dispatcher.add_handler(CommandHandler("result", send_result))
 
     dispatcher.add_handler(CommandHandler("help", help))
 
