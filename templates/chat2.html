@@ -4,7 +4,7 @@
 {% block content %}
   <link rel="stylesheet" href="{% static 'css/chat.css' %}" />
 
-  <div class="container py-5">
+  <div class="container py-5 justify-content-center ">
     <div class="row justify-content-center">
       <div class="col-md-8 col-sm-12">
         <div class="card chat-card">
@@ -19,12 +19,10 @@
                   {% if chat.is_received %}
                     <div class="message received">
                       <span class="text">{{ chat.text }}</span>
-                      <span class="time">00:07</span>
                     </div>
                   {% else %}
                     <div class="message sent">
                       <span class="text">{{ chat.text }}</span>
-                      <span class="time">00:07</span>
                     </div>
                   {% endif %}
                 {% endfor %}
@@ -33,7 +31,6 @@
               {% if response %}
                 <div class="message received">
                   <span class="text">{{ response|linebreaksbr }}</span>
-                  <span class="time">00:07</span>
                 </div>
               {% endif %}
             </div>
@@ -64,7 +61,6 @@
         chatMessages.innerHTML += `
         <div class="message sent">
           <span class="text">${value}</span>
-          <span class="time">00:10</span>
         </div>`
 
         prompt.value = ''
@@ -73,7 +69,7 @@
         dv.className = 'message received typing'
         dv.innerHTML = `
           <span class="text">...</span>
-          <span class="time">00:07</span>`
+          `
 
         chatMessages.appendChild(dv)
         chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -83,7 +79,7 @@
           dv.classList.remove('typing')
           dv.innerHTML = `
             <span class="text">${response.answer}</span>
-            <span class="time">00:07</span>`
+           `
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
           console.log(response.answer);
