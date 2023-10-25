@@ -324,24 +324,27 @@ def download_file(request, id):
 def generate_quiz_from_uploaded_file(request, id):
     user = request.user
     file_obj = File.objects.get(pk=id)
-    with open(file_obj.file.path, 'rb') as f:
-        file = f.read()
-    if request.method == 'POST':
-        num_of_questions = request.POST.get('qnumber')
-        difficulty = request.POST.get('difficulty')
-        spage = int(request.POST.get('spage'))
-        epage = int(request.POST.get('epage'))
-        comment = request.POST.get('additional_comment')
-            
-        try:
-                questions = get_question(file, num_of_questions, difficulty, spage, epage, 'multiple_choice', 'chatgpt')
-                if questions:
-                    title = questions['questions'][0]['question']
-                    quiz = Quiz.objects.create(generated_by=user, questions=str(questions), size=5, title=title)
-                    quiz.save()
-                    return render(request, 'quiz3.html', {'questions': questions['questions'], 'id': quiz.id})
+    if file_obj:
+        if request.method == 'POST':
+            num_of_questions = request.POST.get('qnumber')
+            difficulty = request.POST.get('difficulty')
+            spage = int(request.POST.get('spage'))
+            epage = int(request.POST.get('epage'))
+            comment = request.POST.get('additional_comment')
+                
+            try:
+                    questions = get_question(file_obj.file, num_of_questions, difficulty, spage, epage, 'multiple_choice', 'chatgpt')
+                    if questions:
+                        title = questions['questions'][0]['question']
+                        quiz = Quiz.objects.create(generated_by=user, questions=str(questions), size=5, title=title)
+                        quiz.save()
+                        return render(request, 'quiz3.html', {'questions': questions['questions'], 'id': quiz.id})
 
-        except Exception as e:
-            print(e)
-            question = get_q()
-            return HttpResponse(e)
+            except Exception as e:
+                print(e)
+                question = get_q()
+                return HttpResponse(e)
+        else:
+            return HttpResponse("Get not allowed")
+    else:
+        return HttpResponse("Filee not Found")

@@ -4,50 +4,48 @@
 {% block content %}
   <link rel="stylesheet" href="{% static 'css/chat.css' %}" />
 
-  <div class="containerr">
-    <div id="card" class="ccard border border-primary rounded p-3 mt-3 col-md-6 col-sm-12">
-      <div class="card-header">
-        <h4 class="card-title"><strong>Chat</strong></h4>
-        <a class="btn btn-xs btn-secondary" href="#" data-abc="true">Ask AI</a>
-      </div>
-      <div class="media media-meta-day">Previous Chats</div>
-      {% if prev_chats %}
-        {% for chat in prev_chats %}
-          {% if chat.is_received %}
-            <div class="media media-chat">
-              <img class="avatar" src="{% static 'images/AIlogo.png' %}" alt="...">
-              <div class="media-body">
-                <p>{{ chat.text }}</p>
-                <p class="meta"><time datetime="2023">00:07</time></p>
-              </div>
-            </div>
-          {% else %}
-            <div class="media media-chat media-chat-reverse">
-              <div class="media-body">
-                <p>{{ chat.text }}</p>
-                <p class="meta"><time datetime="2023">00:07</time></p>
-              </div>
-            </div>
-            <br />
-          {% endif %}
-        {% endfor %}
-      {% endif %}
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-sm-12">
+        <div class="card chat-card">
+          <div class="card-header">
+            <h4 class="card-title"><strong>Chat</strong></h4>
+            <a class="btn btn-sm btn-secondary" href="#" data-abc="true">Ask AI</a>
+          </div>
+          <div class="card-body">
+            <div class="chat-messages">
+              {% if prev_chats %}
+                {% for chat in prev_chats %}
+                  {% if chat.is_received %}
+                    <div class="message received">
+                      <span class="text">{{ chat.text }}</span>
+                      <span class="time">00:07</span>
+                    </div>
+                  {% else %}
+                    <div class="message sent">
+                      <span class="text">{{ chat.text }}</span>
+                      <span class="time">00:07</span>
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
 
-      {% if response %}
-        <div class="media media-chat">
-          <img class="avatar" src="{% static 'images/AIlogo.png' %}" alt="...">
-          <div class="media-body">
-            <p>{{ response|linebreaksbr }}</p>
-            <p class="meta"><time datetime="2022">00:07</time></p>
+              {% if response %}
+                <div class="message received">
+                  <span class="text">{{ response|linebreaksbr }}</span>
+                  <span class="time">00:07</span>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="input-wrapper">
+              <input id="prompt" class="input-field" type="text" placeholder="Type your message">
+              <button id="submit" class="send-button" data-abc="true">&#9658;</button>
+            </div>
           </div>
         </div>
-      {% endif %}
-      <div class="media media-meta-day">Now</div>
-    </div>
-
-    <div class="publisher bt-1 border border-primary rounded p-3 mt-3 col-md-9 col-sm-12">
-      <input id="prompt" class="publisher-input" type="text" placeholder="Ask Me">
-      <a id="submit" class="publisher-btn text-info" href="#" data-abc="true"><i class="fa fa-paper-plane"></i></a>
+      </div>
     </div>
   </div>
 
@@ -55,45 +53,39 @@
     $(document).ready(function () {
       let submit = document.getElementById('submit')
       let prompt = document.getElementById('prompt')
-      let card = document.getElementById('card')
-      card.scrollTop = card.scrollHeight;
+      let chatMessages = document.querySelector('.chat-messages')
+      chatMessages.scrollTop = chatMessages.scrollHeight;
 
-      window.scrollTop = window.scrollHeight;
       submit.addEventListener('click', (e) => {
+        
         e.preventDefault()
         value = prompt.value
-        card.innerHTML += `
-        <div class="media media-chat media-chat-reverse">
-          <div class="media-body">
-            <p>${value}</p>
-            <p class="meta"><time datetime="2018">00:10</time></p>
-          </div>
+
+        chatMessages.innerHTML += `
+        <div class="message sent">
+          <span class="text">${value}</span>
+          <span class="time">00:10</span>
         </div>`
+
         prompt.value = ''
 
         var dv = document.createElement('div')
-        dv.className = 'media media-chat'
-        dv.innerHTML = `<div class="media media-chat ">
-          <img class="avatar" src="{% static 'images/AIlogo.png' %}" alt="...">
-          <div class="media-body">
-            <p>Thinking... </p>
-            <p class="meta"><time datetime="2018">00:07</time></p>
-          </div>
-        </div>`
-        card.appendChild(dv)
+        dv.className = 'message received typing'
+        dv.innerHTML = `
+          <span class="text">...</span>
+          <span class="time">00:07</span>`
 
-        card.scrollTop = card.scrollHeight;
+        chatMessages.appendChild(dv)
+        chatMessages.scrollTop = chatMessages.scrollHeight;
         var url = '{% url "get_chat" %}' + '?query=' + encodeURIComponent(value); // Construct the URL with the query parameter
 
         $.get(url, function (response) {
-          dv.innerHTML = `<div class="media media-chat ">
-            <img class="avatar" src="{% static 'images/AIlogo.png' %}" alt="...">
-            <div class="media-body">
-              <p>AI: ${response.answer}</p>
-              <p class="meta"><time datetime="2018">00:07</time></p>
-            </div>
-          </div>`
-          // Handle the response received from the server
+          dv.classList.remove('typing')
+          dv.innerHTML = `
+            <span class="text">${response.answer}</span>
+            <span class="time">00:07</span>`
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
           console.log(response.answer);
         });
       })
