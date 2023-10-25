@@ -1,24 +1,62 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
 
-  .login-box {
-    margin: 0 auto;
-    padding: 40px;
-    border: 1px solid #ced4da;
-  background: linear-gradient(117deg, rgb(2, 1, 22) 0%, rgba(125,129,150,0.9757503221014968) 96%, rgba(222,199,45,1) 98%, rgba(222,199,45,1) 98%, rgba(142,49,242,0.5859143339953169) 98%);
-    margin-top: 100px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
+.login-popup {
+  max-width: 400px;
+  width: 100%;
+}
 
-  .login-box h2 {
-    text-align: center;
-    margin-bottom: 30px;
-  }
+.card {
+  border: none;
+}
 
-  .form-control:focus {
-    border-color: #007bff;
-    box-shadow: none;
-  }
+.card-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
 
-  .btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
-  }
+.form-label {
+  margin-bottom: 0.5rem;
+}
+
+.invalid-feedback {
+  display: none;
+  color: red;
+  margin-top: 0.25rem;
+}
+
+.alert {
+  margin-bottom: 1rem;
+}
+
+.alert p {
+  margin-bottom: 0;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-primary:hover {
+  background-color: #0069d9;
+  border-color: #0062cc;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}

@@ -12,12 +12,13 @@
             {% if error %}
               <div id="alertContainer" class="alert alert-danger" role="alert">
                 {{ error }}
+                <script>
+                  setTimeout(() => {
+                    document.getElementById('alertContainer').innerHTML = '';
+                    document.getElementById('alertContainer').classList = '';
+                  }, 2000);
+                </script>
               </div>
-              <script>
-                setTimeout(() => {
-                  document.getElementById("alertContainer").style.display = "none";
-                }, 2000);
-              </script>
             {% endif %}
             <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
               {% csrf_token %}
