@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 import openai
@@ -132,15 +133,8 @@ def send_result(update: Update, context: CallbackContext):
 
     result_message = "Here is the result:\n"
 
-    # # Placeholder for user_answers
-    # user_answers = ["Answer 1", "Answer 2", "Answer 3", "Answer 4", "Answer 5"]
-
     for i, question_data in enumerate(question_format["questions"]):
         result_message += f"Question {i + 1}: {question_data['question']}\n"
-
-        # Retrieve user's answer based on question index
-        # user_answer = user_answers[i]
-        # result_message += f"Your Answer: {user_answer}\n"
 
         result_message += f"Explanation: {question_data['explanation']}\n\n"
 
@@ -165,7 +159,7 @@ def send_request(update: Update, context: CallbackContext):
         )
     logging.info("request sent")
 
-    for question_data in question_format["questions"]:
+    for i, question_data in enumerate(question_format["questions"]):
         question_text = question_data["question"]
         options = [
             question_data["optionA"],
@@ -187,26 +181,61 @@ def send_request(update: Update, context: CallbackContext):
                 open_period=60,
             )
         except:
-            pass
-    # job = context.job_queue.run_once(send_result, 60, context=update.effective_chat.id)
-    # context.chat_data["job"] = job
+            logging.info(i)
+            prompt = f"""please rephrase this question. Make it shorter, so it can be suitable to be sent in a form of a telgram quiz poll{question_data}. Make sure to return it an json format. in a similar way the questions, oprtions and explanations are arranged"""
+            response = openai.Completion.create(
+                engine="text-davinci-003",
+                prompt=prompt,
+                max_tokens=255,
+                temperature=0.7,
+                n=1,
+            )
+            question_data = response.choices[0].text.strip()
+            logging.info("new request sent")
+            question_data = json.loads(question_data)
+            question_text = question_data["question"]
+            options = [
+                question_data["optionA"],
+                question_data["optionB"],
+                question_data["optionC"],
+                question_data["optionD"],
+            ]
+            correct_option = question_data["correctOption"]
+            try:
+                context.bot.send_poll(
+                    chat_id=update.effective_chat.id,
+                    question=question_text,
+                    options=options,
+                    type=Poll.QUIZ,
+                    correct_option_id=ord(correct_option[-1]) - ord("A"),
+                    is_anonymous=False,
+                    explanation=f'Correct Answer: {question_data["explanation"]}',
+                    open_period=60,
+                )
+            except:
+                pass
 
 
 def register(dispatcher):
-    dispatcher.add_handler(CommandHandler("start", start))
-    conv_handler = ConversationHandler(
-        entry_points=[MessageHandler(Filters.document, Enterfile)],
-        states={
-            START_PAGE: [MessageHandler(Filters.text & ~Filters.command, set_start)],
-            END_PAGE: [MessageHandler(Filters.text & ~Filters.command, set_end)],
-        },
-        fallbacks=[CommandHandler("cancel", cancel)],
-    )
-    dispatcher.add_handler(conv_handler)
-    dispatcher.add_handler(CallbackQueryHandler(button_callback))
-    dispatcher.add_handler(CommandHandler("explain", send_result))
+    try:
+        dispatcher.add_handler(CommandHandler("start", start))
+        conv_handler = ConversationHandler(
+            entry_points=[MessageHandler(Filters.document, Enterfile)],
+            states={
+                START_PAGE: [
+                    MessageHandler(Filters.text & ~Filters.command, set_start)
+                ],
+                END_PAGE: [MessageHandler(Filters.text & ~Filters.command, set_end)],
+            },
+            fallbacks=[CommandHandler("cancel", cancel)],
+        )
+        dispatcher.add_handler(conv_handler)
+        dispatcher.add_handler(CallbackQueryHandler(button_callback))
+        dispatcher.add_handler(CommandHandler("explain", send_result))
 
-    dispatcher.add_handler(CommandHandler("help", help))
+        dispatcher.add_handler(CommandHandler("help", help))
+    except:
+        pass
 
 
 # driver function
