@@ -113,13 +113,7 @@ def user_logout(request):
     return redirect('login')
 
 def home(request):
-    user = request.user
-    context = {}
-    if user.is_authenticated:
-        context['auth'] = True
-    else:
-        context['auth'] = False
-    return render(request, 'home2.html', context)
+    return render(request, 'home2.html')
 
 
 @login_required(login_url='login')
@@ -137,7 +131,7 @@ def handle_upload(request):
             return HttpResponseRedirect(reverse('upload'))  # Redirect to upload page or appropriate URL
         
         try:
-            file = File.objects.create(file=uploaded_file, subject=uploaded_file.file_name, uploaded_by=user)
+            file = File.objects.create(file=uploaded_file, uploaded_by=user)
             file.save()
             
             try:
@@ -151,8 +145,7 @@ def handle_upload(request):
                     # Handle case when questions are not available
                     return HttpResponseRedirect(reverse('upload')) 
             except Exception as e:
-                print(f"Error generating questions: {str(e)}")
-                return HttpResponseRedirect(reverse('upload')) 
+                question = get_q()
         
         except Exception as e:
             print(f"Error creating File object: {str(e)}")

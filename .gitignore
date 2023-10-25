@@ -2,4 +2,7 @@ virtual/
 .env
 db.sqlite3
 venv/
-__pycache__
+__pycache__/
+.vscode/
+chat_gpt.py
+testsummerize.py

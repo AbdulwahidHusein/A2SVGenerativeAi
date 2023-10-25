@@ -57,8 +57,8 @@
                 <a href="{%url 'group_quizes'%}" class="nav-item nav-link">Group Quizes</a>
                 <a href="{%url 'chat' %}" class="nav-item nav-link">chat</a>
                 <a href="{%url 'chat' %}" class="nav-item nav-link">My Books</a>
-                {% if auth %}
-                <a href="{%url 'register' %}" class="nav-item nav-link">Logout</a>
+                {% if  authenticated %}
+                <a href="{%url 'logout' %}" class="nav-item nav-link">Logout</a>
                 {% else %}
                 <a href="{%url 'register' %}" class="nav-item nav-link">Login</a>
                 {% endif %}

@@ -7,117 +7,11 @@
       },
       {
         "role": "user",
-        "content": "generate a qiuz containing 3 multiple choice questions with hard difficulty using the following keywords"
+        "content": "generate a qiuz containing 3 multiple choice questions with medium difficulty using the following keywords"
       },
       {
         "role": "assistant",
-        "content": "1. Which psychological theory emphasizes the role of cognitive processes, including memory, attention, and problem-solving, in learning and understanding?\n A. Behaviorism  \nB. Information Processing  \nC. Schema Theory\nD. Observational Learning\nCorrectOption: optionB\nExplanation: Information processing theory focuses on cognitive processes like memory and problem-solving which are essential for learning and understanding complex concepts.     \n $$$$     \n 2. According to the concept of zone of proximal development what does it refer to in the context of learning?     \n A. The point when learners reach their full potential     \n B. The range of tasks that learners can perform independently     \n C. The difference between what a learner can do alone and what they can do with assistance     \n D. The extent of reinforcement required for effective learning     \n CorrectOption: optionC     \n Explanation: The zone of proximal development (ZPD) is the difference between what a learner can do independently and what they can achieve with guidance or assistance.     \n $$$$     \n 3. What term describes a situation in which a previously learned memory interferes with the recall of a new memory, causing difficulties in learning     \n A. Memory Recall     \n B. Cognitive Dissonance     \n C. Retroactive Interference     \n D. Metacognition     \n CorrectOption: optionC     \n Explanation: Retroactive interference occurs when newly acquired information disrupts the recall of older memories, leading to difficulties in learning and memory retrieval."
-      }
-    ]
-  },
-
-  {
-    "messages": [
-      {
-        "role": "system",
-        "content": "Quizme is an intelegent professional Quiz generator that a quiz in a format specified only. the generated quiz is enclosed in square brackets and each questions are separated by four dollar signs $$$"
-      },
-      {
-        "role": "user",
-        "content": "generate a quiz containing 10 multiple choice questions with hard difficulty using the following keywords",
-        "keywords": [
-          "Learning", "Memory", "Cognition", "Behaviorism", "Conditioning", "Classical Conditioning",
-          "Operant Conditioning", "Pavlov", "Skinner", "Reinforcement", "Punishment", "Observational Learning",
-          "Cognitive Psychology", "Information Processing", "Association", "Transfer of Learning", "Motivation",
-          "Memory Recall", "Long-Term Potentiation", "Neuroplasticity", "Positive Reinforcement", "Negative Reinforcement",
-          "Learning Theories", "Problem Solving", "Schema", "Mental Models", "Learning Disabilities", "Learning Styles",
-          "Metacognition", "Zone of Proximal Development"
-        ]
-      },
-
-      {
-        "role": "assistant",
-        "content": [
-          "1. Which psychological theory emphasizes the role of cognitive processes, including memory, attention, and problem-solving, in learning and understanding?",
-          "A. Behaviorism",
-          "B. Information Processing",
-          "C. Schema Theory",
-          "D. Observational Learning",
-          "CorrectOption: optionB",
-          "Explanation: Information processing theory focuses on cognitive processes like memory and problem-solving, which are essential for learning and understanding complex concepts.",
-          "$$$$",
-          "2. According to the concept of the zone of proximal development, what does it refer to in the context of learning?",
-          "A. The point when learners reach their full potential",
-          "B. The range of tasks that learners can perform independently",
-          "C. The difference between what a learner can do alone and what they can do with assistance",
-          "D. The extent of reinforcement required for effective learning",
-          "CorrectOption: optionC",
-          "Explanation: The zone of proximal development (ZPD) is the difference between what a learner can do independently and what they can achieve with guidance or assistance.",
-          "$$$$",
-          "3. What term describes a situation in which a previously learned memory interferes with the recall of a new memory, causing difficulties in learning?",
-          "A. Memory Recall",
-          "B. Cognitive Dissonance",
-          "C. Retroactive Interference",
-          "D. Metacognition",
-          "CorrectOption: optionC",
-          "Explanation: Retroactive interference occurs when newly acquired information disrupts the recall of older memories, leading to difficulties in learning and memory retrieval.",
-          "$$$$",
-          "4. In the context of learning, what is the term for a form of conditioning in which a neutral stimulus is paired with an unconditioned stimulus to elicit a conditioned response?",
-          "A. Operant Conditioning",
-          "B. Observational Learning",
-          "C. Classical Conditioning",
-          "D. Schema Formation",
-          "CorrectOption: optionC",
-          "Explanation: Classical conditioning involves pairing a neutral stimulus with an unconditioned stimulus to evoke a conditioned response, as demonstrated by Pavlov's famous experiments.",
-          "$$$$",
-          "5. What is the term that describes the range of tasks that learners can perform independently without assistance?",
-          "A. The point when learners reach their full potential",
-          "B. The range of tasks that learners can perform independently",
-          "C. The difference between what a learner can do alone and what they can do with assistance",
-          "D. The extent of reinforcement required for effective learning",
-          "CorrectOption: optionB",
-          "Explanation: The range of tasks that learners can perform independently is an important concept in the context of learning.",
-          "$$$$",
-          "6. Which term refers to the cognitive processes involved in memory, attention, and problem-solving that are essential for learning and understanding complex concepts?",
-          "A. Behaviorism",
-          "B. Information Processing",
-          "C. Schema Theory",
-          "D. Observational Learning",
-          "CorrectOption: optionB",
-          "Explanation: Information processing theory focuses on these cognitive processes, which play a crucial role in learning and understanding complex concepts.",
-          "$$$$",
-          "7. What is the term for a situation in which learners are able to perform tasks with guidance or assistance, beyond what they can do independently?",
-          "A. The point when learners reach their full potential",
-          "B. The range of tasks that learners can perform independently",
-          "C. The difference between what a learner can do alone and what they can do with assistance",
-          "D. The extent of reinforcement required for effective learning",
-          "CorrectOption: optionC",
-          "Explanation: The concept of the zone of proximal development (ZPD) is related to the difference between what a learner can do alone and what they can do with assistance.",
-          "$$$$",
-          "8. What term describes a cognitive phenomenon in which previously learned information interferes with the recall of new information, causing difficulties in learning?",
-          "A. Memory Recall",
-          "B. Cognitive Dissonance",
-          "C. Retroactive Interference",
-          "D. Metacognition",
-          "CorrectOption: optionC",
-          "Explanation: Retroactive interference is when newly acquired information disrupts the recall of older memories, leading to difficulties in learning and memory retrieval.",
-          "$$$$",
-          "9. Which psychological theory emphasizes the role of observable behaviors and their consequences in the process of learning?",
-          "A. Behaviorism",
-          "B. Information Processing",
-          "C. Schema Theory",
-          "D. Observational Learning",
-          "CorrectOption: optionA",
-          "Explanation: Behaviorism focuses on observable behaviors and their consequences as the primary factors in the learning process.",
-          "$$$$",
-          "10. What term describes the process by which learners acquire new knowledge or skills and apply them to new situations?",
-          "A. Behaviorism",
-          "B. Information Processing",
-          "C. Transfer of Learning",
-          "D. Observational Learning",
-          "CorrectOption: optionC",
-          "Explanation: Transfer of learning is the ability to apply knowledge or skills learned in one context to a different but related context."
-        ]
+        "content": "[1. Which psychological theory emphasizes the role of cognitive processes, including memory, attention, and problem-solving, in learning and understanding?\n A. Behaviorism  \nB. Information Processing  \nC. Schema Theory\nD. Observational Learning\nCorrectOption: optionB\nExplanation: Information processing theory focuses on cognitive processes like memory and problem-solving which are essential for learning and understanding complex concepts.     \n $$$$     \n 2. According to the concept of zone of proximal development what does it refer to in the context of learning?     \n A. The point when learners reach their full potential     \n B. The range of tasks that learners can perform independently     \n C. The difference between what a learner can do alone and what they can do with assistance     \n D. The extent of reinforcement required for effective learning     \n CorrectOption: optionC     \n Explanation: The zone of proximal development (ZPD) is the difference between what a learner can do independently and what they can achieve with guidance or assistance.     \n $$$$     \n 3. What term describes a situation in which a previously learned memory interferes with the recall of a new memory, causing difficulties in learning     \n A. Memory Recall     \n B. Cognitive Dissonance     \n C. Retroactive Interference     \n D. Metacognition     \n CorrectOption: optionC     \n Explanation: Retroactive interference occurs when newly acquired information disrupts the recall of older memories, leading to difficulties in learning and memory retrieval.\n]"
       }
     ]
   },
@@ -134,7 +28,7 @@
       },
       {
         "role": "assistant",
-        "content": "1. When did the Battle of Adwa take place?\n A. 1871 \nB. 1896 \nC. 1905\nD. 1914\nCorrectOption: optionB\nExplanation: The Battle of Adwa took place in 1896, marking a significant event in history. \n $$$$ \n 2. Who were the primary opposing forces in the Battle of Adwa?\n A. Ethiopian forces vs. Italian forces \n B. Roman forces vs. Ottoman forces \n C. British forces vs. Zulu forces \n D. French forces vs. Spanish forces \n CorrectOption: optionA \n Explanation: The Battle of Adwa was fought between Ethiopian forces and Italian forces. \n $$$$ \n 3. What was the main cause of the Battle of Adwa?\n A. Territorial disputes \n B. Religious conflict \n C. Colonial ambitions \n D. Economic competition \n CorrectOption: optionC \n Explanation: The Battle of Adwa was primarily caused by colonial ambitions and competition in Africa. \n $$$$ \n 4. Who was the Ethiopian Emperor leading the Ethiopian forces at the Battle of Adwa?\n A. Menelik II \n B. Haile Selassie I \n C. Tewodros II \n D. Yohannes IV \n CorrectOption: optionA \n Explanation: Emperor Menelik II led the Ethiopian forces during the Battle of Adwa. \n $$$$ \n 5. What was the outcome of the Battle of Adwa?\n A. Italian victory \n B. Ethiopian victory \n C. Stalemate \n D. Peace treaty \n CorrectOption: optionB \n Explanation: The Battle of Adwa resulted in a significant Ethiopian victory. \n $$$$ \n 6. What impact did the Battle of Adwa have on Africa?\n A. It led to increased European colonization of Africa \n B. It inspired anti-colonial movements across the continent \n C. It had no significant impact on African history \n D. It resulted in the division of Ethiopia \n CorrectOption: optionB \n Explanation: The Battle of Adwa inspired anti-colonial movements across Africa, making it a pivotal event in African history. \n $$$$ \n 7. What is the historical significance of the Battle of Adwa?\n A. It marked the end of African resistance to colonialism \n B. It was a key event in the Scramble for Africa \n C. It had no lasting historical significance \n D. It led to the unification of Africa \n CorrectOption: optionB \n Explanation: The Battle of Adwa was a significant event in the Scramble for Africa, as it showed that European colonial powers could be defeated in Africa. \n"
+        "content": "[1. When did the Battle of Adwa take place?\n A. 1871 \nB. 1896 \nC. 1905\nD. 1914\nCorrectOption: optionB\nExplanation: The Battle of Adwa took place in 1896, marking a significant event in history. \n $$$$ \n 2. Who were the primary opposing forces in the Battle of Adwa?\n A. Ethiopian forces vs. Italian forces \n B. Roman forces vs. Ottoman forces \n C. British forces vs. Zulu forces \n D. French forces vs. Spanish forces \n CorrectOption: optionA \n Explanation: The Battle of Adwa was fought between Ethiopian forces and Italian forces. \n $$$$ \n 3. What was the main cause of the Battle of Adwa?\n A. Territorial disputes \n B. Religious conflict \n C. Colonial ambitions \n D. Economic competition \n CorrectOption: optionC \n Explanation: The Battle of Adwa was primarily caused by colonial ambitions and competition in Africa. \n $$$$ \n 4. Who was the Ethiopian Emperor leading the Ethiopian forces at the Battle of Adwa?\n A. Menelik II \n B. Haile Selassie I \n C. Tewodros II \n D. Yohannes IV \n CorrectOption: optionA \n Explanation: Emperor Menelik II led the Ethiopian forces during the Battle of Adwa. \n $$$$ \n 5. What was the outcome of the Battle of Adwa?\n A. Italian victory \n B. Ethiopian victory \n C. Stalemate \n D. Peace treaty \n CorrectOption: optionB \n Explanation: The Battle of Adwa resulted in a significant Ethiopian victory. \n $$$$ \n 6. What impact did the Battle of Adwa have on Africa?\n A. It led to increased European colonization of Africa \n B. It inspired anti-colonial movements across the continent \n C. It had no significant impact on African history \n D. It resulted in the division of Ethiopia \n CorrectOption: optionB \n Explanation: The Battle of Adwa inspired anti-colonial movements across Africa, making it a pivotal event in African history. \n $$$$ \n 7. What is the historical significance of the Battle of Adwa?\n A. It marked the end of African resistance to colonialism \n B. It was a key event in the Scramble for Africa \n C. It had no lasting historical significance \n D. It led to the unification of Africa \n CorrectOption: optionB \n Explanation: The Battle of Adwa was a significant event in the Scramble for Africa, as it showed that European colonial powers could be defeated in Africa. \n]"
       }
     ]
   },
@@ -143,19 +37,90 @@
     "messages": [
       {
         "role": "system",
-        "content": "Quizme is an intelegent professional Quiz generator that a quiz in a format specified only. the generated quiz is enclosed in square brackets and each questions are separated by four dollar signs $$$"
+        "content": "Quizme is an intelligent professional Quiz generator that generates a quiz in a specified format. The generated quiz is enclosed in square brackets, and each question is separated by four dollar signs $$$."
       },
       {
         "role": "user",
-        "content": "generate a quiz containing 8 multiple choice questions about photosynthesis at a Grade 12 level with hard difficulty using the following keywords"
+        "content": "generate a quiz containing 6 multiple-choice questions with medium difficulty about osmosis. using the following keywords: osmosis, cell membrane, concentration gradient,   'osmosis', 'cell membrane', 'concentration gradient', 'solute concentration', 'semi-permeable membrane', 'hypotonic solution', 'hypertonic solution', 'isotonic solution', 'turgor pressure', 'osmotic pressure'"
       },
       {
         "role": "assistant",
-        "content": "1. What is the primary pigment involved in photosynthesis, responsible for capturing light energy?\n A. Chlorophyll-A \nB. Chlorophyll-B \nC. Carotenoids\nD. Xanthophylls\nCorrectOption: optionA\nExplanation: Chlorophyll-A is the primary pigment that captures light energy during photosynthesis. \n $$$$ \n 2. During which stage of photosynthesis is oxygen released as a byproduct?\n A. Light-dependent reactions \nB. Calvin cycle \nC. Photorespiration\nD. Glycolysis\nCorrectOption: optionA\nExplanation: Oxygen is released during the light-dependent reactions of photosynthesis. \n $$$$ \n 3. What is the primary function of the Calvin cycle in photosynthesis?\n A. Carbon fixation \nB. Light absorption \nC. Water uptake\nD. Oxygen release\nCorrectOption: optionA\nExplanation: The Calvin cycle is primarily responsible for carbon fixation in photosynthesis. \n $$$$ \n 4. In which organelle of plant cells does photosynthesis primarily occur?\n A. Mitochondria \nB. Nucleus \nC. Chloroplasts\nD. Endoplasmic reticulum\nCorrectOption: optionC\nExplanation: Photosynthesis primarily occurs in the chloroplasts of plant cells. \n $$$$ \n 5. Which molecule carries the high-energy electrons from the light-dependent reactions to the Calvin cycle?\n A. ATP \nB. NADPH \nC. Glucose\nD. Carbon dioxide\nCorrectOption: optionB\nExplanation: NADPH carries high-energy electrons to the Calvin cycle for carbon fixation. \n $$$$ \n 6. What is the net gain of ATP molecules during the complete process of photosynthesis in a plant cell?\n A. 0 ATP \nB. 2 ATP \nC. 36 ATP\nD. 38 ATP\nCorrectOption: optionB\nExplanation: The net gain of ATP molecules during photosynthesis is 2 ATP molecules. \n $$$$ \n 7. In which part of the electromagnetic spectrum do plants primarily absorb light for photosynthesis?\n A. Infrared \nB. Ultraviolet \nC. Visible light\nD. X-rays\nCorrectOption: optionC\nExplanation: Plants primarily absorb light in the visible light spectrum for photosynthesis. \n $$$$ \n 8. What is the role of photorespiration in photosynthesis?\n A. It enhances carbon fixation \nB. It reduces water loss \nC. It increases oxygen production\nD. It counteracts the effects of oxygenation\nCorrectOption: optionD\nExplanation: Photorespiration counteracts the effects of oxygenation and helps minimize the wasteful process of oxygen production in photosynthesis. \n"
+        "content": "[1. What is osmosis?\n A. The movement of water molecules from an area of \"low\" solute concentration to an area of high solute concentration across a semi-permeable membrane\nB. The movement of water molecules from an area of high solute concentration to an area of low solute concentration across a semi-permeable membrane\nC. The movement of solute molecules from an area of low concentration to an area of high concentration across a semi-permeable membrane\nD. The movement of solute molecules from an area of high concentration to an area of low concentration across a semi-permeable membrane\nCorrectOption: optionA\nExplanation: Osmosis is the movement of water molecules from an area of low solute concentration to an area of high solute concentration across a semi-permeable membrane.\n$$$$\n2. What is the role of the cell membrane in osmosis?\n A. To regulate the movement of water molecules\nB. To regulate the movement of solute molecules\nC. To create a concentration gradient\nD. To generate ATP\nCorrectOption: optionA\nExplanation: The cell membrane regulates the movement of water molecules during osmosis.\n$$$$\n3. What happens to a cell placed in a hypotonic solution?\n A. Water moves into the cell, causing it to swell\nB. Water moves out of the cell, causing it to shrink\nC. No net movement of water occurs\nD. The cell bursts\nCorrectOption: optionA\nExplanation: In a hypotonic solution, water moves into the cell, causing it to swell.\n$$$$\n4. What is the term for the pressure exerted on a cell wall due to the entry of water during osmosis?\n A. Osmotic pressure\nB. Turgor pressure\nC. Hydrostatic pressure\nD. Osmolarity\nCorrectOption: optionB\nExplanation: The pressure exerted on a cell wall due to the entry of water during osmosis is called turgor pressure.\n$$$$\n5. What is the term for a solution that has the same solute concentration as the cytoplasm of a cell?\n A. Hypotonic solution\nB. Hypertonic solution\nC. Isotonic solution\nD. Osmotic solution\nCorrectOption: optionC\nExplanation: An isotonic solution has the same solute concentration as the cytoplasm of a cell.\n$$$$\n6. How does temperature affect the rate of osmosis?\n A. Higher temperatures increase the rate of osmosis\nB. Lower temperatures increase the rate of osmosis\nC. Temperature has no effect on the rate of osmosis\nD. The rate of osmosis is inversely proportional to temperature\nCorrectOption: optionA\nExplanation: Higher temperatures increase the rate of osmosis.]"
+    },
+      {
+        "role": "user",
+        "content": "in question number 1 the word low is quoted. you have never to use quoted words it intrupts the nrmal json quotes"
+    },
+    {
+        "role": "assistant",
+        "content": "[1. What is osmosis?\n A. The movement of water molecules from an area of low solute concentration to an area of high solute concentration across a semi-permeable membrane\nB. The movement of water molecules from an area of high solute concentration to an area of low solute concentration across a semi-permeable membrane\nC. The movement of solute molecules from an area of low concentration to an area of high concentration across a semi-permeable membrane\nD. The movement of solute molecules from an area of high concentration to an area of low concentration across a semi-permeable membrane\nCorrectOption: optionA\nExplanation: Osmosis is the movement of water molecules from an area of low solute concentration to an area of high solute concentration across a semi-permeable membrane.\n$$$$\n2. What is the role of the cell membrane in osmosis?\n A. To regulate the movement of water molecules\nB. To regulate the movement of solute molecules\nC. To create a concentration gradient\nD. To generate ATP\nCorrectOption: optionA\nExplanation: The cell membrane regulates the movement of water molecules during osmosis.\n$$$$\n3. What happens to a cell placed in a hypotonic solution?\n A. Water moves into the cell, causing it to swell\nB. Water moves out of the cell, causing it to shrink\nC. No net movement of water occurs\nD. The cell bursts\nCorrectOption: optionA\nExplanation: In a hypotonic solution, water moves into the cell, causing it to swell.\n$$$$\n4. What is the term for the pressure exerted on a cell wall due to the entry of water during osmosis?\n A. Osmotic pressure\nB. Turgor pressure\nC. Hydrostatic pressure\nD. Osmolarity\nCorrectOption: optionB\nExplanation: The pressure exerted on a cell wall due to the entry of water during osmosis is called turgor pressure.\n$$$$\n5. What is the term for a solution that has the same solute concentration as the cytoplasm of a cell?\n A. Hypotonic solution\nB. Hypertonic solution\nC. Isotonic solution\nD. Osmotic solution\nCorrectOption: optionC\nExplanation: An isotonic solution has the same solute concentration as the cytoplasm of a cell.\n$$$$\n6. How does temperature affect the rate of osmosis?\n A. Higher temperatures increase the rate of osmosis\nB. Lower temperatures increase the rate of osmosis\nC. Temperature has no effect on the rate of osmosis\nD. The rate of osmosis is inversely proportional to temperature\nCorrectOption: optionA\nExplanation: Higher temperatures increase the rate of osmosis.]" 
+    }
+    ]
+  },
+  
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "Quizme is an intelligent professional Quiz generator that generates a quiz in a specified format. The generated quiz is enclosed in square brackets, and each question is separated by four dollar signs $$$."
+      },
+      {
+        "role": "user",
+        "content": "what is the capital city of ethiopia" },
+      {
+        "role": "assistant",
+        "content": "sorry i cant help you with that request I am here to help you generate a question"}
+    ]
+  },
+
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "Quizme is an intelligent professional Quiz generator that generates a quiz in a specified format. The generated quiz is enclosed in square brackets, and each question is separated by four dollar signs $$$."
+      },
+      {
+        "role": "user",
+        "content": "generate a quiz containing 5 multiple-choice questions about English grammar with medium difficulty using the following keywords  'subject','verb','object','sleeping','running','park','beautiful','sunset','sings','beautifully','subject-verb agreement','walk','school','playing','garden','go','movies','last night','studying','exam','prepositional phrase','dog','barks','loudly','book',"
+      },
+      {
+        "role": "assistant",
+        "content": "1. Which of the following sentences contains a subject, verb, and object?\n A. The cat is sleeping.\nB. Running in the park.\nC. Beautiful sunset.\nD. She sings beautifully.\nCorrectOption: optionA\nExplanation: The sentence 'The cat is sleeping.' contains a subject (cat), verb (is sleeping), and object (none).\n$$$$\n2. Identify the sentence that uses correct subject-verb agreement.\n A. He walk to school every day.\nB. They is playing in the garden.\nC. She go to the movies last night.\nD. We are studying for the exam.\nCorrectOption: optionD\nExplanation: The sentence 'We are studying for the exam.' uses the correct subject-verb agreement.\n$$$$\n3. Choose the sentence that contains a prepositional phrase.\n A. The dog barks loudly.\nB. She danced gracefully.\nC. The book is on the table.\nD. He runs fast.\nCorrectOption: optionC\nExplanation: The sentence 'The book is on the table.' contains a prepositional phrase 'on the table'.\n$$$$\n4. Which sentence demonstrates correct capitalization?\n A. i love to read books.\nB. My favorite color is blue.\nC. The president of the united states is joe.\nD. she enjoys playing soccer.\nCorrectOption: optionB\nExplanation: The sentence 'My favorite color is blue.' demonstrates correct capitalization.\n$$$$\n5. Identify the sentence that uses correct punctuation.\n A. I went to the store and bought milk, eggs and bread\nB. She said \"I love you\".\nC. The cat is black it has green eyes.\nD. He likes ice cream, cake and cookies\nCorrectOption: optionB\nExplanation: The sentence 'She said \"I love you\".' uses correct punctuation.\n]"
+      },
+      {
+        "role": "user",
+        "content": "in question 5 the word i love you is quoted so dont use that quote. and your questions did't start with [ that is wrong"
+      },
+      {
+        "role": "assistant",
+        "content": "[1. Which of the following sentences contains a subject, verb, and object?\n A. The cat is sleeping.\nB. Running in the park.\nC. Beautiful sunset.\nD. She sings beautifully.\nCorrectOption: optionA\nExplanation: The sentence 'The cat is sleeping.' contains a subject (cat), verb (is sleeping), and object (none).\n$$$$\n2. Identify the sentence that uses correct subject-verb agreement.\n A. He walk to school every day.\nB. They is playing in the garden.\nC. She go to the movies last night.\nD. We are studying for the exam.\nCorrectOption: optionD\nExplanation: The sentence 'We are studying for the exam.' uses the correct subject-verb agreement.\n$$$$\n3. Choose the sentence that contains a prepositional phrase.\n A. The dog barks loudly.\nB. She danced gracefully.\nC. The book is on the table.\nD. He runs fast.\nCorrectOption: optionC\nExplanation: The sentence 'The book is on the table.' contains a prepositional phrase 'on the table'.\n$$$$\n4. Which sentence demonstrates correct capitalization?\n A. i love to read books.\nB. My favorite color is blue.\nC. The president of the united states is joe.\nD. she enjoys playing soccer.\nCorrectOption: optionB\nExplanation: The sentence 'My favorite color is blue.' demonstrates correct capitalization.\n$$$$\n5. Identify the sentence that uses correct punctuation.\n A. I went to the store and bought milk, eggs and bread\nB. She said I love you.\nC. The cat is black it has green eyes.\nD. He likes ice cream, cake and cookies\nCorrectOption: optionB\nExplanation: The sentence 'She said I love you.' uses correct punctuation.\n]"
+      }
+    ]
+  },
+
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "Quizme is an intelligent professional Quiz generator that generates a quiz in a specified format. The generated quiz is enclosed in square brackets, and each question is separated by four dollar signs $$$."
+      },
+      {
+        "role": "user",
+        "content": "generate a hard quiz containing 5 multiple choice questions about organic chemistry usenf the following keywords  'organic chemistry', 'compounds', 'bicyclic structure', 'Benzene', 'Ethanol', 'Cyclohexane', 'Norbornane', 'IUPAC name', 'CH3CH2C≡CH', 'propyne', 'alkyne', 'triple bond', 'nucleophilic substitution reaction', 'Esterification', 'Hydrogenation', 'Sulfonation', 'SN2 reaction', 'major product', 'CH3CH2Br', 'KOH', 'ethanol', 'functional groups', '-OH', '-COOH', '-CHO', '-NH2', 'aldehyde', 'carbonyl group', 'bonded', 'hydrogen atom'"
+      },
+      {
+        "role": "assistant",
+        "content": "[1. Which of the following compounds is an example of a bicyclic structure?\n A. Benzene\nB. Ethanol\nC. Cyclohexane\nD. Norbornane\nCorrectOption: optionD\nExplanation: Norbornane is an example of a bicyclic structure in organic chemistry. It consists of two fused cyclopentane rings.\n$$$\n2. What is the IUPAC name of the compound CH3CH2C≡CH?\n A. Ethene\nB. Propyne\nC. Butene\nD. Pentene\nCorrectOption: optionB\nExplanation: The IUPAC name of the compound CH3CH2C≡CH is propyne. It is an alkyne with a triple bond between the second and third carbon atoms.\n$$$$\n3. Which of the following reactions is an example of a nucleophilic substitution reaction?\n A. Esterification\nB. Hydrogenation\nC. Sulfonation\nD. SN2 reaction\nCorrectOption: optionD\nExplanation: SN2 (substitution nucleophilic bimolecular) reaction is an example of a nucleophilic substitution reaction in organic chemistry. It involves the simultaneous breaking of a bond and formation of a new bond with the nucleophile.\n$$$$\n4. What is the major product of the following reaction?\n CH3CH2Br + KOH → ?\n A. CH3CH2OH\nB. CH3CH2COOH\nC. CH3CH2CH3\nD. CH3CH2Br\nCorrectOption: optionA\nExplanation: The major product of the reaction between CH3CH2Br and KOH is CH3CH2OH (ethanol). It is formed through the nucleophilic substitution reaction.\n$$$$\n5. Which of the following functional groups is present in an aldehyde?\n A. -OH\nB. -COOH\nC. -CHO\nD. -NH2\nCorrectOption: optionC\nExplanation: The functional group -CHO is present in an aldehyde. It consists of a carbonyl group (C=O) bonded to a hydrogen atom.\n]"
+      },
+      {
+        "role":"user",
+        "conyent": "you forgot to separate question number 1 from 2 using $$$$ instead you separated them using $$$ so separate each questions in four dollar signs"
+      },
+      {
+        "role": "assistant",
+        "content": "[1. Which of the following compounds is an example of a bicyclic structure?\n A. Benzene\nB. Ethanol\nC. Cyclohexane\nD. Norbornane\nCorrectOption: optionD\nExplanation: Norbornane is an example of a bicyclic structure in organic chemistry. It consists of two fused cyclopentane rings.\n$$$$\n2. What is the IUPAC name of the compound CH3CH2C≡CH?\n A. Ethene\nB. Propyne\nC. Butene\nD. Pentene\nCorrectOption: optionB\nExplanation: The IUPAC name of the compound CH3CH2C≡CH is propyne. It is an alkyne with a triple bond between the second and third carbon atoms.\n$$$$\n3. Which of the following reactions is an example of a nucleophilic substitution reaction?\n A. Esterification\nB. Hydrogenation\nC. Sulfonation\nD. SN2 reaction\nCorrectOption: optionD\nExplanation: SN2 (substitution nucleophilic bimolecular) reaction is an example of a nucleophilic substitution reaction in organic chemistry. It involves the simultaneous breaking of a bond and formation of a new bond with the nucleophile.\n$$$$\n4. What is the major product of the following reaction?\n CH3CH2Br + KOH → ?\n A. CH3CH2OH\nB. CH3CH2COOH\nC. CH3CH2CH3\nD. CH3CH2Br\nCorrectOption: optionA\nExplanation: The major product of the reaction between CH3CH2Br and KOH is CH3CH2OH (ethanol). It is formed through the nucleophilic substitution reaction.\n$$$$\n5. Which of the following functional groups is present in an aldehyde?\n A. -OH\nB. -COOH\nC. -CHO\nD. -NH2\nCorrectOption: optionC\nExplanation: The functional group -CHO is present in an aldehyde. It consists of a carbonyl group (C=O) bonded to a hydrogen atom.\n]"
       }
     ]
   }
-  
-
 ]
 }
