@@ -1,0 +1,65 @@
+{% extends "index2.html" %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/file_page.css' %}" />
+<div class="file-list">
+  {% for file in files %}
+    {% if file.file %}
+      <div class="file-item">
+        <span class="file-subject">{{ file.subject }}</span>
+        <a href="{% url 'download_file' file.id %}" class="btn btn-primary">Download</a>
+        <button onClick="showForm('{{ file.name }}', '{{ file.id }}')" class="btn btn-primary">Generate a quiz from this book</button>
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>
+<div id="form-popup" class="form-popup">
+  <div class="form-container">
+    <span class="close-button" onclick="closeForm()">&times;</span>
+    <h2>Generate Quiz</h2>
+    <form method="POST" id="quiz-form" class="quiz-form" >
+        {% csrf_token %}
+        <input type="hidden" name="fileId" id="hidden-int">
+        <label for="start_page">File</label>
+        <input type="number" id="disabled-input" name="start_page" value="" disabled>
+      
+        <label for="number_of_questions">Number of Questions:</label>
+        <input type="number" id="qnumber" name="qnumber" required>
+      
+        <label for="difficulty">Difficulty:</label>
+        <select id="difficulty" name="difficulty" required>
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+      
+        <label for="start_page">Start Page:</label>
+        <input type="number" id="spage" name="spage" required>
+      
+        <label for="end_page">End Page:</label>
+        <input type="number" id="epage" name="epage" required>
+      
+        <input type="submit" value="Generate">
+      </form>
+  </div>
+</div>
+<script>
+  function showForm(fileName, fileId) {
+    var formPopup = document.getElementById("form-popup");
+    formPopup.style.display = "block";
+
+    var form = document.getElementById("quiz-form");
+    form.action = "{% url 'generate_quiz' 0 %}".replace("0", fileId);
+
+    var hiddenInput = document.getElementById("hidden-int");
+    hiddenInput.value = fileId;
+
+    document.getElementById("disabled-input").value = fileName
+  }
+
+  function closeForm() {
+    var formPopup = document.getElementById("form-popup");
+    formPopup.style.display = "none";
+  }
+</script>
+{% endblock content %}

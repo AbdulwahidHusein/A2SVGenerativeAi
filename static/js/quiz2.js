@@ -28,6 +28,7 @@ let indexNumber = 0
 
 // function for displaying next question in the array to dom
 function NextQuestion(index) {
+    closeOptionModal()
     if (groupQuiz){
         var csrftoken = getCookie('csrftoken');
         var formData = new FormData();
@@ -91,7 +92,7 @@ function checkForAnswer() {
    
     //checking to make sure a radio input has been checked or an option being chosen
     if (options[0].checked === false && options[1].checked === false && options[2].checked === false && options[3].checked == false) {
-        document.getElementById('option-modal').style.display = "flex"
+        document.getElementById('option-modal').style.visibility = "visible"
     }
 
     //checking if checked radio button is same as answer
@@ -268,12 +269,11 @@ function showExplanation() {
 //function to close warning modal
 function closeOptionModal() {
     //explanationArea.style.display = 'block'
-    document.getElementById('option-modal').style.display = "none"
+    document.getElementById('option-modal').style.visibility = "hidden"
 }
 document.addEventListener('DOMContentLoaded', function() {
 document.getElementById('next').addEventListener('click', handleNextQuestion)
 document.getElementById('exp-btn').addEventListener('click', showExplanation)
-document.getElementById('close-modal-btn').addEventListener('click', closeOptionModal)
 NextQuestion(0);
 })
 
@@ -287,14 +287,14 @@ function getQuery(question){
 
     let query = "";
     if (userAnswers[index] === '1'){
-        query += 'Provide me Explanation about the following question ' + qs[index].question;
-        query += ' and the choices are ' + ' ' + qs[index].optionA + ' ' + qs[index].optionB + ' ' + qs[index].optionC + ' ' + qs[index].optionD + ' what is the correct answer and tell me the reason';
-        query += ' and our user answered this question as '+ qs[index][userAnswers[index]] +' explain weather they are right or wrong. and if wrong what may be the reason that made the answer like this. conclude this and what should they always remember'
+        query += 'Provide me a more detailed Explanation about the following question question: ' + qs[index].question;
+        query += ' and the choices are ' + ' ' + qs[index].optionA + ' ' + qs[index].optionB + ' ' + qs[index].optionC + ' ' + qs[index].optionD + ' I have answered the question correctely again tell me additional explanations';
+        query += ' My answer was '+ qs[index][userAnswers[index]] +' based on this justify my answer. '
     }
     else{
-        query += 'Provide me Explanation about the following question ' + qs[index].question;
+        query += 'Provide me Explanation about the following question question: ' + qs[index].question;
         query += ' and the choices are ' + ' ' + qs[index].optionA + ' ' + qs[index].optionB + ' ' + qs[index].optionC + ' ' + qs[index].optionD + ' what is the correct answer and tell me the reason';
-        query += ' and our user answered this question as '+ qs[index][userAnswers[index]] +' explain weather they are right or wrong. and if wrong what may be the reason that made the answer like this. conclude this and what should they always remember'
+        query += ' and our I answered this question as '+ qs[index][userAnswers[index]] +' explain weather I am are right or wrong. and if wrong what may be the reason that made me the answer like this. what should they always remember'
     }
    
     return query
