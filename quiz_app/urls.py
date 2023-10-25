@@ -24,5 +24,7 @@ urlpatterns = [
     path('my_group_quizzes', views.user_group_quizs, name="group_quizes"),
     path('create_group_quiz',views.create_group_quiz, name="create_group_quiz"),
     path('join_quiz/<int:id>', views.handle_join_group, name='join_group'),
-
+    path('my_files/', views.get_user_files, name="my_files"),
+    path('download_file/<int:id>', views.download_file, name="download_file"),
+    path('generate_quiz/<int:id>/', views.generate_quiz_from_uploaded_file, name="generate_quiz"),
 ]

@@ -16,7 +16,7 @@
     test(shuffledQuestions, QuizId);
   </script>
 <div class="quiz-page">
-  <main class="main" style="display:nne">
+  <main class="main">
     <div style="display:none; z-index:50" class="modal-container" id="score-modal">
       <div class="modal-content-container">
         <h1>Quiz Completed.</h1>
@@ -44,12 +44,7 @@
 
       <div class="game-options-container">
         <div class="modal-container" id="option-modal">
-          <div class="modal-content-container">
-            <h1>Please Pick An Option</h1>
-            <div class="modal-button-container">
-              <button id="close-modal-btn">Continue</button>
-            </div>
-          </div>
+            <p style="color:red">Please Pick An Option</p>
         </div>
 
         <span class="choice">
@@ -81,7 +76,7 @@
 
   <div id="explanations" style="display:none">
     {% for quest in questions %}
-    <div class="single-result border border-primary rounded p-3 mt-3">
+    <div class="single-result">
       <p class="exp explanation-question"><h>Question {{ quest.id }}:</h>{{ quest.question }}</p>
       <p class="exp explanation-correctAnswer"><h>Correct Answer:</h>{{ quest.correctOption }}</p>
       <p class="exp explanation-correctAnswer"><h>Explanation:</h>{{ quest.explanation }}</p>
@@ -94,7 +89,7 @@
         <button id="element_{{ forloop.counter }}b" class="btn btn-primary" type="submit">View more Explanations</button>
       </form>
       <div id="element_{{ forloop.counter }}l" class="loader" style="display:none"></div>
-      <div id="element_{{ forloop.counter }}" class="more-explanation-area"></div>
+      <div id="element_{{ forloop.counter }}" style="display:none" class="more-explanation-area"></div>
     </div>
     {% endfor %}
   </div>
@@ -117,6 +112,7 @@
         queryInput.value = query;
 
         dv = document.getElementById(div_id);
+        dv.style.display = "block";
         document.getElementById(div_id+"l").style.display = 'block'
         document.getElementById(div_id+"b").style.display = 'none'
 

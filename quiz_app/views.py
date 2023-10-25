@@ -1,5 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import render, redirect, HttpResponseRedirect
+from django.shortcuts import render, redirect, HttpResponseRedirect, HttpResponse
 from django.http import JsonResponse, Http404
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404
 from .models import CustomUser, Message, Quiz, GroupQuiz, ScoreHolder, File
 from .generator import get_question, get_q
 from django.urls import reverse
-
+from django.views.decorators.csrf import csrf_exempt
 import json, re
 from dateutil import parser
 from quiz_app.api.api_caller import OpenAi
@@ -131,7 +131,7 @@ def handle_upload(request):
             return HttpResponseRedirect(reverse('upload'))  # Redirect to upload page or appropriate URL
         
         try:
-            file = File.objects.create(file=uploaded_file, uploaded_by=user)
+            file = File.objects.create(file=uploaded_file, subject=uploaded_file.name, uploaded_by=user)
             file.save()
             
             try:
@@ -302,6 +302,46 @@ def get_scoreboard(request):
 @login_required(login_url='login')
 def get_user_files(request):
     user = request.user
+    files = File.objects.filter(uploaded_by=user)
+    return render(request, 'files_page.html', {'files':files})
+
+@login_required(login_url='login')    
+def download_file(request, id):
+    file_obj = File.objects.get(pk=id)
+    file = file_obj.file
+    try:
+        with open(file.path, 'rb') as fb:
+            file_data = file.read()
+        response = HttpResponse(file_data, content_type = 'application/octet-stream')
+        response['Content-Disposition'] = 'attachment; filename="{}"'.format(file.name)
+        return response
+    except:
+        response = HttpResponse("file not found")
+        return response
     
-    
-    
+@login_required(login_url='login')    
+@csrf_exempt
+def generate_quiz_from_uploaded_file(request, id):
+    user = request.user
+    file_obj = File.objects.get(pk=id)
+    with open(file_obj.file.path, 'rb') as f:
+        file = f.read()
+    if request.method == 'POST':
+        num_of_questions = request.POST.get('qnumber')
+        difficulty = request.POST.get('difficulty')
+        spage = int(request.POST.get('spage'))
+        epage = int(request.POST.get('epage'))
+        comment = request.POST.get('additional_comment')
+            
+        try:
+                questions = get_question(file, num_of_questions, difficulty, spage, epage, 'multiple_choice', 'chatgpt')
+                if questions:
+                    title = questions['questions'][0]['question']
+                    quiz = Quiz.objects.create(generated_by=user, questions=str(questions), size=5, title=title)
+                    quiz.save()
+                    return render(request, 'quiz3.html', {'questions': questions['questions'], 'id': quiz.id})
+
+        except Exception as e:
+            print(e)
+            question = get_q()
+            return HttpResponse(e)
