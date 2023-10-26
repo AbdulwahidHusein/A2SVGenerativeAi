@@ -4,4 +4,6 @@ virtual/
 db.sqlite3
 venv/
 __pycache__/
-files
+files/
+venv/
+__pycache__/clear
