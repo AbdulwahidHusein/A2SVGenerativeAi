@@ -90,4 +90,24 @@ class ResponseParser:
         supported_format['questions'] = data
         
         return supported_format
+
+def parse_short_answer_submission(response):
+        if ']' not in response[-5:]:
+            response  = response + ']'
+        match = re.search(r'\[(.+)\]', response, re.DOTALL)
+
+        if match:
+            feedback = match.group(1)
+        if feedback:
+            feedbacks = feedback.strip().split("$$$$")
+            cont = []
+            for single_feedback in feedbacks:
+                arr = []
+                lines = single_feedback.strip().split('\n')
+                for line in lines:
+                    arr.append(line.strip())
+                cont.append(arr)
+            return cont
+        else:
+            return False
         

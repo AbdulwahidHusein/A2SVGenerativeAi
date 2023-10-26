@@ -15,6 +15,8 @@ from quiz_app.api.api_caller import OpenAi
 import os
 from dotenv import load_dotenv
 load_dotenv()
+from quiz_app.api.parse_response_v2 import parse_short_answer_submission
+
 OPEN_AI_API_KEY  = os.getenv('OPEN_AI_API_KEY')
 
 
@@ -107,6 +109,16 @@ def chat(request):
 
     return render(request, 'chat2.html', {'prev_chats': chats, 'response': response})
 
+def judge_short_answer_submissions(request):
+    user_submission = request.POST.get('submission')
+    return JsonResponse({"response":[["!@# 12dwufneru", "!@# 12dwufneru", "!@# 12dwufneru"],["!@# 12dwufneru", "!@# 12dwufneru", "!@# 12dwufneru"],["!@# 12dwufneru", "!@# 12dwufneru", "!@# 12dwufneru"]]})
+    opena = OpenAi(OPEN_AI_API_KEY)
+    ai_response = opena.gudge_short_answer_submission(user_submission)
+    response_list = parse_short_answer_submission(ai_response)
+    return JsonResponse({"response":[["!@# 12dwufneru", "!@# 12dwufneru", "!@# 12dwufneru"],["!@# 12dwufneru", "!@# 12dwufneru", "!@# 12dwufneru"],["!@# 12dwufneru", "!@# 12dwufneru", "!@# 12dwufneru"]]})
+    return JsonResponse({"response":response_list})
+
+    
 @login_required(login_url='login')
 def user_logout(request):
     logout(request)
@@ -146,6 +158,9 @@ def handle_upload(request):
                         quiz.save()
                         return render(request, 'quiz3.html', {'questions': questions['questions'], 'id': quiz.id})
                     else:
+                        title = questions[0]
+                        quiz = Quiz.objects.create(generated_by=user, questions=str(questions), size=5, title=title, mode="short_answer")
+                        quiz.save()
                         return render(request, "short_answer_quiz.html", {'quiz':questions})
                 else:
                     # Handle case when questions are not available
@@ -166,6 +181,9 @@ def get_quiz(request, id):
         quiz = Quiz.objects.get(pk=id)
 
         if quiz.generated_by.id == user.id:
+            if quiz.mode == "short_answer":
+                questions = eval(quiz.questions)
+                return render(request, 'short_answer_quiz.html', {'quiz':questions, "id":quiz.id})
             questions = quiz.questions
             questions = re.sub(r"'", '"', questions)
             print(questions)

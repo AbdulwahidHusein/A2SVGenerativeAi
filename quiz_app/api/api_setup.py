@@ -1,7 +1,6 @@
 import openai
 from bardapi import Bard
 
-
 class PromptGenerator:
     
     def __init__(self, text_data, difficulty):
@@ -78,6 +77,55 @@ class OpenAi:
             'model': 'text-davinci-003',  # Choose the model you want to use
             'prompt': prompt,
             'max_tokens': max_tokens,  # Adjust the length of the generated reply as needed
+            'temperature': 0.7,  # Adjust the temperature to control the randomness of the output
+            'n': 1,  # Generate a single reply
+            'stop': None,  # You can specify a stop sequence to control the length of the completion
+        }
+        response = openai.Completion.create(**parameters)
+        reply = response.choices[0].text.strip()
+        return reply
+    def gudge_short_answer_submission(self, submission):
+        feedback_format = """
+        [
+            what is 1+1?
+            1+1 is 2
+            you are correct 1+1 is 2. this is a simple mathematical concept ...
+            $$$$
+            what is the big bang?
+            it is a big thing
+            your answer for this question is wrong or incomplete. in theoretical physics the big bang is an event that happend billons of years ago ans it is believed to be the cause for the birth od the universe
+            $$$$
+            what is motion?
+            moion is the movement of particles
+            your answer for this question seems correct but it is not accurate. you need to improve your explanation. motion is the change of spac coordinate of an object through the passage of time
+            ]
+            """
+        prompt = f"""
+        You are helpful quiz judge.
+        JUDGE THE FOLLOWING QUIZ OBJECTIVELY 
+        the following question answer pairs was submitted by me '''{submission}''' Judge these submissions
+        when the key of the above object is the question the value is the my answer for that question
+        so based on that judge the my answers wheather they are right or wrong and give me corrective feedback and challange my answers for each question.
+        your response should be in the following format '''{feedback_format}''' 
+        NOTE the above feedback format is only a demo templete give your feedback for my quiz i provided erlier
+        NOTICE YOU CAN ONLY RETURN YOUR RESPONSE IN THE GIVEN FORMAT ABOVE: WHERE
+        THE FEEDBACK MUST BE ENCLOSED WITH ANGLE BRACKETS [ ] AND FEEDBACK FOR EACH QUESTION IS SEPARATED BY NEW LINE + FOUR DOLLAR SIGHNS I.E $$$$ AND A NEW LINE
+        FOR EACH QUESTION THE FEEDBACK ONLY CONTAINS THREE LINES THE FIRST LINE IS THE ORIGINAL QUESTION THE SECOND LINE IS MY ANSWER WITH OUT ANY MODIFICATION AND
+        THE THIRD LINE IS YOUR FEEDBACK FOR MY ANSWER IN ADDITION TO FURTHER EXPLANATION
+        AND NEVER USE QUOTED WORDS SINCE I WANT TO PARSE THAT TEXT TO JSON. EACH QUESTION MY ANSWER AND YOU FEED BACK SHOUL NOT CONTAIN NEW LINE THEY MUST BE IN A SINGLE LINE
+        FOR EACH QUESTION THE FEEDBACK MUST BE THREE LINE AND EACH FEEDBACKS MUST BESEPARATED BY NEW LINE + $$$$ + LEWLINE
+        AND YOU MUST OBJECTIVELY JUDGE MY QUIZ. MAKE YOU EXPLANTIONS DETAILED. Do not forget to enclose your response with [ ]
+        there must be [ at the start of your response and ] at the end as included in the demo
+        
+        THANK YOU FOR YOUR ASSISTANCE
+        """
+        prompt_token_length = len([w for w in prompt.split()])
+        max_tokens = 3100 - prompt_token_length 
+        parameters = {
+            'model': 'text-davinci-003',  
+            
+            'prompt': prompt,
+            'max_tokens': max_tokens,
             'temperature': 0.7,  # Adjust the temperature to control the randomness of the output
             'n': 1,  # Generate a single reply
             'stop': None,  # You can specify a stop sequence to control the length of the completion

@@ -27,5 +27,5 @@ urlpatterns = [
     path('my_files/', views.get_user_files, name="my_files"),
     path('download_file/<int:id>', views.download_file, name="download_file"),
     path('generate_quiz/<int:id>/', views.generate_quiz_from_uploaded_file, name="generate_quiz"),
-    path('quiz_short_answer',views.test_sh ),
+    path("judge_short_answer_submission/", views.judge_short_answer_submissions, name="judge_short_answer"),
 ]
