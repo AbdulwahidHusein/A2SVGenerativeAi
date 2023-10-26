@@ -123,11 +123,12 @@ def handle_upload(request):
     user = request.user
     if request.method == 'POST':
         uploaded_file = request.FILES.get('file')
-        num_of_questions = request.POST.get('qnumber')
+        num_of_questions = int(request.POST.get('qnumber'))
         difficulty = request.POST.get('difficulty')
         spage = int(request.POST.get('spage'))
         epage = int(request.POST.get('epage'))
         comment = request.POST.get('additional_comment')
+        mode = request.POST.get('qtype')
         
         if not uploaded_file or not num_of_questions or not difficulty or not spage or not epage:
             return HttpResponseRedirect(reverse('upload'))  # Redirect to upload page or appropriate URL
@@ -137,16 +138,20 @@ def handle_upload(request):
             file.save()
             
             try:
-                questions = get_question(uploaded_file, num_of_questions, difficulty, spage, epage, 'multiple_choice', 'chatgpt')
+                questions = get_question(uploaded_file, num_of_questions, difficulty, spage, epage, mode, 'chatgpt')
                 if questions:
-                    title = questions['questions'][0]['question']
-                    quiz = Quiz.objects.create(generated_by=user, questions=str(questions), size=5, title=title)
-                    quiz.save()
-                    return render(request, 'quiz3.html', {'questions': questions['questions'], 'id': quiz.id})
+                    if mode == "multiple_choice":
+                        title = questions['questions'][0]['question']
+                        quiz = Quiz.objects.create(generated_by=user, questions=str(questions), size=5, title=title)
+                        quiz.save()
+                        return render(request, 'quiz3.html', {'questions': questions['questions'], 'id': quiz.id})
+                    else:
+                        return render(request, "short_answer_quiz.html", {'quiz':questions})
                 else:
                     # Handle case when questions are not available
                     return HttpResponseRedirect(reverse('upload')) 
             except Exception as e:
+                return HttpResponse(e)
                 question = get_q()
         
         except Exception as e:

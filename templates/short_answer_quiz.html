@@ -3,7 +3,10 @@
 {% block content %}
 <link rel="stylesheet" href="{%static 'css/short_answer_page.css'%}" />
 <script defer>
-    var quizData = {{quiz|safe}};
+    var quizD = {{quiz|safe}};
+    let quizData = {"questions":[]};
+    quizData.questions = quizD
+    console.log(quizData);
 </script>
     <div class="containerr">
         <h1 class="text-center mb-4">Enter appropirate Answer</h1>
@@ -24,9 +27,6 @@
     </div>
 
     <script>
-        const quizData = {
-            questions: ["q1q1 q1q1 q1q1 q1q1 q1q1 q1q1q1q1 q1q1 q1q1 q1q1 q1q1 q1q1 q1q1 q1q1 q1q1 q1q1 q1q1 q1q1 q1q1 q1q1", "q2", "q3", "q4"] 
-        };
 
         const questionContainer = document.getElementById("question-container");
         const questionNumber = document.getElementById("question-number");
