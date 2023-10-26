@@ -4,5 +4,3 @@ virtual/
 db.sqlite3
 venv/
 __pycache__/
-chat_gpt.py
-testsummerize.py
