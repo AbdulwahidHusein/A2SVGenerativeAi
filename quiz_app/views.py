@@ -111,11 +111,9 @@ def chat(request):
 
 def judge_short_answer_submissions(request):
     user_submission = request.POST.get('submission')
-    return JsonResponse({"response":[["!@# 12dwufneru", "!@# 12dwufneru", "!@# 12dwufneru"],["!@# 12dwufneru", "!@# 12dwufneru", "!@# 12dwufneru"],["!@# 12dwufneru", "!@# 12dwufneru", "!@# 12dwufneru"]]})
     opena = OpenAi(OPEN_AI_API_KEY)
     ai_response = opena.gudge_short_answer_submission(user_submission)
     response_list = parse_short_answer_submission(ai_response)
-    return JsonResponse({"response":[["!@# 12dwufneru", "!@# 12dwufneru", "!@# 12dwufneru"],["!@# 12dwufneru", "!@# 12dwufneru", "!@# 12dwufneru"],["!@# 12dwufneru", "!@# 12dwufneru", "!@# 12dwufneru"]]})
     return JsonResponse({"response":response_list})
 
     

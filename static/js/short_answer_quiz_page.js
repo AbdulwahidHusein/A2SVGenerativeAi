@@ -19,6 +19,7 @@ let userAnswers = {}
             questionContainer.classList.add("show");
         }
         function getFeedback(){
+            document.getElementById('loader').style.display = 'block';
             var csrftoken = getCookie('csrftoken');
             var formData = new FormData();
             let answers = JSON.stringify(userAnswers)
@@ -38,6 +39,7 @@ let userAnswers = {}
                 data: formData,
                 processData: false,
                 contentType: false,
+                
                 success: function(response) {
                   console.log(response.response);
                   let res = response.response;
@@ -54,7 +56,7 @@ let userAnswers = {}
                 
                     
                     var question = document.createElement("p");
-                    question.style.color = "black"
+                
                     question.classList.add("questionn");
                     question.textContent = questionData[0];
                 
@@ -66,7 +68,7 @@ let userAnswers = {}
                
                     var correctAnswer = document.createElement("p");
                     correctAnswer.classList.add("correct-answer");
-                    correctAnswer.textContent = "Correct Answer: " + questionData[2];
+                    correctAnswer.textContent = "Feed Back: " + questionData[2];
                 
                   
                     questionDiv.appendChild(question);
@@ -78,7 +80,7 @@ let userAnswers = {}
 
                   }
                   console.log("score updated")
-                 
+                  document.getElementById('loader').style.display = 'none';
                 },
                 error: function(xhr, status, error) {
                   console.log(error);
