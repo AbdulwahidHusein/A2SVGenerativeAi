@@ -114,6 +114,7 @@ def judge_short_answer_submissions(request):
     opena = OpenAi(OPEN_AI_API_KEY)
     ai_response = opena.gudge_short_answer_submission(user_submission)
     response_list = parse_short_answer_submission(ai_response)
+    print(response_list)
     return JsonResponse({"response":response_list})
 
     
@@ -349,20 +350,26 @@ def generate_quiz_from_uploaded_file(request, id):
     file_obj = File.objects.get(pk=id)
     if file_obj:
         if request.method == 'POST':
-            num_of_questions = request.POST.get('qnumber')
+            num_of_questions = int(request.POST.get('qnumber'))
             difficulty = request.POST.get('difficulty')
             spage = int(request.POST.get('spage'))
             epage = int(request.POST.get('epage'))
             comment = request.POST.get('additional_comment')
+            mode = request.POST.get('qtype')
                 
             try:
-                    questions = get_question(file_obj.file, num_of_questions, difficulty, spage, epage, 'multiple_choice', 'chatgpt')
+                    questions = get_question(file_obj.file, num_of_questions, difficulty, spage, epage, mode, 'chatgpt')
                     if questions:
-                        title = questions['questions'][0]['question']
-                        quiz = Quiz.objects.create(generated_by=user, questions=str(questions), size=5, title=title)
-                        quiz.save()
-                        return render(request, 'quiz3.html', {'questions': questions['questions'], 'id': quiz.id})
-
+                        if mode == "multiple_choice":
+                            title = questions['questions'][0]['question']
+                            quiz = Quiz.objects.create(generated_by=user, questions=str(questions), size=5, title=title)
+                            quiz.save()
+                            return render(request, 'quiz3.html', {'questions': questions['questions'], 'id': quiz.id})
+                        else:
+                            title = questions[0]
+                            quiz = Quiz.objects.create(generated_by=user, questions=str(questions), size=5, title=title, mode="short_answer")
+                            quiz.save()
+                            return render(request, "short_answer_quiz.html", {'quiz':questions})
             except Exception as e:
                 print(e)
                 question = get_q()

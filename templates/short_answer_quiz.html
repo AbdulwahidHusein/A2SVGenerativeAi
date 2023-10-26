@@ -1,6 +1,7 @@
 {% extends "index2.html" %}
 {% load static %}
 {% block content %}
+
 <link rel="stylesheet" href="{%static 'css/short_answer_page.css'%}" />
 <script defer>
     var quizD = {{quiz|safe}};
@@ -27,9 +28,9 @@
         </div>
      </div>
     </div>
-     <div  class="explanation-area" id="explanation-area">
+     <div  class="explanation-area" id="explanation-area" style="display:none">
      </div>
     
     <script src="{% static 'js/short_answer_quiz_page.js' %}">
 
-        {% endblock content %}
+{% endblock content %}

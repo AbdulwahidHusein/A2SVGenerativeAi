@@ -45,6 +45,7 @@ let userAnswers = {}
                   let res = response.response;
                   document.getElementById('cont').style.display = "none";
                   explanationArea = document.getElementById("explanation-area");
+                  explanationArea.style.display = 'flex'
 
                   for (var i=0; i<res.length; i++){
                     
