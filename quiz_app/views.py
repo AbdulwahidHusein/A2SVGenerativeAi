@@ -115,6 +115,8 @@ def user_logout(request):
 def home(request):
     return render(request, 'home2.html')
 
+def test_sh(request):
+    return render(request, 'short_answer_quiz.html')
 
 @login_required(login_url='login')
 def handle_upload(request):

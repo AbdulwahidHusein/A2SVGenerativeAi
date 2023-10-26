@@ -31,6 +31,22 @@ class PromptGenerator:
     '''
         return prompt
     
+    def make_short_answer_prompt(self, number_of_questions, questions_format):
+        prompt =  f'''You are helpful Quiz generator
+            Please generate a quiz containing {number_of_questions} short answer questions. {self.difficulty_sentences}. The quiz should follow the strict rules below:
+    - the quiz must be enclosed in square brackets [ ].
+    - The quiz should contain {number_of_questions} questions!!.
+    - The quiz should be generated in the following format but the number of questions you generate is {number_of_questions} here is the demo format : """" {questions_format}"""". 
+    - The quiz should be enclosed in square brackets [ ], and each question should span only one line!!!! important!!!.
+    - The quiz should resemble an academic quiz that helps students prepare for an exam.
+
+    the following keywords are extracted from the book from which the quiz is to be generated. therefore generate the quiz that is related 
+    to these topics and their relationships
+    """"{self.text}""""
+    Thank You for your assistance and for understanding my context!
+    '''
+        return prompt
+    
         
 
 class OpenAi:

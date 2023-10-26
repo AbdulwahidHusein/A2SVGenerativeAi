@@ -39,13 +39,13 @@ def red_extract_keyword(file, start_page, end_page):
     raise Exception("error reading a file")
     
 def get_question(file, num_of_questions, difficulty, start_page, end_page, mode, model):
-    num_of_questions = max(int(num_of_questions), 10)#for now only support <= 10 questions
+    num_of_questions = max(int(num_of_questions), num_of_questions)
     #mode can be multiple_choice or short_answer
     #summerized_data = read_summerize_split(file, start_page, end_page)
     keywords = red_extract_keyword(file, start_page, end_page)#for now we use kewords instead
     summerized_data = keywords
     if summerized_data:
-        print(summerized_data)
+        #print(summerized_data)
         #use v2
         question_generator = api_caller_v2.GenerateQuestionRequest(summerized_data, model)
         questions = question_generator.make_request(num_of_questions, difficulty, mode)

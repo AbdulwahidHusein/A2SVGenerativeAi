@@ -1,0 +1,81 @@
+{% extends "index2.html" %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{%static 'css/short_answer_page.css'%}" />
+<script defer>
+    var quizData = {{quiz|safe}};
+</script>
+    <div class="containerr">
+        <h1 class="text-center mb-4">Enter appropirate Answer</h1>
+
+        <div id="quiz" class="quiz-container">
+            <div id="question-container" class="question-container">
+                <h2 id="question-number" class="question-number"></h2>
+                <p id="question-text" class="question-text"></p>
+                <input type="text" id="answer" class="answer-input" placeholder="Enter your answer">
+            </div>
+            <button id="submit" class="submit-button btn btn-primary">Submit</button>
+        </div>
+
+        <div id="result" class="result-container" style="display:none;">
+            <h2 class="score-label">Your Result</h2>
+            <p class="score-value" id="score-value"></p>
+        </div>
+    </div>
+
+    <script>
+        const quizData = {
+            questions: ["q1q1 q1q1 q1q1 q1q1 q1q1 q1q1q1q1 q1q1 q1q1 q1q1 q1q1 q1q1 q1q1 q1q1 q1q1 q1q1 q1q1 q1q1 q1q1 q1q1", "q2", "q3", "q4"] 
+        };
+
+        const questionContainer = document.getElementById("question-container");
+        const questionNumber = document.getElementById("question-number");
+        const questionText = document.getElementById("question-text");
+        const answerInput = document.getElementById("answer");
+        const submitButton = document.getElementById("submit");
+        const resultContainer = document.getElementById("result");
+        const scoreValue = document.getElementById("score-value");
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function displayQuestion() {
+            const question = quizData.questions[currentQuestionIndex];
+            questionNumber.innerText = `Question ${currentQuestionIndex + 1}`;
+            questionText.innerText = question;
+            answerInput.value = "";
+            questionContainer.classList.add("show");
+        }
+
+        function checkAnswer() {
+            const userAnswer = answerInput.value.trim().toLowerCase();
+            const correctAnswer = "correct answer"; // Replace with the correct answer for the current question
+
+            if (userAnswer === correctAnswer) {
+                score++;
+            }
+
+            currentQuestionIndex++;
+
+            questionContainer.classList.remove("show");
+
+            setTimeout(() => {
+                if (currentQuestionIndex < quizData.questions.length) {
+                    displayQuestion();
+                } else {
+                    showResult();
+                }
+            }, 300);
+        }
+
+        function showResult() {
+            questionContainer.style.display = "none";
+            resultContainer.style.display = "block";
+            scoreValue.innerText = `${score} / ${quizData.questions.length}`;
+        }
+
+        submitButton.addEventListener("click", checkAnswer);
+
+        displayQuestion();
+    </script>
+    {% endblock content %}
