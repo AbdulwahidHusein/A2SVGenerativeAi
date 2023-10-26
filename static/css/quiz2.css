@@ -282,11 +282,12 @@
 }
 
 .single-result {
-  border: 2px solid #f7f9fb;
   border-radius: 8px;
   padding: 20px;
   margin-bottom: 20px;
-  background-color: #d8dfe5;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .exp {
@@ -313,6 +314,10 @@ h {
 .more-explanation-area {
   margin-top: 10px;
   padding: 10px;
-  border: 1px solid #ccc;
-  background-color: #fff;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.1);
+}
+.explanation-correctExplanation{
+  color:#4a904d;
 }

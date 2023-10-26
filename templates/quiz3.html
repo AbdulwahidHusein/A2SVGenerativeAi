@@ -78,8 +78,16 @@
     {% for quest in questions %}
     <div class="single-result">
       <p class="exp explanation-question"><h>Question {{ quest.id }}:</h>{{ quest.question }}</p>
-      <p class="exp explanation-correctAnswer"><h>Correct Answer:</h>{{ quest.correctOption }}</p>
-      <p class="exp explanation-correctAnswer"><h>Explanation:</h>{{ quest.explanation }}</p>
+      {% if quest.correctOption == "optionA" %}
+      <p class="exp explanation-correctAnswer"><h>Correct Answer:</h>{{ quest.optionA }}</p>
+  {% elif quest.correctOption == "optionB" %}
+      <p class="exp explanation-correctAnswer"><h>Correct Answer:</h>{{ quest.optionB }}</p>
+  {% elif quest.correctOption == "optionC" %}
+      <p class="exp explanation-correctAnswer"><h>Correct Answer:</h>{{ quest.optionC }}</p>
+  {% else %}
+      <p class="exp explanation-correctAnswer"><h>Correct Answer:</h>{{ quest.optionD }}</p>
+  {% endif %}
+      <p class="exp explanation-correctExplanation"><h>Explanation:</h>{{ quest.explanation }}</p>
       
       <form>
         {% csrf_token %}
