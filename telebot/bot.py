@@ -182,25 +182,6 @@ def send_request(update: Update, context: CallbackContext):
             )
         except:
             logging.info(i)
-            prompt = f"""please rephrase this question. Make it shorter, so it can be suitable to be sent in a form of a telgram quiz poll{question_data}. Make sure to return it an json format. in a similar way the questions, oprtions and explanations are arranged"""
-            response = openai.Completion.create(
-                engine="text-davinci-003",
-                prompt=prompt,
-                max_tokens=255,
-                temperature=0.7,
-                n=1,
-            )
-            question_data = response.choices[0].text.strip()
-            logging.info("new request sent")
-            question_data = json.loads(question_data)
-            question_text = question_data["question"]
-            options = [
-                question_data["optionA"],
-                question_data["optionB"],
-                question_data["optionC"],
-                question_data["optionD"],
-            ]
-            correct_option = question_data["correctOption"]
             try:
                 context.bot.send_poll(
                     chat_id=update.effective_chat.id,
@@ -209,7 +190,7 @@ def send_request(update: Update, context: CallbackContext):
                     type=Poll.QUIZ,
                     correct_option_id=ord(correct_option[-1]) - ord("A"),
                     is_anonymous=False,
-                    explanation=f'Correct Answer: {question_data["explanation"]}',
+                    explanation="Use the explain command to get the explanation",
                     open_period=60,
                 )
             except:
