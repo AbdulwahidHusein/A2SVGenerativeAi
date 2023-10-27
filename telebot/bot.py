@@ -4,7 +4,7 @@ import os
 import openai
 import sys
 import time
-from quiz_app import generator
+import request
 
 sys.path.append("..")
 from telegram import (
@@ -157,40 +157,7 @@ def send_explanation(update: Update, context: CallbackContext):
         )
 
 
-# this function handles the answers when a poll is selected. it increments each user's score if it is correct
-def poll_answer_handler(update: Update, context: CallbackContext):
-    answer: PollAnswer = update.poll_answer
-
-    # Check if the user's answer is correct
-    if answer.option_ids[0] == ord(user_answers.get(answer.user.id, "Z")[-1]) - ord(
-        "A"
-    ):
-        user_id = answer.user.id
-        scores[user_id] = scores.get(user_id, 0) + 1
-
-
-# function for sending the rank of each user
-def send_rankings(update: Update, context: CallbackContext):
-    logging.info(scores)
-    logging.info(user_answers)
-    context.bot.send_chat_action(
-        chat_id=update.effective_chat.id, action=ChatAction.TYPING
-    )
-    # Calculate rankings based on scores dictionary
-    ranked_users = sorted(scores.items(), key=lambda x: x[1], reverse=True)
-
-    # Send rankings message
-    rankings_message = "Rankings:\n"
-    for rank, (user_id, score) in enumerate(ranked_users, start=1):
-        user = context.bot.get_chat_member(
-            chat_id=update.effective_chat.id, user_id=user_id
-        ).user
-        rankings_message += f"{rank}. {user.username or user.full_name}: {score}\n"
-
-    context.bot.send_message(chat_id=update.effective_chat.id, text=rankings_message)
-
-
-# function for sending request to openai for generating question and sending the poll to users
+# function for generating question and sending the generating question in a quiz poll format for users
 # it calls the send explanation function 20 seconds after the final poll is sent
 def send_request(update: Update, context: CallbackContext):
     global user_data
@@ -201,16 +168,12 @@ def send_request(update: Update, context: CallbackContext):
     context.bot.send_chat_action(
         chat_id=update.effective_chat.id, action=ChatAction.TYPING
     )
-    with open(user_data["file"], "rb") as f:
-        question_format = generator.get_question(
-            f,
-            5,
-            user_data["difficulty"],
-            int(user_data["start_page"]),
-            int(user_data["end_page"]),
-            mode="multiple_choice",
-            model="chatgpt",
-        )
+    question_format = request.send_request_(
+        user_data["file"],
+        user_data["start_page"],
+        user_data["end_page"],
+        user_data["difficulty"],
+    )
     logging.info("request sent")
     total_polls = len(question_format["questions"]) - 1
     for i, question_data in enumerate(question_format["questions"]):
@@ -286,8 +249,6 @@ def register(dispatcher):
         )
         dispatcher.add_handler(conv_handler)
         dispatcher.add_handler(CallbackQueryHandler(button_callback))
-        dispatcher.add_handler(PollAnswerHandler(poll_answer_handler))
-
         dispatcher.add_handler(CommandHandler("help", help))
     except:
         pass
