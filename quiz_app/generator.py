@@ -1,7 +1,7 @@
 import sys
 sys.path.append("..") 
-from quiz_app.api import api_caller_v2
-from quiz_app.file_processor import file_reader, file_summerizer, file_chunk, keyword_extractor
+from api import api_caller_v2
+from file_processor import file_reader, file_summerizer, file_chunk, keyword_extractor
 
 def read_summerize_split(file, start_page, end_page):
     '''read and summerise'''
@@ -33,9 +33,9 @@ def red_extract_keyword(file, start_page, end_page):
     end_page = min(start_page+30, end_page)
     reader = file_reader.FileReader(file)
     file_content = reader.read_file(start_page, end_page) 
-    if file_content:
-        keywwords = keyword_extractor.extract_keywords(file_content,(end_page-start_page)*10)
-        return keywwords
+
+    keywwords = keyword_extractor.extract_keywords(file_content,(end_page-start_page)*10)
+    return keywwords
     raise Exception("error reading a file")
     
 def get_question(file, num_of_questions, difficulty, start_page, end_page, mode, model):

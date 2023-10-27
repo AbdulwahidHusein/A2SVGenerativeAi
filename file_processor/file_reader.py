@@ -42,17 +42,17 @@ class FileReader:
             return False
             
     def read_file(self, start_page=0, end_page=None):
-        try:
-            file_name = self.file.name
-            file_extension = file_name.split('.')[-1]
+        if True:
+            if hasattr(self.file, 'name'):
+                file_name = self.file.name
+                file_extension = file_name.split('.')[-1]
 
-            if file_extension == 'pdf':
+                if file_extension == 'pdf':
+                    return self._read_pdf(start_page, end_page)
+                elif file_extension == 'docx':
+                    return self._read_docx(start_page, end_page)
+            else:
                 return self._read_pdf(start_page, end_page)
-            elif file_extension == 'docx':
-                return self._read_docx(start_page, end_page)
 
             return False
         
-        except Exception as e:
-            print(f"Error reading file: {e}")
-            return False

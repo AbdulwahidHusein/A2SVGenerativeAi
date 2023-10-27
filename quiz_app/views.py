@@ -11,12 +11,15 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 import json, re
 from dateutil import parser
-from quiz_app.api.api_caller import OpenAi
+from api.api_caller import OpenAi
 import os
+import sys
+sys.path.append("..") 
 from dotenv import load_dotenv
 load_dotenv()
-from quiz_app.api.parse_response_v2 import parse_short_answer_submission
+from api.parse_response_v2 import parse_short_answer_submission
 from io import BytesIO
+import base64
 
 OPEN_AI_API_KEY  = os.getenv('OPEN_AI_API_KEY')
 
@@ -395,28 +398,34 @@ def generate_quiz_from_uploaded_file(request, id):
     else:
         return HttpResponse("Filee not Found")
     
-
+@csrf_exempt
 def accept_json_book(request):
     if request.method == "POST":
         json_data = json.loads(request.body)
         book_data = json_data.get('book')
-        spage = json_data.get('spage')
-        epage = json_data.get('epage')
-        qnumber = json_data.get('qnumber')
+        spage = int(json_data.get('spage'))
+        epage = int(json_data.get('epage'))
+        qnumber = int(json_data.get('qnumber'))
         difficulty = json_data.get('difficulty')
-        file_obj = BytesIO(book_data)
-        
-        get_question()
-        return
+        file_obj = BytesIO(base64.b64decode(book_data))
+        questions = get_question(file_obj, qnumber, difficulty, spage, epage, 'multiple_choice', 'chatgpt')
+        q = {}
+        q["questions"] = questions
+        return JsonResponse(q)
+    
     '''
     with open('book.pdf', 'rb') as file:
         book_data = file.read()
     payload = {
     'book': book_data
-    others
+    'spage':2
+    'epage':15
+    'qnumber':10
+    'difficulty': 'medium'
     }
-    url = 'https://example.com/get_questions/'
+    url = 'http://192.168.137.1:8000//get_questions/'
     response = requests.post(url, json=payload)
+    print(response)
 ```
 ```
     '''
