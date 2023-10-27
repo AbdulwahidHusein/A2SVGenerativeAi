@@ -19,5 +19,3 @@ stop-words==2018.7.23
 sumy==0.11.0
 yake==0.4.8
 yarl==1.9.2
-gunicorn==21.2.0
-dj-database-url==2.1.0
