@@ -395,8 +395,7 @@ def generate_quiz_from_uploaded_file(request, id):
                 return HttpResponse(e)
         else:
             return HttpResponse("Get not allowed")
-    else:
-        return HttpResponse("Filee not Found")
+    return HttpResponse("Filee not Found")
     
 @csrf_exempt
 def accept_json_book(request):
