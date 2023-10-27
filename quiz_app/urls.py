@@ -22,4 +22,6 @@ urlpatterns = [
     path('download_file/<int:id>', views.download_file, name="download_file"),
     path('generate_quiz/<int:id>/', views.generate_quiz_from_uploaded_file, name="generate_quiz"),
     path("judge_short_answer_submission/", views.judge_short_answer_submissions, name="judge_short_answer"),
+    path('get_questions/', views.accept_json_book, name="get_questions"),
+    path('get_quiz_json/<int:id>',views.get_json_quiz, name="get_json_quiz" ),
 ]

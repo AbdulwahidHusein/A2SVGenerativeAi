@@ -16,6 +16,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 from quiz_app.api.parse_response_v2 import parse_short_answer_submission
+from io import BytesIO
 
 OPEN_AI_API_KEY  = os.getenv('OPEN_AI_API_KEY')
 
@@ -173,7 +174,7 @@ def handle_upload(request):
             return HttpResponseRedirect(reverse('upload'))  # Redirect to upload page or appropriate URL
     
     return render(request, 'upload.html')
-
+@login_required(login_url='login')
 def get_quiz(request, id):
     try:
         user = request.user
@@ -196,6 +197,21 @@ def get_quiz(request, id):
         raise Http404("Quiz does not exist")
     except Exception as e:
         return redirect('error_page') 
+@login_required(login_url='login')
+def get_json_quiz(request, id):
+    user = request.user
+    quiz = Quiz.objects.get(pk=id)
+    if quiz.generated_by.id == user.id:
+            if quiz.mode == "short_answer":
+                questions = eval(quiz.questions)
+                return render(request, 'short_answer_quiz.html', {'quiz':questions, "id":quiz.id})
+            questions = quiz.questions
+            questions = re.sub(r"'", '"', questions)
+            print(questions)
+            questions = json.loads(questions)
+            return JsonResponse(questions)
+    return JsonResponse({"response":"unavailable"})
+
 
 @login_required(login_url='login')
 def handle_quiz_submit(request):
@@ -378,3 +394,29 @@ def generate_quiz_from_uploaded_file(request, id):
             return HttpResponse("Get not allowed")
     else:
         return HttpResponse("Filee not Found")
+    
+
+def accept_json_book(request):
+    if request.method == "POST":
+        json_data = json.loads(request.body)
+        book_data = json_data.get('book')
+        spage = json_data.get('spage')
+        epage = json_data.get('epage')
+        qnumber = json_data.get('qnumber')
+        difficulty = json_data.get('difficulty')
+        file_obj = BytesIO(book_data)
+        
+        get_question()
+        return
+    '''
+    with open('book.pdf', 'rb') as file:
+        book_data = file.read()
+    payload = {
+    'book': book_data
+    others
+    }
+    url = 'https://example.com/get_questions/'
+    response = requests.post(url, json=payload)
+```
+```
+    '''
