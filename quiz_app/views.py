@@ -366,7 +366,7 @@ def download_file(request, id):
 @csrf_exempt
 def generate_quiz_from_uploaded_file(request, id):
     user = request.user
-    file_obj = File.objects.get(pk=id)
+    file_obj = File.objects.get(id=id)
     if file_obj:
         if request.method == 'POST':
             num_of_questions = int(request.POST.get('qnumber'))
