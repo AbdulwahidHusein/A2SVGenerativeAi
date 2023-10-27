@@ -7,3 +7,4 @@ __pycache__/
 files/
 venv/
 __pycache__/clear
+test_requests.py

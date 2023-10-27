@@ -5,17 +5,6 @@
 
   <div class="container">
     <div class="login-popup">
-      {% if error %}
-        <div id="alert" class="alert alert-danger">
-          <p style="color: white">{{ error }}</p>
-          <script>
-            setTimeout(() => {
-              document.getElementById('alert').innerHTML = '';
-              document.getElementById('alert').classList = '';
-            }, 2000);
-          </script>
-        </div>
-      {% endif %}
 
       <div class="container-xxl py-5">
         <div class="container">

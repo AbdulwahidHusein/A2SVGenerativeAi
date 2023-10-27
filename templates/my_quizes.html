@@ -36,14 +36,13 @@
         margin-top: 10px;
     }
 </style>
-<body>
     <div class="container-fluid py-5 custom-container">
         <div class="container">
             {% if quizes %}
                 {% for quiz in quizes %}
                     <div class="quiz-card">
                         <h>{{ quiz.title }}</h>
-                        <p>Your previous Score: <span class="score">{{ quiz.user_score }} / 10</span></p>
+                        <p>Your previous Score: <span class="score">{{ quiz.user_score }} / {{quiz.size}}</span></p>
                         <a href="{% url 'quiz' quiz.id %}" class="btn btn-primary btn-sm">Retake Quiz</a>
                         <button onclick="exportQuiz({{ quiz.id }})" class="btn btn-primary btn-sm">Export</button>
                     </div>
@@ -53,7 +52,6 @@
             {% endif %}
         </div>
     </div>
-</body>
 <script>
     function exportQuiz(quizId) {
         fetch(`/get_quiz_json/${quizId}`)

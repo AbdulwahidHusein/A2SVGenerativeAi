@@ -4,9 +4,9 @@ from django.utils import timezone
 
 class CustomUser(AbstractUser):
     first_name = models.CharField(null=True, max_length=50)
-    email = models.EmailField(max_length=20, unique=True)
-    carrier = models.CharField(max_length=20, null=True, blank=True)
-    gender = models.CharField(max_length=5, null=True, blank=True)
+    email = models.EmailField(max_length=200, unique=True)
+    carrier = models.CharField(max_length=200, null=True, blank=True)
+    gender = models.CharField(max_length=50, null=True, blank=True)
     
 
     USERNAME_FIELD = 'email'
