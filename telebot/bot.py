@@ -157,6 +157,52 @@ def send_explanation(update: Update, context: CallbackContext):
         )
 
 
+# this function handles the answers when a poll is selected. it increments each user's score if it is correct
+def poll_answer_handler(update: Update, context: CallbackContext):
+    answer: PollAnswer = update.poll_answer
+    try:
+        # Check if the user's answer is correct
+        print(user_answers[answer.poll_id][-1], ord(user_answers[answer.poll_id][-1]))
+        print(
+            answer.option_ids[0],
+            ord(user_answers[answer.poll_id][-1]) - ord("A"),
+            answer.option_ids[0] == ord(user_answers[answer.poll_id][-1]) - ord("A"),
+        )
+        if answer.option_ids[0] == ord(user_answers[answer.poll_id][-1]) - ord("A"):
+            user_id = answer.user.id
+            scores[user_id] = scores.get(user_id, 0) + 1
+        else:
+            scores[user_id] = scores.get(user_id, 0)
+    except:
+        pass
+
+
+# function for sending the rank of each user
+def send_rankings(update: Update, context: CallbackContext):
+    context.bot.send_chat_action(
+        chat_id=update.effective_chat.id, action=ChatAction.TYPING
+    )
+    try:
+        # Calculate rankings based on scores dictionary
+        ranked_users = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+
+        # Send rankings message
+        rankings_message = "Rankings:\n"
+        for rank, (user_id, score) in enumerate(ranked_users, start=1):
+            user = context.bot.get_chat_member(
+                chat_id=update.effective_chat.id, user_id=user_id
+            ).user
+            rankings_message += f"{rank}. {user.username or user.full_name}: {score}\n"
+
+        context.bot.send_message(
+            chat_id=update.effective_chat.id, text=rankings_message
+        )
+    except:
+        context.bot.send_message(
+            chat_id=update.effective_chat.id, text="No ranking found"
+        )
+
+
 # function for generating question and sending the generating question in a quiz poll format for users
 # it calls the send explanation function 20 seconds after the final poll is sent
 def send_request(update: Update, context: CallbackContext):
@@ -168,44 +214,25 @@ def send_request(update: Update, context: CallbackContext):
     context.bot.send_chat_action(
         chat_id=update.effective_chat.id, action=ChatAction.TYPING
     )
-    question_format = request.send_request_(
-        user_data["file"],
-        user_data["start_page"],
-        user_data["end_page"],
-        user_data["difficulty"],
-    )
-    logging.info("request sent")
-    total_polls = len(question_format["questions"]) - 1
-    for i, question_data in enumerate(question_format["questions"]):
-        question_text = question_data["question"]
-        options = [
-            question_data["optionA"],
-            question_data["optionB"],
-            question_data["optionC"],
-            question_data["optionD"],
-        ]
-        correct_option = question_data["correctOption"]
+    try:
+        question_format = request.send_request_(
+            user_data["file"],
+            user_data["start_page"],
+            user_data["end_page"],
+            user_data["difficulty"],
+        )
+        logging.info("request sent")
+        total_polls = len(question_format["questions"]) - 1
+        for i, question_data in enumerate(question_format["questions"]):
+            question_text = question_data["question"]
+            options = [
+                question_data["optionA"],
+                question_data["optionB"],
+                question_data["optionC"],
+                question_data["optionD"],
+            ]
+            correct_option = question_data["correctOption"]
 
-        try:
-            context.bot.send_chat_action(
-                chat_id=update.effective_chat.id, action=ChatAction.TYPING
-            )
-            sent_poll = context.bot.send_poll(
-                chat_id=update.effective_chat.id,
-                question=question_text,
-                options=options,
-                type=Poll.QUIZ,
-                correct_option_id=ord(correct_option[-1]) - ord("A"),
-                is_anonymous=False,
-                explanation=f'Correct Answer: {question_data["explanation"]}',
-                open_period=20,
-            )
-            polls_sent_count += 1
-            poll_ids.append(sent_poll.poll.id)
-            poll_message_id.append(sent_poll.message_id)
-            user_answers[update.effective_chat.id] = correct_option
-        except:
-            logging.info(i)
             try:
                 context.bot.send_chat_action(
                     chat_id=update.effective_chat.id, action=ChatAction.TYPING
@@ -217,18 +244,41 @@ def send_request(update: Update, context: CallbackContext):
                     type=Poll.QUIZ,
                     correct_option_id=ord(correct_option[-1]) - ord("A"),
                     is_anonymous=False,
-                    explanation="Explanation will be sent when the quiz ends",
+                    explanation=f'Correct Answer: {question_data["explanation"]}',
                     open_period=20,
                 )
                 polls_sent_count += 1
                 poll_ids.append(sent_poll.poll.id)
                 poll_message_id.append(sent_poll.message_id)
-                user_answers[update.effective_chat.id] = correct_option
+                user_answers[sent_poll.poll.id] = correct_option
             except:
-                pass
+                logging.info(i)
+                try:
+                    context.bot.send_chat_action(
+                        chat_id=update.effective_chat.id, action=ChatAction.TYPING
+                    )
+                    sent_poll = context.bot.send_poll(
+                        chat_id=update.effective_chat.id,
+                        question=question_text,
+                        options=options,
+                        type=Poll.QUIZ,
+                        correct_option_id=ord(correct_option[-1]) - ord("A"),
+                        is_anonymous=False,
+                        explanation="",
+                        open_period=20,
+                    )
+                    polls_sent_count += 1
+                    poll_ids.append(sent_poll.poll.id)
+                    poll_message_id.append(sent_poll.message_id)
+                    user_answers[sent_poll.poll.id] = correct_option
+                except:
+                    pass
+    except:
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text="No file found..please upload file first",
+        )
     logging.info("done")
-    logging.info(polls_sent_count)
-    logging.info(total_polls)
     time.sleep(20)
     send_explanation(update=update, context=context)
 
@@ -237,6 +287,7 @@ def send_request(update: Update, context: CallbackContext):
 def register(dispatcher):
     try:
         dispatcher.add_handler(CommandHandler("start", start))
+        dispatcher.add_handler(CommandHandler("result", send_rankings))
         conv_handler = ConversationHandler(
             entry_points=[MessageHandler(Filters.document, Enterfile)],
             states={
@@ -249,6 +300,7 @@ def register(dispatcher):
         )
         dispatcher.add_handler(conv_handler)
         dispatcher.add_handler(CallbackQueryHandler(button_callback))
+        dispatcher.add_handler(PollAnswerHandler(poll_answer_handler))
         dispatcher.add_handler(CommandHandler("help", help))
     except:
         pass
