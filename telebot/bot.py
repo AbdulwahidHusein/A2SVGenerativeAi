@@ -3,11 +3,12 @@ import logging
 import os
 import openai
 import sys
-
-from quiz_app import generator
+import time
+import request
 
 sys.path.append("..")
 from telegram import (
+    Bot,
     Message,
     ChatAction,
     Poll,
@@ -15,6 +16,7 @@ from telegram import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
     File,
+    PollAnswer,
 )
 from telegram.ext import (
     ConversationHandler,
@@ -24,6 +26,7 @@ from telegram.ext import (
     CallbackContext,
     Updater,
     CallbackQueryHandler,
+    PollAnswerHandler,
 )
 from dotenv import load_dotenv
 
@@ -38,9 +41,12 @@ logging.basicConfig(level=logging.INFO)
 # some global variables for storing data.
 user_data = {}
 question_format = {}
-user_answers = []
+user_answers = {}
+scores = {}
 START_PAGE = 0
 END_PAGE = 1
+poll_ids = []
+poll_message_id = []
 
 
 def help(update: Update, context: CallbackContext):
@@ -88,77 +94,88 @@ def cancel(update: Update, context: CallbackContext):
     return ConversationHandler.END
 
 
-# Function for processing the file. It currently works by downloading the file first and then moves on to processing it.
-# working on ways to process the file without downloading it
+# Function for processing the file. It works by downloading the file first and then moves on to processing it.
 def Enterfile(update: Update, context: CallbackContext):
-    global user_data
-    file = update.message.document
-    file_recieved = context.bot.get_file(file_id=file.file_id)
-    file_name = file.file_name
-    user_data["file_name"] = file_name
-    file_downloaded = file_recieved.download()
-    user_data["file"] = file_downloaded
-    with open(file_downloaded, "rb") as f:
+    try:
+        global user_data
+        file = update.message.document
+        file_recieved = context.bot.get_file(file_id=file.file_id)
+        file_name = file.file_name
+        store = file_name.split(".")
+        if store[-1] != "pdf":
+            raise Exception
+        user_data["file_name"] = file_name
+        file_downloaded = file_recieved.download()
         user_data["file"] = file_downloaded
+        with open(file_downloaded, "rb") as f:
+            user_data["file"] = file_downloaded
 
-    reply_text = f"Recieved file: {user_data['file_name']}"
-    user_data["file_name"] = file_name
-    context.bot.send_chat_action(
-        chat_id=update.effective_chat.id, action=ChatAction.TYPING
-    )
-    context.bot.send_message(
-        chat_id=update.effective_chat.id,
-        text=reply_text + "\nEnter start page:",
-    )
-    return START_PAGE
+        reply_text = f"Recieved file: {user_data['file_name']}"
+        user_data["file_name"] = file_name
+        context.bot.send_chat_action(
+            chat_id=update.effective_chat.id, action=ChatAction.TYPING
+        )
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=reply_text + "\nEnter start page:",
+        )
+        return START_PAGE
+    except:
+        context.bot.send_message(
+            chat_id=update.effective_chat.id, text="please upload a valid pdf file"
+        )
 
 
-# this function handles the events that happen after a button is pressed
+# this function handles the events that happen when a button is pressed
 def button_callback(update: Update, context: CallbackContext):
     global user_data
     global difficulty
     query = update.callback_query
-    if query.data.isalnum():
+    if query.data == "easy" or query.data == "medium" or query.data == "difficult":
         user_data["difficulty"] = query.data
         query.message.reply_text(
-            f"diffiiculty set to {user_data['difficulty']}",
+            f"diffiiculty set to {user_data['difficulty']}\nPlease wait till we generate the quiz...",
         )
         send_request(update=update, context=context)
 
 
-def send_result(update: Update, context: CallbackContext):
-    job = context.chat_data.get("job")
-    if job:
-        job.schedule_removal()
+# function for sending explanation.
+def send_explanation(update: Update, context: CallbackContext):
+    try:
+        result_message = "Here are the explanations:\n"
 
-    result_message = "Here is the result:\n"
+        for i, question_data in enumerate(question_format["questions"]):
+            result_message += f"Question {i + 1}: {question_data['question']}\n"
 
-    for i, question_data in enumerate(question_format["questions"]):
-        result_message += f"Question {i + 1}: {question_data['question']}\n"
+            result_message += f"Explanation: {question_data['explanation']}\n\n"
 
-        result_message += f"Explanation: {question_data['explanation']}\n\n"
+        context.bot.send_message(chat_id=update.effective_chat.id, text=result_message)
+    except:
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text="No Explanation found. please upload file to generate quiz first",
+        )
 
-    context.bot.send_message(chat_id=update.effective_chat.id, text=result_message)
 
-
+# function for generating question and sending the generating question in a quiz poll format for users
+# it calls the send explanation function 20 seconds after the final poll is sent
 def send_request(update: Update, context: CallbackContext):
+    global user_data
+    global question_format
+    polls_sent_count = 0
+    total_polls = 0
+
     context.bot.send_chat_action(
         chat_id=update.effective_chat.id, action=ChatAction.TYPING
     )
-    global user_data
-    global question_format
-    with open(user_data["file"], "rb") as f:
-        question_format = generator.get_question(
-            f,
-            5,
-            user_data["difficulty"],
-            int(user_data["start_page"]),
-            int(user_data["end_page"]),
-            mode="multiple_choice",
-            model="chatgpt",
-        )
+    question_format = request.send_request_(
+        user_data["file"],
+        user_data["start_page"],
+        user_data["end_page"],
+        user_data["difficulty"],
+    )
     logging.info("request sent")
-
+    total_polls = len(question_format["questions"]) - 1
     for i, question_data in enumerate(question_format["questions"]):
         question_text = question_data["question"]
         options = [
@@ -170,7 +187,10 @@ def send_request(update: Update, context: CallbackContext):
         correct_option = question_data["correctOption"]
 
         try:
-            context.bot.send_poll(
+            context.bot.send_chat_action(
+                chat_id=update.effective_chat.id, action=ChatAction.TYPING
+            )
+            sent_poll = context.bot.send_poll(
                 chat_id=update.effective_chat.id,
                 question=question_text,
                 options=options,
@@ -178,25 +198,42 @@ def send_request(update: Update, context: CallbackContext):
                 correct_option_id=ord(correct_option[-1]) - ord("A"),
                 is_anonymous=False,
                 explanation=f'Correct Answer: {question_data["explanation"]}',
-                open_period=60,
+                open_period=20,
             )
+            polls_sent_count += 1
+            poll_ids.append(sent_poll.poll.id)
+            poll_message_id.append(sent_poll.message_id)
+            user_answers[update.effective_chat.id] = correct_option
         except:
             logging.info(i)
             try:
-                context.bot.send_poll(
+                context.bot.send_chat_action(
+                    chat_id=update.effective_chat.id, action=ChatAction.TYPING
+                )
+                sent_poll = context.bot.send_poll(
                     chat_id=update.effective_chat.id,
                     question=question_text,
                     options=options,
                     type=Poll.QUIZ,
                     correct_option_id=ord(correct_option[-1]) - ord("A"),
                     is_anonymous=False,
-                    explanation="Use the explain command to get the explanation",
-                    open_period=60,
+                    explanation="Explanation will be sent when the quiz ends",
+                    open_period=20,
                 )
+                polls_sent_count += 1
+                poll_ids.append(sent_poll.poll.id)
+                poll_message_id.append(sent_poll.message_id)
+                user_answers[update.effective_chat.id] = correct_option
             except:
                 pass
+    logging.info("done")
+    logging.info(polls_sent_count)
+    logging.info(total_polls)
+    time.sleep(20)
+    send_explanation(update=update, context=context)
 
 
+# dispatcher
 def register(dispatcher):
     try:
         dispatcher.add_handler(CommandHandler("start", start))
@@ -212,8 +249,6 @@ def register(dispatcher):
         )
         dispatcher.add_handler(conv_handler)
         dispatcher.add_handler(CallbackQueryHandler(button_callback))
-        dispatcher.add_handler(CommandHandler("explain", send_result))
-
         dispatcher.add_handler(CommandHandler("help", help))
     except:
         pass
