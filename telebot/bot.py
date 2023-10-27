@@ -162,8 +162,6 @@ def poll_answer_handler(update: Update, context: CallbackContext):
     answer: PollAnswer = update.poll_answer
     try:
         # Check if the user's answer is correct
-        print(answer, "hi", answer.option_ids[0])
-        print(user_answers, "user hi")
         print(user_answers[answer.poll_id][-1], ord(user_answers[answer.poll_id][-1]))
         print(
             answer.option_ids[0],
@@ -181,7 +179,6 @@ def poll_answer_handler(update: Update, context: CallbackContext):
 
 # function for sending the rank of each user
 def send_rankings(update: Update, context: CallbackContext):
-    print(scores)
     context.bot.send_chat_action(
         chat_id=update.effective_chat.id, action=ChatAction.TYPING
     )
