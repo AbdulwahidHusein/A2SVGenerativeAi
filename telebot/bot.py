@@ -185,18 +185,25 @@ def send_rankings(update: Update, context: CallbackContext):
     context.bot.send_chat_action(
         chat_id=update.effective_chat.id, action=ChatAction.TYPING
     )
-    # Calculate rankings based on scores dictionary
-    ranked_users = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+    try:
+        # Calculate rankings based on scores dictionary
+        ranked_users = sorted(scores.items(), key=lambda x: x[1], reverse=True)
 
-    # Send rankings message
-    rankings_message = "Rankings:\n"
-    for rank, (user_id, score) in enumerate(ranked_users, start=1):
-        user = context.bot.get_chat_member(
-            chat_id=update.effective_chat.id, user_id=user_id
-        ).user
-        rankings_message += f"{rank}. {user.username or user.full_name}: {score}\n"
+        # Send rankings message
+        rankings_message = "Rankings:\n"
+        for rank, (user_id, score) in enumerate(ranked_users, start=1):
+            user = context.bot.get_chat_member(
+                chat_id=update.effective_chat.id, user_id=user_id
+            ).user
+            rankings_message += f"{rank}. {user.username or user.full_name}: {score}\n"
 
-    context.bot.send_message(chat_id=update.effective_chat.id, text=rankings_message)
+        context.bot.send_message(
+            chat_id=update.effective_chat.id, text=rankings_message
+        )
+    except:
+        context.bot.send_message(
+            chat_id=update.effective_chat.id, text="No ranking found"
+        )
 
 
 # function for generating question and sending the generating question in a quiz poll format for users
@@ -210,44 +217,25 @@ def send_request(update: Update, context: CallbackContext):
     context.bot.send_chat_action(
         chat_id=update.effective_chat.id, action=ChatAction.TYPING
     )
-    question_format = request.send_request_(
-        user_data["file"],
-        user_data["start_page"],
-        user_data["end_page"],
-        user_data["difficulty"],
-    )
-    logging.info("request sent")
-    total_polls = len(question_format["questions"]) - 1
-    for i, question_data in enumerate(question_format["questions"]):
-        question_text = question_data["question"]
-        options = [
-            question_data["optionA"],
-            question_data["optionB"],
-            question_data["optionC"],
-            question_data["optionD"],
-        ]
-        correct_option = question_data["correctOption"]
+    try:
+        question_format = request.send_request_(
+            user_data["file"],
+            user_data["start_page"],
+            user_data["end_page"],
+            user_data["difficulty"],
+        )
+        logging.info("request sent")
+        total_polls = len(question_format["questions"]) - 1
+        for i, question_data in enumerate(question_format["questions"]):
+            question_text = question_data["question"]
+            options = [
+                question_data["optionA"],
+                question_data["optionB"],
+                question_data["optionC"],
+                question_data["optionD"],
+            ]
+            correct_option = question_data["correctOption"]
 
-        try:
-            context.bot.send_chat_action(
-                chat_id=update.effective_chat.id, action=ChatAction.TYPING
-            )
-            sent_poll = context.bot.send_poll(
-                chat_id=update.effective_chat.id,
-                question=question_text,
-                options=options,
-                type=Poll.QUIZ,
-                correct_option_id=ord(correct_option[-1]) - ord("A"),
-                is_anonymous=False,
-                explanation=f'Correct Answer: {question_data["explanation"]}',
-                open_period=20,
-            )
-            polls_sent_count += 1
-            poll_ids.append(sent_poll.poll.id)
-            poll_message_id.append(sent_poll.message_id)
-            user_answers[sent_poll.poll.id] = correct_option
-        except:
-            logging.info(i)
             try:
                 context.bot.send_chat_action(
                     chat_id=update.effective_chat.id, action=ChatAction.TYPING
@@ -259,7 +247,7 @@ def send_request(update: Update, context: CallbackContext):
                     type=Poll.QUIZ,
                     correct_option_id=ord(correct_option[-1]) - ord("A"),
                     is_anonymous=False,
-                    explanation="Explanation will be sent when the quiz ends",
+                    explanation=f'Correct Answer: {question_data["explanation"]}',
                     open_period=20,
                 )
                 polls_sent_count += 1
@@ -267,7 +255,32 @@ def send_request(update: Update, context: CallbackContext):
                 poll_message_id.append(sent_poll.message_id)
                 user_answers[sent_poll.poll.id] = correct_option
             except:
-                pass
+                logging.info(i)
+                try:
+                    context.bot.send_chat_action(
+                        chat_id=update.effective_chat.id, action=ChatAction.TYPING
+                    )
+                    sent_poll = context.bot.send_poll(
+                        chat_id=update.effective_chat.id,
+                        question=question_text,
+                        options=options,
+                        type=Poll.QUIZ,
+                        correct_option_id=ord(correct_option[-1]) - ord("A"),
+                        is_anonymous=False,
+                        explanation="",
+                        open_period=20,
+                    )
+                    polls_sent_count += 1
+                    poll_ids.append(sent_poll.poll.id)
+                    poll_message_id.append(sent_poll.message_id)
+                    user_answers[sent_poll.poll.id] = correct_option
+                except:
+                    pass
+    except:
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text="No file found..please upload file first",
+        )
     logging.info("done")
     time.sleep(20)
     send_explanation(update=update, context=context)
