@@ -1,0 +1,40 @@
+.custom-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.actions {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 20px;
+}
+
+.actions button.standings {
+    border: 1px solid;
+    min-height: 50px;
+    min-width: 100px;
+    background-color: #FF800F;
+    border-radius: 5px;
+    color: white;
+    transition: .5s all;
+}
+
+.actions button.standings:hover {
+    border-radius: 5px;
+    border: 1px solid #FF800F;
+    background-color: white;
+    color: black;
+}
+
+.actions .timer {
+    font-size: 20px;
+    font-weight: bold;
+}
+@media (max-width:760px) {
+    #joined-flag{
+        display: none;
+    }
+    
+}
