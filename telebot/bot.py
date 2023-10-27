@@ -94,8 +94,7 @@ def cancel(update: Update, context: CallbackContext):
     return ConversationHandler.END
 
 
-# Function for processing the file. It currently works by downloading the file first and then moves on to processing it.
-# working on ways to process the file without downloading it
+# Function for processing the file. It works by downloading the file first and then moves on to processing it.
 def Enterfile(update: Update, context: CallbackContext):
     try:
         global user_data
@@ -127,7 +126,7 @@ def Enterfile(update: Update, context: CallbackContext):
         )
 
 
-# this function handles the events that happen after a button is pressed
+# this function handles the events that happen when a button is pressed
 def button_callback(update: Update, context: CallbackContext):
     global user_data
     global difficulty
@@ -140,6 +139,7 @@ def button_callback(update: Update, context: CallbackContext):
         send_request(update=update, context=context)
 
 
+# function for sending explanation.
 def send_explanation(update: Update, context: CallbackContext):
     try:
         result_message = "Here are the explanations:\n"
@@ -157,6 +157,7 @@ def send_explanation(update: Update, context: CallbackContext):
         )
 
 
+# this function handles the answers when a poll is selected. it increments each user's score if it is correct
 def poll_answer_handler(update: Update, context: CallbackContext):
     answer: PollAnswer = update.poll_answer
 
@@ -168,6 +169,7 @@ def poll_answer_handler(update: Update, context: CallbackContext):
         scores[user_id] = scores.get(user_id, 0) + 1
 
 
+# function for sending the rank of each user
 def send_rankings(update: Update, context: CallbackContext):
     logging.info(scores)
     logging.info(user_answers)
@@ -188,12 +190,17 @@ def send_rankings(update: Update, context: CallbackContext):
     context.bot.send_message(chat_id=update.effective_chat.id, text=rankings_message)
 
 
+# function for sending request to openai for generating question and sending the poll to users
+# it calls the send explanation function 20 seconds after the final poll is sent
 def send_request(update: Update, context: CallbackContext):
     global user_data
     global question_format
     polls_sent_count = 0
     total_polls = 0
 
+    context.bot.send_chat_action(
+        chat_id=update.effective_chat.id, action=ChatAction.TYPING
+    )
     with open(user_data["file"], "rb") as f:
         question_format = generator.get_question(
             f,
@@ -263,6 +270,7 @@ def send_request(update: Update, context: CallbackContext):
     send_explanation(update=update, context=context)
 
 
+# dispatcher
 def register(dispatcher):
     try:
         dispatcher.add_handler(CommandHandler("start", start))
