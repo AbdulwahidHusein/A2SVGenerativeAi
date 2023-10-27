@@ -16,6 +16,7 @@
     min-height: 50px;
     min-width: 100px;
     background-color: #FF800F;
+    border-radius: 5px;
     color: white;
     transition: .5s all;
 }

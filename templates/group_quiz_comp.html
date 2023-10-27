@@ -9,7 +9,8 @@
     <script defer>
         const groupQuiz = true;
         const groupId = {{group_quiz.id}}
-        let QuizId = {{group_quiz.quiz.id|safe}};
+        
+        let QuizId = {{group_quiz.id|safe}};
         let shuffledQuestions  = {{ questions|safe }};
         console.log(shuffledQuestions);
         //shuffledQuestions = JSON.parse(shuffledQuestions);

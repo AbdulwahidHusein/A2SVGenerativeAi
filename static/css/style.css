@@ -264,3 +264,9 @@ nav{
 .footer .copyright a:hover {
     color: #FFFFFF;
 }
+.bg-light{
+    border-radius: 5px;
+}
+.get-started-btn{
+    border-radius: 5px;
+}

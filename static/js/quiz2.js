@@ -32,7 +32,7 @@ function NextQuestion(index) {
     if (groupQuiz){
         var csrftoken = getCookie('csrftoken');
         var formData = new FormData();
-        formData.append('id', QuizId);
+        formData.append('id', groupId);
         formData.append('score', playerScore);
         
      // Add CSRF token to request headers
