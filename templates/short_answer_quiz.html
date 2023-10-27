@@ -1,0 +1,36 @@
+{% extends "index2.html" %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="{%static 'css/short_answer_page.css'%}" />
+<script defer>
+    var quizD = {{quiz|safe}};
+    let quizData = {"questions":[]};
+    quizData.questions = quizD
+    console.log(quizData);
+</script>
+    <div class="containerr" id="cont">
+      <div id="quiz-page">
+
+        <div id="quiz" class="quiz-container">
+            <div id="question-container" class="question-container">
+                <h2 id="question-number" class="question-number"></h2>
+                <p id="question-text" class="question-text"></p>
+                <input type="text" id="answer" class="answer-input" placeholder="Enter your answer">
+            </div>
+            <button id="submit" class="submit-button btn btn-primary">Next</button>
+        </div>
+
+        <div id="result" class="result-container" style="display:none;">
+            <h2 class="score-label">Quiz completed</h2>
+            <button id="judge-button" class="btn btn-primary">Judge my Answers</div>
+            <p class="score-value" id="score-value"></p>
+        </div>
+     </div>
+    </div>
+     <div  class="explanation-area" id="explanation-area" style="display:none">
+     </div>
+    
+    <script src="{% static 'js/short_answer_quiz_page.js' %}">
+
+{% endblock content %}

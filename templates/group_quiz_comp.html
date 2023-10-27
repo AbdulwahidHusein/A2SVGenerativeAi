@@ -99,7 +99,8 @@
             if (started){
                 document.getElementById('quiz-main').style.display = 'block'
             }
-    </script>
+    </script> 
+
 
 <div class="quiz-page">
     <div class="actions">
@@ -107,7 +108,7 @@
         <div id="timer">
             <!-- {{ timer_minutes }}:{{ timer_seconds }} If the time is passed as a prop -->
         </div>
-        {%if has_user_joined %}<p>Joined</p>
+        {%if has_user_joined %}<p id="joined-flag">Joined</p>
         {%else%}
         <form method="post" action="{%url 'join_group' group_quiz.id %}">
             {% csrf_token %}
@@ -165,12 +166,7 @@
     
           <div class="game-options-container">
             <div class="modal-container" id="option-modal">
-              <div class="modal-content-container">
-                <h1>Please Pick An Option</h1>
-                <div class="modal-button-container">
-                  <button id="close-modal-btn">Continue</button>
-                </div>
-              </div>
+                <p style="color:red">Please Pick An Option</p>
             </div>
     
             <span class="choice">

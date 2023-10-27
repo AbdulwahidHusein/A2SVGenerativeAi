@@ -15,6 +15,9 @@ from quiz_app.api.api_caller import OpenAi
 import os
 from dotenv import load_dotenv
 load_dotenv()
+from quiz_app.api.parse_response_v2 import parse_short_answer_submission
+from io import BytesIO
+
 OPEN_AI_API_KEY  = os.getenv('OPEN_AI_API_KEY')
 
 
@@ -107,6 +110,15 @@ def chat(request):
 
     return render(request, 'chat2.html', {'prev_chats': chats, 'response': response})
 
+def judge_short_answer_submissions(request):
+    user_submission = request.POST.get('submission')
+    opena = OpenAi(OPEN_AI_API_KEY)
+    ai_response = opena.gudge_short_answer_submission(user_submission)
+    response_list = parse_short_answer_submission(ai_response)
+    print(response_list)
+    return JsonResponse({"response":response_list})
+
+    
 @login_required(login_url='login')
 def user_logout(request):
     logout(request)
@@ -115,17 +127,20 @@ def user_logout(request):
 def home(request):
     return render(request, 'home2.html')
 
+def test_sh(request):
+    return render(request, 'short_answer_quiz.html')
 
 @login_required(login_url='login')
 def handle_upload(request):
     user = request.user
     if request.method == 'POST':
         uploaded_file = request.FILES.get('file')
-        num_of_questions = request.POST.get('qnumber')
+        num_of_questions = int(request.POST.get('qnumber'))
         difficulty = request.POST.get('difficulty')
         spage = int(request.POST.get('spage'))
         epage = int(request.POST.get('epage'))
         comment = request.POST.get('additional_comment')
+        mode = request.POST.get('qtype')
         
         if not uploaded_file or not num_of_questions or not difficulty or not spage or not epage:
             return HttpResponseRedirect(reverse('upload'))  # Redirect to upload page or appropriate URL
@@ -135,16 +150,23 @@ def handle_upload(request):
             file.save()
             
             try:
-                questions = get_question(uploaded_file, num_of_questions, difficulty, spage, epage, 'multiple_choice', 'chatgpt')
+                questions = get_question(uploaded_file, num_of_questions, difficulty, spage, epage, mode, 'chatgpt')
                 if questions:
-                    title = questions['questions'][0]['question']
-                    quiz = Quiz.objects.create(generated_by=user, questions=str(questions), size=5, title=title)
-                    quiz.save()
-                    return render(request, 'quiz3.html', {'questions': questions['questions'], 'id': quiz.id})
+                    if mode == "multiple_choice":
+                        title = questions['questions'][0]['question']
+                        quiz = Quiz.objects.create(generated_by=user, questions=str(questions), size=5, title=title)
+                        quiz.save()
+                        return render(request, 'quiz3.html', {'questions': questions['questions'], 'id': quiz.id})
+                    else:
+                        title = questions[0]
+                        quiz = Quiz.objects.create(generated_by=user, questions=str(questions), size=5, title=title, mode="short_answer")
+                        quiz.save()
+                        return render(request, "short_answer_quiz.html", {'quiz':questions})
                 else:
                     # Handle case when questions are not available
                     return HttpResponseRedirect(reverse('upload')) 
             except Exception as e:
+                return HttpResponse(e)
                 question = get_q()
         
         except Exception as e:
@@ -152,13 +174,16 @@ def handle_upload(request):
             return HttpResponseRedirect(reverse('upload'))  # Redirect to upload page or appropriate URL
     
     return render(request, 'upload.html')
-
+@login_required(login_url='login')
 def get_quiz(request, id):
     try:
         user = request.user
         quiz = Quiz.objects.get(pk=id)
 
         if quiz.generated_by.id == user.id:
+            if quiz.mode == "short_answer":
+                questions = eval(quiz.questions)
+                return render(request, 'short_answer_quiz.html', {'quiz':questions, "id":quiz.id})
             questions = quiz.questions
             questions = re.sub(r"'", '"', questions)
             print(questions)
@@ -172,6 +197,21 @@ def get_quiz(request, id):
         raise Http404("Quiz does not exist")
     except Exception as e:
         return redirect('error_page') 
+@login_required(login_url='login')
+def get_json_quiz(request, id):
+    user = request.user
+    quiz = Quiz.objects.get(pk=id)
+    if quiz.generated_by.id == user.id:
+            if quiz.mode == "short_answer":
+                questions = eval(quiz.questions)
+                return render(request, 'short_answer_quiz.html', {'quiz':questions, "id":quiz.id})
+            questions = quiz.questions
+            questions = re.sub(r"'", '"', questions)
+            print(questions)
+            questions = json.loads(questions)
+            return JsonResponse(questions)
+    return JsonResponse({"response":"unavailable"})
+
 
 @login_required(login_url='login')
 def handle_quiz_submit(request):
@@ -326,20 +366,26 @@ def generate_quiz_from_uploaded_file(request, id):
     file_obj = File.objects.get(pk=id)
     if file_obj:
         if request.method == 'POST':
-            num_of_questions = request.POST.get('qnumber')
+            num_of_questions = int(request.POST.get('qnumber'))
             difficulty = request.POST.get('difficulty')
             spage = int(request.POST.get('spage'))
             epage = int(request.POST.get('epage'))
             comment = request.POST.get('additional_comment')
+            mode = request.POST.get('qtype')
                 
             try:
-                    questions = get_question(file_obj.file, num_of_questions, difficulty, spage, epage, 'multiple_choice', 'chatgpt')
+                    questions = get_question(file_obj.file, num_of_questions, difficulty, spage, epage, mode, 'chatgpt')
                     if questions:
-                        title = questions['questions'][0]['question']
-                        quiz = Quiz.objects.create(generated_by=user, questions=str(questions), size=5, title=title)
-                        quiz.save()
-                        return render(request, 'quiz3.html', {'questions': questions['questions'], 'id': quiz.id})
-
+                        if mode == "multiple_choice":
+                            title = questions['questions'][0]['question']
+                            quiz = Quiz.objects.create(generated_by=user, questions=str(questions), size=5, title=title)
+                            quiz.save()
+                            return render(request, 'quiz3.html', {'questions': questions['questions'], 'id': quiz.id})
+                        else:
+                            title = questions[0]
+                            quiz = Quiz.objects.create(generated_by=user, questions=str(questions), size=5, title=title, mode="short_answer")
+                            quiz.save()
+                            return render(request, "short_answer_quiz.html", {'quiz':questions})
             except Exception as e:
                 print(e)
                 question = get_q()
@@ -348,3 +394,29 @@ def generate_quiz_from_uploaded_file(request, id):
             return HttpResponse("Get not allowed")
     else:
         return HttpResponse("Filee not Found")
+    
+
+def accept_json_book(request):
+    if request.method == "POST":
+        json_data = json.loads(request.body)
+        book_data = json_data.get('book')
+        spage = json_data.get('spage')
+        epage = json_data.get('epage')
+        qnumber = json_data.get('qnumber')
+        difficulty = json_data.get('difficulty')
+        file_obj = BytesIO(book_data)
+        
+        get_question()
+        return
+    '''
+    with open('book.pdf', 'rb') as file:
+        book_data = file.read()
+    payload = {
+    'book': book_data
+    others
+    }
+    url = 'https://example.com/get_questions/'
+    response = requests.post(url, json=payload)
+```
+```
+    '''

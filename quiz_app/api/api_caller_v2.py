@@ -31,20 +31,13 @@ Explanation: The threat landscape in cyberspace is constantly evolving and inclu
 
 '''
 
-short_answer_question_format = {
-    'questions': [
-   {
-      "question": "question1"
-    },
-     {
-      "question": "question2"
-    },
-     {
-      "question": "question3"
-    }
-     
+short_answer_question_format = '''
+[
+    Why is cybersecurity important?
+    What does the threat landscape in cyberspace include?
 ]
-}
+'''
+
 
 class GenerateQuestionRequest:
     
@@ -59,7 +52,7 @@ class GenerateQuestionRequest:
         if mode == 'multiple_choice':
             prompt = prompt_generator.make_multiple_choice_prompt(number_of_questions, multiple_choice_question_format)
         elif mode == 'short_answer':
-            prompt = prompt_generator.make_short_answer_propmt(number_of_questions, short_answer_question_format)
+            prompt = prompt_generator.make_short_answer_prompt(number_of_questions, short_answer_question_format)
         else:
             prompt = prompt_generator.make_multiple_choice_prompt(number_of_questions, multiple_choice_question_format)
         
@@ -67,7 +60,7 @@ class GenerateQuestionRequest:
             open_ai = OpenAi(OPEN_AI_API_KEY)
             generated_questions = open_ai.generate_question(prompt)
             print(generated_questions)
-            parsed = ResponseParser(generated_questions)
+            parsed = ResponseParser(generated_questions, mode)
             parsed = parsed.get_json_data()
             return parsed
 
@@ -89,6 +82,6 @@ if __name__ == '__main__':
 
 
     generator = GenerateQuestionRequest(text, 'chatgpt')
-    data = generator.make_request(50, 'medium', 'multiple_choice')
+    data = generator.make_request(5, 'medium', 'short_answer')
 
     print(data)

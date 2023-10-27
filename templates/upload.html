@@ -1,7 +1,7 @@
 {% extends "index2.html" %}
-
+{% load static %}
 {% block content %}
-
+<script src="{% static 'js/file_upload.js' %}"></script>
     <!-- Contact Start -->
     <div class="container-xxl py-5">
         <div class="container">
@@ -12,9 +12,9 @@
                     <form method="post" enctype="multipart/form-data" id="quizForm">
                         {% csrf_token %}
                         <div class="row g-3">
-                            <div class="col-md-6">
+                            <div class="col">
                                 <div class="form-floating">
-                                    <input type="file" name="file" class="form-control" id="name" >
+                                    <input type="file" name="file" class="form-control file-upload-input" id="name" >
                                     <label for="name">Your Document</label>
                                 </div>
                                 <small id="fileError" class="text-danger"></small>
@@ -46,13 +46,32 @@
                                 </div>
                                 <small id="spageError" class="text-danger"></small>
                             </div>
-                            <div class="col-6">
+                            <div class="col-md-6">
                                 <div class="form-floating">
                                     <input type="number" name="epage" class="form-control" id="endPage" placeholder="End Page">
                                     <label for="endPage">End Page</label>
                                 </div>
                                 <small id="epageError" class="text-danger"></small>
                             </div>
+
+                            <div class="col">
+                                <div class="form-floating">
+                                    <select id="difficulty" name="qtype" class="form-control" >
+                                        <option value="multiple_choice">
+                                            multiple Choice
+                                        </option>
+                                        <option value="short_answer">
+                                            short Answer
+                                        </option>
+                                        <option value="true_false" disabled>
+                                            True False
+                                        </option>
+                                    </select>
+                                    <label for="difficulty">Select Type of Question</label>
+                                </div>
+                                <small id="difficultyError" class="text-danger"></small>
+                            </div>
+
                             <p class="">Specify the number of questions</p>
                             <div class="col-md-6">
                                 <div class="form-floating">
@@ -63,7 +82,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <textarea class="form-control" name="additional_comment" placeholder="Leave a message here" id="additionalComment" style="height: 100px"></textarea>
+                                    <input class="form-control" name="additional_comment" placeholder="Leave a message here" id="additionalComment">
                                     <label for="additionalComment">Additional Comments</label>
                                 </div>
                             </div>
@@ -99,6 +118,13 @@
             if (fileInput.files.length === 0) {
                 document.getElementById('fileError').textContent = 'Please select a file.';
                 errors = true;
+            }
+            else{
+                uploadMessage = fileSelect()
+                if (uploadMessage !== true){
+                    document.getElementById('fileError').textContent = uploadMessage
+                    errors = true;
+                }
             }
     
             if (difficultyInput.value === '') {

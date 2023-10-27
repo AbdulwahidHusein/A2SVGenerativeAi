@@ -15,8 +15,9 @@ import re
 # D. All of the above
 
 class ResponseParser:
-    def __init__(self, generated_messsage) -> None:
+    def __init__(self, generated_messsage, mode) -> None:
         self.generated_message = generated_messsage
+        self.mode = mode
         
     def replace_new_lines(self, text):
         pattern =  r"\n(?! *([ABCD]\.|Corr|Exp))"
@@ -71,10 +72,42 @@ class ResponseParser:
 
                 quiz_data.append(question_data)
             return quiz_data
+    def parse_short_answer(self):
+        match = re.search(r'\[(.+)\]', self.generated_message, re.DOTALL)
+        if match:
+            self.generated_message = match.group(1)
+        quiz_data = []
+        for line in self.generated_message.split('\n'):
+            if line.strip():
+                quiz_data.append(line.strip())
+        return quiz_data
+    
     def get_json_data(self):
+        if self.mode == "short_answer":
+            return self.parse_short_answer()
         supported_format = {}
         data =  self._parse_multiple_choice()
         supported_format['questions'] = data
         
         return supported_format
+
+def parse_short_answer_submission(response):
+        if ']' not in response[-5:]:
+            response  = response + ']'
+        match = re.search(r'\[(.+)\]', response, re.DOTALL)
+
+        if match:
+            feedback = match.group(1)
+        if feedback:
+            feedbacks = feedback.strip().split("$$$$")
+            cont = []
+            for single_feedback in feedbacks:
+                arr = []
+                lines = single_feedback.strip().split('\n')
+                for line in lines:
+                    arr.append(line.strip())
+                cont.append(arr)
+            return cont
+        else:
+            return False
         

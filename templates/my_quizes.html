@@ -2,47 +2,94 @@
 
 {% block content %}
 {% load static %}
-    <style>
-        .custom-container {
-            min-height: 80vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-    </style>
-    <body>
-        <div class="container-xxl py-5 custom-container">
-            <div class="container text-center">
-                {% if quizes %}
-                    {% for quiz in quizes %}
-                        <div class="row border border-primary rounded p-3 mt-3 d-flex justify-content-center align-items-center">
-                            <div class="col-md-6">
-                                {{ quiz.title }}
-                            </div>
-                            <div class="col-md-3">
-                                Your previous Score: {{ quiz.user_score }} / 10
-                            </div>
-                            <div class="col-md-3">
-                                <a href="{%url 'quiz' quiz.id %}">Retake quiz</a>
-                            </div>
-                            <Button onClick="exportQuiz({{quiz.id}})" class="btn btn-primary" style="margin-top:20px; width:50%">
-                                Export
-                            </Button>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <h1>You haven't taken any quizzes yet.</h1>
-                {% endif %}
-            </div>
+<style>
+    .custom-container {
+        min-height: 80vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .quiz-card {
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .quiz-card h {
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+
+    .quiz-card p {
+        margin-bottom: 0;
+    }
+
+    .quiz-card .score {
+        font-weight: bold;
+    }
+
+    .quiz-card .btn {
+        margin-top: 10px;
+    }
+</style>
+<body>
+    <div class="container-fluid py-5 custom-container">
+        <div class="container">
+            {% if quizes %}
+                {% for quiz in quizes %}
+                    <div class="quiz-card">
+                        <h>{{ quiz.title }}</h>
+                        <p>Your previous Score: <span class="score">{{ quiz.user_score }} / 10</span></p>
+                        <a href="{% url 'quiz' quiz.id %}" class="btn btn-primary btn-sm">Retake Quiz</a>
+                        <button onclick="exportQuiz({{ quiz.id }})" class="btn btn-primary btn-sm">Export</button>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <h1>You haven't taken any quizzes yet.</h1>
+            {% endif %}
         </div>
-    </body>
-    <script>
-        function exportQuiz(quiz){
-            let quizz = ""
-           {% for q in quizes %}
-           
-           {%endfor%}
-        }
-    </script>
+    </div>
+</body>
+<script>
+    function exportQuiz(quizId) {
+        fetch(`/get_quiz_json/${quizId}`)
+            .then(response => response.json())
+            .then(data => {
+                const quizData = formatQuizData(data);
+                const filename = `quiz_${quizId}.txt`;
+
+                const blob = new Blob([quizData], { type: 'text/plain' });
+                const anchor = document.createElement('a');
+                anchor.href = window.URL.createObjectURL(blob);
+                anchor.download = filename;
+                anchor.click();
+                anchor.remove();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    function formatQuizData(data) {
+        let formattedQuizData = '';
+
+        data.questions.forEach((question, index) => {
+            formattedQuizData += `Question ${index + 1}:\n`;
+            formattedQuizData += `  ${question.question}\n`;
+            formattedQuizData += `  Options:\n`;
+            formattedQuizData += `    A. ${question.optionA}\n`;
+            formattedQuizData += `    B. ${question.optionB}\n`;
+            formattedQuizData += `    C. ${question.optionC}\n`;
+            formattedQuizData += `    D. ${question.optionD}\n`;
+            formattedQuizData += `  Correct Option: ${question.correctOption}\n`;
+            formattedQuizData += `  Explanation: ${question.explanation}\n\n`;
+        });
+
+        return formattedQuizData;
+    }
+</script>
 {% endblock content %}

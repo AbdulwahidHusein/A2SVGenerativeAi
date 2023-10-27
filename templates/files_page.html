@@ -6,8 +6,8 @@
   {% for file in files %}
     {% if file.file %}
       <div class="file-item">
-        <span class="file-subject">{{ file.subject }}</span>
-        <a href="{% url 'download_file' file.id %}" class="btn btn-primary">Download</a>
+        <span class="file-subject"> <i style="margin-right:5px; color:red" class="fa fa-file-pdf-o"></i>{{ file.subject }}</span>
+        <a style="margin-right:10px;"" href="{% url 'download_file' file.id %}" class="btn btn-primary">Download</a>
         <button onClick="showForm('{{ file.name }}', '{{ file.id }}')" class="btn btn-primary">Generate a quiz from this book</button>
       </div>
     {% endif %}
@@ -32,6 +32,13 @@
           <option value="medium">Medium</option>
           <option value="hard">Hard</option>
         </select>
+
+        <label for="difficulty">Question Type:</label>
+        <select id="qtype" name="qtype" required>
+          <option value="multiple_choice">multiple choice</option>
+          <option value="short_answer">short answer</option>
+          <option value="true_false" disabled>True False</option>
+        </select>
       
         <label for="start_page">Start Page:</label>
         <input type="number" id="spage" name="spage" required>
@@ -39,11 +46,14 @@
         <label for="end_page">End Page:</label>
         <input type="number" id="epage" name="epage" required>
       
-        <input type="submit" value="Generate">
+        <input type="submit" onClick="showLoader()" value="Generate">
       </form>
   </div>
 </div>
 <script>
+  function showLoader(){
+    document.getElementById('loader').style.display = 'block'
+  }
   function showForm(fileName, fileId) {
     var formPopup = document.getElementById("form-popup");
     formPopup.style.display = "block";
