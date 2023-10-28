@@ -42,13 +42,13 @@
                 {% for quiz in quizes %}
                     <div class="quiz-card">
                         <h>{{ quiz.title }}</h>
-                        <p>Your previous Score: <span class="score">{{ quiz.user_score }} / {{quiz.size}}</span></p>
+                        <p>Your previous Score: <span class="score">{{ quiz.user_score }} / 10</span></p>
                         <a href="{% url 'quiz' quiz.id %}" class="btn btn-primary btn-sm">Retake Quiz</a>
                         <button onclick="exportQuiz({{ quiz.id }})" class="btn btn-primary btn-sm">Export</button>
                     </div>
                 {% endfor %}
             {% else %}
-                <h1>You haven't taken any quizzes yet.</h1>
+                <h1>You do not have taken any quizzes yet.</h1>
             {% endif %}
         </div>
     </div>

@@ -97,15 +97,18 @@ WSGI_APPLICATION = 'quiz_project.wsgi.application'
 # DATABASES = {
 #     'default':dj_database_url.parse(os.environ.get("DATABASE_URL"))
 # }
-
+'''
+here we understand that releasing sensitive informations like below can be potentially harmful
+but the below database credentials are generated for demo prepouse without any account
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'railway',
         'USER': 'postgres',
-        'PASSWORD': 'f*ABdAgB16Df*2D-4dGAebBC4eADcDAe',
-        'HOST': 'monorail.proxy.rlwy.net',
-        'PORT': '37859',
+        'PASSWORD': 'BF4a-6DG-1cceF13E-e3Ea16aFC1*gbf',
+        'HOST': 'viaduct.proxy.rlwy.net',
+        'PORT': '28125',
     }
 }
 

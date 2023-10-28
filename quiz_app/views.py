@@ -258,7 +258,7 @@ def get_group_quiz_info(request, id):
     try:
         user = request.user
         data = {}
-        group_quiz = get_object_or_404(GroupQuiz, pk=id)
+        group_quiz = get_object_or_404(GroupQuiz, id=id)
 
         has_user_joined = False
         if group_quiz.joined_members.filter(id=user.id).exists():
@@ -286,8 +286,6 @@ def get_group_quiz_info(request, id):
 
     except GroupQuiz.DoesNotExist:
         raise Http404("Group quiz does not exist")
-    except Exception as e:
-        return render(request, 'error_page.html', {"error_message": str(e)})
     
 @login_required(login_url='login')   
 def handle_join_group(request, id):
