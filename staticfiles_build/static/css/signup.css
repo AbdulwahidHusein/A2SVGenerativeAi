@@ -1,0 +1,36 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.card {
+  border: none;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.form-label {
+  margin-bottom: 0.5rem;
+}
+
+.invalid-feedback {
+ margin-top: 0.25rem;
+  color: red;
+}
+
+.form-check-label {
+  margin-bottom: 0.5rem;
+}
+
+.btn-primary {
+  width: 100%;
+}
+
+.text-center {
+  margin-top: 1rem;
+}

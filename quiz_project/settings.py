@@ -13,11 +13,13 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-import dj_database_url
+#import dj_database_url
 load_dotenv()
-
-BARD_API_KEY = os.getenv("BARD_API_KEY")
-OPEN_AI_API_KEY  = os.getenv('OPEN_AI_API_KEY')
+try:
+    BARD_API_KEY = os.getenv("BARD_API_KEY")
+    OPEN_AI_API_KEY  = os.getenv('OPEN_AI_API_KEY')
+except:
+    pass
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -78,6 +80,7 @@ TEMPLATES = [
     },
 ]
 
+
 WSGI_APPLICATION = 'quiz_project.wsgi.application'
 
 
@@ -90,8 +93,20 @@ WSGI_APPLICATION = 'quiz_project.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+# DATABASES = {
+#     'default':dj_database_url.parse(os.environ.get("DATABASE_URL"))
+# }
+
 DATABASES = {
-    'default':dj_database_url.parse(os.environ.get("DATABASE_URL"))
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'railway',
+        'USER': 'postgres',
+        'PASSWORD': 'f*ABdAgB16Df*2D-4dGAebBC4eADcDAe',
+        'HOST': 'monorail.proxy.rlwy.net',
+        'PORT': '37859',
+    }
 }
 
 
@@ -130,10 +145,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
+STATIC_URL = 'static/'
+
+STATICFILES_DIRS = os.path.join(BASE_DIR, 'static'),
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
 
 MEDIA_URL = '/files/'
 # Default primary key field type

@@ -327,7 +327,7 @@ def update_scoreboard(request):
     user = request.user
     id = request.POST.get('id')
     score = request.POST.get('score')
-    score_holder = ScoreHolder.objects.get(group_quiz__quiz__id=id, competitor=user)
+    score_holder = ScoreHolder.objects.get(group_quiz_id=id, competitor=user)
     score_holder.score = score
     score_holder.save()
     return JsonResponse({"status":"okay"}, safe=False)
