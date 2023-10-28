@@ -97,6 +97,8 @@ def cancel(update: Update, context: CallbackContext):
 def Enterfile(update: Update, context: CallbackContext):
     try:
         global user_data
+        global scores
+        scores = {}
         file = update.message.document
         file_recieved = context.bot.get_file(file_id=file.file_id)
         file_name = file.file_name
@@ -158,6 +160,7 @@ def send_explanation(update: Update, context: CallbackContext):
 
 # this function handles the answers when a poll is selected. it increments each user's score if it is correct
 def poll_answer_handler(update: Update, context: CallbackContext):
+    global scores
     answer: PollAnswer = update.poll_answer
     try:
         # Check if the user's answer is correct
@@ -178,6 +181,7 @@ def poll_answer_handler(update: Update, context: CallbackContext):
 
 # function for sending the rank of each user
 def send_rankings(update: Update, context: CallbackContext):
+    global scores
     context.bot.send_chat_action(
         chat_id=update.effective_chat.id, action=ChatAction.TYPING
     )
@@ -284,25 +288,24 @@ def send_request(update: Update, context: CallbackContext):
 
 # dispatcher
 def register(dispatcher):
-    try:
-        dispatcher.add_handler(CommandHandler("start", start))
-        dispatcher.add_handler(CommandHandler("result", send_rankings))
-        conv_handler = ConversationHandler(
-            entry_points=[MessageHandler(Filters.document, Enterfile)],
-            states={
-                START_PAGE: [
-                    MessageHandler(Filters.text & ~Filters.command, set_start)
-                ],
-                END_PAGE: [MessageHandler(Filters.text & ~Filters.command, set_end)],
-            },
-            fallbacks=[CommandHandler("cancel", cancel)],
-        )
-        dispatcher.add_handler(conv_handler)
-        dispatcher.add_handler(CallbackQueryHandler(button_callback))
-        dispatcher.add_handler(PollAnswerHandler(poll_answer_handler))
-        dispatcher.add_handler(CommandHandler("help", help))
-    except:
-        pass
+    dispatcher.add_handler(CommandHandler("start", start))
+    dispatcher.add_handler(CommandHandler("result", send_rankings))
+    conv_handler = ConversationHandler(
+        entry_points=[
+            MessageHandler(
+                Filters.document & ~Filters.text & ~Filters.command, Enterfile
+            )
+        ],
+        states={
+            START_PAGE: [MessageHandler(Filters.text & ~Filters.command, set_start)],
+            END_PAGE: [MessageHandler(Filters.text & ~Filters.command, set_end)],
+        },
+        fallbacks=[CommandHandler("cancel", cancel)],
+    )
+    dispatcher.add_handler(conv_handler)
+    dispatcher.add_handler(CallbackQueryHandler(button_callback))
+    dispatcher.add_handler(PollAnswerHandler(poll_answer_handler))
+    dispatcher.add_handler(CommandHandler("help", help))
 
 
 # driver function
