@@ -81,3 +81,6 @@ class File(models.Model):
     subject = models.CharField(max_length=500, null=True, blank=True)
     uploaded_by = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING)
     file = models.FileField(upload_to="files/", null=True, blank=True)
+    
+    def __str__(self) -> str:
+        return self.uploaded_by.first_name
