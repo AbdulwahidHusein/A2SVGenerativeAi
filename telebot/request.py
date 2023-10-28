@@ -1,8 +1,9 @@
 import requests
 import base64
 
+# if you are running this locally, make sure to change the url to the ip of the local host.
+# example: url = 'http://192.168.137.1:8000/get_questions/'
 url = "http://192.168.137.1:8000/get_questions/"
-
 
 def send_request_(file, start, end, difficulty):
     with open(file, "rb") as file:
