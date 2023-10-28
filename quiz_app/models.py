@@ -83,4 +83,4 @@ class File(models.Model):
     file = models.FileField(upload_to="files/", null=True, blank=True)
     
     def __str__(self) -> str:
-        return self.subject +' '+ self.uploaded_by.first_name
+        return self.uploaded_by.first_name
