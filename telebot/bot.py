@@ -1,4 +1,3 @@
-import json
 import logging
 import os
 import openai
@@ -56,7 +55,7 @@ def help(update: Update, context: CallbackContext):
 # The start function
 def start(update: Update, context: CallbackContext):
     update.message.reply_text(
-        "Hello There, please enter file so we can change it to qize for you!"
+        "Hello There, please enter file so we can change it to quiz for you!"
     )
 
 
@@ -134,7 +133,7 @@ def button_callback(update: Update, context: CallbackContext):
     if query.data == "easy" or query.data == "medium" or query.data == "difficult":
         user_data["difficulty"] = query.data
         query.message.reply_text(
-            f"diffiiculty set to {user_data['difficulty']}\nPlease wait till we generate the quiz...",
+            f"diffiiculty set to {user_data['difficulty']}\nPlease wait while we generate the quiz...",
         )
         send_request(update=update, context=context)
 
@@ -153,7 +152,7 @@ def send_explanation(update: Update, context: CallbackContext):
     except:
         context.bot.send_message(
             chat_id=update.effective_chat.id,
-            text="No Explanation found. please upload file to generate quiz first",
+            text="No Explanation found.",
         )
 
 
