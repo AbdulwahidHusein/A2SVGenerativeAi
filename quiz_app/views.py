@@ -354,7 +354,7 @@ def download_file(request, id):
     file = file_obj.file
     try:
         with open(file.path, 'rb') as fb:
-            file_data = file.read()
+            file_data = fb.read()
         response = HttpResponse(file_data, content_type = 'application/octet-stream')
         response['Content-Disposition'] = 'attachment; filename="{}"'.format(file.name)
         return response
