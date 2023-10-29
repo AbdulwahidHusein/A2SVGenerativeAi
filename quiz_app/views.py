@@ -149,8 +149,10 @@ def handle_upload(request):
             return HttpResponseRedirect(reverse('upload'))  # Redirect to upload page or appropriate URL
         
         try:
-            file = File.objects.create(file=uploaded_file, subject=uploaded_file.name, uploaded_by=user)
-            file.save()
+            files = File.objects.all().filter(uploaded_by=user)
+            if len(files) < 2:
+                file = File.objects.create(file=uploaded_file, subject=uploaded_file.name, uploaded_by=user)
+                file.save()
             
             try:
                 questions = get_question(uploaded_file, num_of_questions, difficulty, spage, epage, mode, 'chatgpt')

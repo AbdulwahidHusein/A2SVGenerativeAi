@@ -9,14 +9,13 @@ class PromptGenerator:
 
         self.difficulty = difficulty
         if difficulty == 'easy':
-            self.difficulty_sentences = 'the generated questions should be easy so that elementart students can answer'
+            self.difficulty_sentences = 'The questions should be designed with simplicity in mind but logical, making them accessible to individuals who possess basic knowledge of the topic.'
         elif difficulty == 'medium':
-            self.difficulty_sentences = 'the generated questions should have medium difficulty so that avarage persons can answer them'
+            self.difficulty_sentences = 'The questions should offer a moderate level of challenge, suitable for individuals with an average understanding of the topic.'
         else:
-            self.difficulty_sentences = 'the generated questions should be so hard that only person who deeply understand the topic can answer any of the questions'
-            
+            self.difficulty_sentences = 'The questions should be intentionally difficult, requiring a deep comprehension of the topic for anyone attempting to answer them. onlyindividuls having a deeper understanding of the content should answer these questions'
     def make_multiple_choice_prompt(self, number_of_questions, question_format):
-        prompt = f'''You are helpful Quiz generator
+        prompt = f'''You are helpful Quiz generator for academic prepouse
             Please generate a quiz containing {number_of_questions} multiple-choice questions. {self.difficulty_sentences}. The quiz should follow the strict rules below:
     - the quiz must be enclosed in square brackets [ ].
     - Each question should consist of a question, four options, the correct option, and an explanation Note The quiz should contain {number_of_questions} questions!!.
@@ -24,8 +23,10 @@ class PromptGenerator:
     - The quiz should be enclosed in square brackets [ ], and each question should be separated by four dollar signs $$$$ as indicated in the format. Ensure that the text, options, and explanations for each question are on a single line, even if they are long.
     - The quiz should resemble an academic quiz that helps students prepare for an exam.
 
+    make your quiz very smart and logical that asesses students understandinf of the topic. it should not be a random set of questions without a context.
+    the questions must be helpful for studens to understand their topic well the explanations also.
     the following keywords are extracted from the book from which the quiz is to be generated. therefore generate the quiz that is related 
-    to these topics and their relationships
+    to these topics and their note try please dont use these keywords separately they are part of some texx book so use them appropirately. 
     """"{self.text}""""
     Thank You for your assistance and for understanding my context!
     '''
