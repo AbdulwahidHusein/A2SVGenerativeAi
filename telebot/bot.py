@@ -6,6 +6,7 @@ import time
 import request
 
 sys.path.append("..")
+from quiz_app import generator
 from telegram import (
     Bot,
     Message,
@@ -49,7 +50,7 @@ poll_message_id = []
 
 
 def help(update: Update, context: CallbackContext):
-    update.message.reply_text("Please enter file")
+    update.message.reply_text("Use /cancel command to start the bot again")
 
 
 # The start function
@@ -64,33 +65,49 @@ def set_difficulty(update: Update, context: CallbackContext):
     keyboard = [
         [InlineKeyboardButton("Easy", callback_data="easy")],
         [InlineKeyboardButton("Medium", callback_data="medium")],
-        [InlineKeyboardButton("Difficult", callback_data="difficult")],
+        [InlineKeyboardButton("Hard", callback_data="hard")],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     update.message.reply_text("Choose Difficulty:", reply_markup=reply_markup)
 
 
-# function for setting the end page of the recieved file
-def set_end(update: Update, context: CallbackContext):
-    end = update.message.text
-    user_data["end_page"] = int(end)
-    update.message.reply_text(
-        f"Start page: {user_data['start_page']}\nEnd page: {user_data['end_page']}"
-    )
-    set_difficulty(update=update, context=context)
-
-
 # function for setting the start page of the received file
 def set_start(update: Update, context: CommandHandler):
     start = update.message.text
-    user_data["start_page"] = int(start)
-    update.message.reply_text("Enter end page")
-    return END_PAGE
+    try:
+        user_data["start_page"] = int(start)
+        update.message.reply_text("Enter end page")
+        return END_PAGE
+    except:
+        context.bot.send_message(
+            chat_id=update.effective_chat.id, text="Enter a valid number"
+        )
 
 
 def cancel(update: Update, context: CallbackContext):
-    update.message.reply_text("Conversation canceled.")
+    context.bot.send_message(
+        chat_id=update.effective_chat.id, text="Conversation canceled."
+    )
     return ConversationHandler.END
+
+
+# function for setting the end page of the recieved file
+def set_end(update: Update, context: CallbackContext):
+    try:
+        end = update.message.text
+        if int(end) < user_data["start_page"]:
+            raise Exception
+
+        user_data["end_page"] = int(end)
+        update.message.reply_text(
+            f"Start page: {user_data['start_page']}\nEnd page: {user_data['end_page']}"
+        )
+        set_difficulty(update=update, context=context)
+    except:
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text="Entrer valid end page",
+        )
 
 
 # Function for processing the file. It works by downloading the file first and then moves on to processing it.
@@ -98,6 +115,7 @@ def Enterfile(update: Update, context: CallbackContext):
     try:
         global user_data
         global scores
+        context.user_data.clear()
         scores = {}
         file = update.message.document
         file_recieved = context.bot.get_file(file_id=file.file_id)
@@ -116,6 +134,7 @@ def Enterfile(update: Update, context: CallbackContext):
         context.bot.send_chat_action(
             chat_id=update.effective_chat.id, action=ChatAction.TYPING
         )
+        context.user_data["file_processed"] = True
         context.bot.send_message(
             chat_id=update.effective_chat.id,
             text=reply_text + "\nEnter start page:",
@@ -125,6 +144,7 @@ def Enterfile(update: Update, context: CallbackContext):
         context.bot.send_message(
             chat_id=update.effective_chat.id, text="please upload a valid pdf file"
         )
+        return ConversationHandler.END
 
 
 # this function handles the events that happen when a button is pressed
@@ -132,7 +152,7 @@ def button_callback(update: Update, context: CallbackContext):
     global user_data
     global difficulty
     query = update.callback_query
-    if query.data == "easy" or query.data == "medium" or query.data == "difficult":
+    if query.data == "easy" or query.data == "medium" or query.data == "hard":
         user_data["difficulty"] = query.data
         query.message.reply_text(
             f"diffiiculty set to {user_data['difficulty']}\nPlease wait while we generate the quiz...",
@@ -150,7 +170,11 @@ def send_explanation(update: Update, context: CallbackContext):
 
             result_message += f"Explanation: {question_data['explanation']}\n\n"
 
-        context.bot.send_message(chat_id=update.effective_chat.id, text=result_message)
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=result_message
+            + "\nPlease use the /cancel command when finishing the session",
+        )
     except:
         context.bot.send_message(
             chat_id=update.effective_chat.id,
@@ -160,7 +184,6 @@ def send_explanation(update: Update, context: CallbackContext):
 
 # this function handles the answers when a poll is selected. it increments each user's score if it is correct
 def poll_answer_handler(update: Update, context: CallbackContext):
-    global scores
     answer: PollAnswer = update.poll_answer
     try:
         # Check if the user's answer is correct
@@ -181,7 +204,6 @@ def poll_answer_handler(update: Update, context: CallbackContext):
 
 # function for sending the rank of each user
 def send_rankings(update: Update, context: CallbackContext):
-    global scores
     context.bot.send_chat_action(
         chat_id=update.effective_chat.id, action=ChatAction.TYPING
     )
@@ -206,6 +228,10 @@ def send_rankings(update: Update, context: CallbackContext):
         )
 
 
+def fallback(update: Update, context: CallbackContext):
+    return ConversationHandler.END
+
+
 # function for generating question and sending the generating question in a quiz poll format for users
 # it calls the send explanation function 20 seconds after the final poll is sent
 def send_request(update: Update, context: CallbackContext):
@@ -218,12 +244,16 @@ def send_request(update: Update, context: CallbackContext):
         chat_id=update.effective_chat.id, action=ChatAction.TYPING
     )
     try:
-        question_format = request.send_request_(
-            user_data["file"],
-            user_data["start_page"],
-            user_data["end_page"],
-            user_data["difficulty"],
-        )
+        with open(user_data["file"], "rb") as f:
+            question_format = generator.get_question(
+                f,
+                10,
+                user_data["difficulty"],
+                int(user_data["start_page"]),
+                int(user_data["end_page"]),
+                mode="multiple_choice",
+                model="chatgpt",
+            )
         logging.info("request sent")
         total_polls = len(question_format["questions"]) - 1
         for i, question_data in enumerate(question_format["questions"]):
@@ -248,7 +278,7 @@ def send_request(update: Update, context: CallbackContext):
                     correct_option_id=ord(correct_option[-1]) - ord("A"),
                     is_anonymous=False,
                     explanation=f'Correct Answer: {question_data["explanation"]}',
-                    open_period=20,
+                    open_period=45,
                 )
                 polls_sent_count += 1
                 poll_ids.append(sent_poll.poll.id)
@@ -268,7 +298,7 @@ def send_request(update: Update, context: CallbackContext):
                         correct_option_id=ord(correct_option[-1]) - ord("A"),
                         is_anonymous=False,
                         explanation="",
-                        open_period=20,
+                        open_period=45,
                     )
                     polls_sent_count += 1
                     poll_ids.append(sent_poll.poll.id)
@@ -282,30 +312,34 @@ def send_request(update: Update, context: CallbackContext):
             text="No file found..please upload file first",
         )
     logging.info("done")
-    time.sleep(20)
+    time.sleep(55)
     send_explanation(update=update, context=context)
 
 
 # dispatcher
 def register(dispatcher):
-    dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(CommandHandler("result", send_rankings))
-    conv_handler = ConversationHandler(
-        entry_points=[
-            MessageHandler(
-                Filters.document & ~Filters.text & ~Filters.command, Enterfile
-            )
-        ],
-        states={
-            START_PAGE: [MessageHandler(Filters.text & ~Filters.command, set_start)],
-            END_PAGE: [MessageHandler(Filters.text & ~Filters.command, set_end)],
-        },
-        fallbacks=[CommandHandler("cancel", cancel)],
-    )
-    dispatcher.add_handler(conv_handler)
-    dispatcher.add_handler(CallbackQueryHandler(button_callback))
-    dispatcher.add_handler(PollAnswerHandler(poll_answer_handler))
-    dispatcher.add_handler(CommandHandler("help", help))
+    try:
+        dispatcher.add_handler(CommandHandler("start", start))
+        dispatcher.add_handler(CommandHandler("result", send_rankings))
+        conv_handler = ConversationHandler(
+            entry_points=[
+                MessageHandler(Filters.document, Enterfile),
+                MessageHandler(Filters.all, fallback),
+            ],
+            states={
+                START_PAGE: [
+                    MessageHandler(Filters.text & ~Filters.command, set_start)
+                ],
+                END_PAGE: [MessageHandler(Filters.text & ~Filters.command, set_end)],
+            },
+            fallbacks=[CommandHandler("cancel", cancel)],
+        )
+        dispatcher.add_handler(conv_handler)
+        dispatcher.add_handler(CallbackQueryHandler(button_callback))
+        dispatcher.add_handler(PollAnswerHandler(poll_answer_handler))
+        dispatcher.add_handler(CommandHandler("help", help))
+    except:
+        pass
 
 
 # driver function
