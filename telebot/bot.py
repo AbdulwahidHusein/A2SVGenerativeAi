@@ -3,7 +3,6 @@ import os
 import openai
 import sys
 import time
-import request
 
 sys.path.append("..")
 from quiz_app import generator
