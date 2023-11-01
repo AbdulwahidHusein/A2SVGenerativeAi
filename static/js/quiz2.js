@@ -75,10 +75,12 @@ function NextQuestion(index) {
 
 
 function checkForAnswer() {
+    
     const currentQuestion = shuffledQuestions[indexNumber] //gets current Question 
     const currentQuestionAnswer = currentQuestion.correctOption //gets current Question's answer
     const options = document.getElementsByName("option"); //gets all elements in dom with name of 'option' (in this the radio inputs)
     let correctOption = null
+   
 
     options.forEach((option) => {
         //console.log(currentQuestion[option.value])
@@ -97,7 +99,8 @@ function checkForAnswer() {
 
     //checking if checked radio button is same as answer
     options.forEach((option) => {
-        if (option.checked === true && option.value === currentQuestionAnswer) {
+        console.log(option.value + ' ' + currentQuestionAnswer )
+        if (option.checked === true && option.value == currentQuestionAnswer) {
             // document.getElementById(correctOption).style.backgroundColor = "green"
             correctAnswers[indexNumber] = 1
             userAnswers[indexNumber] = option.value

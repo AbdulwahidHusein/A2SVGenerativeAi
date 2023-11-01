@@ -13,7 +13,10 @@ class CustomUser(AbstractUser):
     REQUIRED_FIELDS = ['first_name']
 
     def __str__(self):
-        return self.first_name
+        if not self.first_name is None:
+            return self.first_name
+        else:
+            return self.email
 
 
 class Message(models.Model):
@@ -48,7 +51,7 @@ class GroupQuiz(models.Model):
     created_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
-        return f"Group Quiz {self.pk} - Quiz: {self.quiz} - Start Time: {self.start_time}"
+        return f"Group Quiz {self.pk} - Quiz: {self.quiz.pk} - Start Time: {self.start_time}"
     
     def update_status(self):
         current_time = timezone.now()
@@ -83,4 +86,4 @@ class File(models.Model):
     file = models.FileField(upload_to="files/", null=True, blank=True)
     
     def __str__(self) -> str:
-        return self.uploaded_by.first_name
+        return "file "

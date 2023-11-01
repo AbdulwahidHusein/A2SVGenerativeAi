@@ -1,4 +1,5 @@
 import PyPDF2
+import pdfplumber
 from docx import Document
 #a class to read files
 #supports pdf and docx files
@@ -7,10 +8,11 @@ class FileReader:
     def __init__(self, file) -> None:
         self.file = file
         self.text = ""
+
     def _read_pdf(self, start_page=0, end_page=None):
         try:
-                pdf_reader = PyPDF2.PdfReader(self.file)
-                num_pages = len(pdf_reader.pages)
+            with pdfplumber.open(self.file) as pdf:
+                num_pages = len(pdf.pages)
 
                 if end_page is None:
                     end_page = num_pages
@@ -18,11 +20,11 @@ class FileReader:
                     end_page = num_pages - 1
 
                 for page in range(start_page, end_page + 1):
-                    self.text += pdf_reader.pages[page].extract_text().strip()
+                    self.text += pdf.pages[page].extract_text().strip()
                 return self.text
         except Exception as e:
-                print(f"Error reading PDF: {e}")
-                return False
+            print(f"Error reading PDF: {e}")
+            return False
     def _read_docx(self, start_page=0, end_page=None):
         try:
             document = Document(self.file)
